@@ -1,6 +1,7 @@
+package com.thesis.TheChess.constants;
 //package com.example.thesis.constants;
-//
-//public enum OperatingSystem {
+
+public enum OperatingSystem {
 //    SOLARIS,
 //    PCF,
 //    REDHAT_LINUX_WINDOWS;
@@ -43,4 +44,4 @@
 //                return "";
 //        }
 //    }
-//}
+}

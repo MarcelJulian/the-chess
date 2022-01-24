@@ -1,13 +1,13 @@
-package com.example.thesis;
+package com.thesis.TheChess;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ThesisApplication {
+public class TheChess {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ThesisApplication.class, args);
+		SpringApplication.run(TheChess.class, args);
 	}
 
 }
