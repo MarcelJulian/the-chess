@@ -1,10 +1,10 @@
-package com.example.thesis;
+package com.thesis.thechess;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ThesisApplicationTests {
+class TheChessTests {
 
 	@Test
 	void contextLoads() {

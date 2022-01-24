@@ -1,4 +1,4 @@
-package com.thesis.TheChess.service;
+package com.thesis.thechess.service;
 
 import org.springframework.stereotype.Service;
 
