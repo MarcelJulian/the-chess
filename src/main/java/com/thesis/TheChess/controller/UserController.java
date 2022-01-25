@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.thesis.TheChess.model.LoginInput;
-import com.thesis.TheChess.model.LoginOutput;
+import com.thesis.TheChess.dto.LoginInput;
+import com.thesis.TheChess.dto.LoginOutput;
 import com.thesis.TheChess.service.UserService;
 
 @RestController

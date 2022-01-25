@@ -1,4 +1,4 @@
-package com.thesis.TheChess.model;
+package com.thesis.TheChess.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

@@ -3,8 +3,8 @@ package com.thesis.TheChess.service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.thesis.TheChess.model.LoginInput;
-import com.thesis.TheChess.model.LoginOutput;
+import com.thesis.TheChess.dto.LoginInput;
+import com.thesis.TheChess.dto.LoginOutput;
 
 @Service
 public class UserService {
