@@ -1,4 +1,4 @@
-package com.thesis.thechess.controller;
+package com.thesis.TheChess.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

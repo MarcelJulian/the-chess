@@ -1,4 +1,4 @@
-package com.thesis.thechess;
+package com.thesis.TheChess;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
