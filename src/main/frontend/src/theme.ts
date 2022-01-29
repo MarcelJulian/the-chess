@@ -4,7 +4,9 @@ const theme = extendTheme({
   components: {
     Button: {
       baseStyle: {
-        padding: "1rem"
+        p: "0.5rem",
+        py: "0.5rem",
+        m: "0.5rem"
       }
     }
   }

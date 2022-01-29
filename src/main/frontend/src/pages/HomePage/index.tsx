@@ -1,33 +1,18 @@
 import React from "react";
 
-import { Box, Button, Flex } from "@chakra-ui/react";
+import { Box, Container } from "@chakra-ui/react";
+
+import NavBar from "components/NavBar";
 
 function HomePage() {
   return (
-    <Flex>
-      <Box>
-        <Button colorScheme="red" variant="link">
-          Logo
-        </Button>
-        <Button colorScheme="red" variant="link">
-          Home
-        </Button>
-        <Button colorScheme="red" variant="link">
-          Tutorial
-        </Button>
-        <Button colorScheme="red" variant="link">
-          Settings
-        </Button>
-      </Box>
-      <Box ml="auto">
-        <Button colorScheme="red" variant="link">
-          Register
-        </Button>
-        <Button colorScheme="red" variant="link">
-          Sign In
-        </Button>
-      </Box>
-    </Flex>
+    <Box>
+      <NavBar />
+      <Container />
+      <Container>
+        <Box border="1px" borderColor="gray.200" borderRadius="lg" h="10rem" />
+      </Container>
+    </Box>
   );
 }
 
