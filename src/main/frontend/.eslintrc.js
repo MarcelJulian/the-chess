@@ -21,7 +21,12 @@ module.exports = {
   },
   plugins: ["react", "@typescript-eslint", "prettier"],
   rules: {
-    "prettier/prettier": ["error"],
+    "prettier/prettier": [
+      "error",
+      {
+        endOfLine: "auto"
+      }
+    ],
     "react/jsx-filename-extension": [
       2,
       { extensions: [".js", ".jsx", ".ts", ".tsx"] }
@@ -59,6 +64,7 @@ module.exports = {
   settings: {
     "import/resolver": {
       node: {
+        paths: ["src"],
         extensions: [".js", ".jsx", ".ts", ".tsx"]
       }
     }
