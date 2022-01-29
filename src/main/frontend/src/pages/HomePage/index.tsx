@@ -10,7 +10,12 @@ function HomePage() {
       <NavBar />
       <Container />
       <Container>
-        <Box border="1px" borderColor="gray.200" borderRadius="lg" h="10rem" />
+        <Box border="1px" borderColor="gray.200" borderRadius="lg" h="2rem">
+          <p>asd</p>
+        </Box>
+        <Box border="1px" borderColor="gray.200" borderRadius="lg" h="2rem">
+          <p>asd</p>
+        </Box>
       </Container>
     </Box>
   );
