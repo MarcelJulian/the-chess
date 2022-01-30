@@ -72,39 +72,23 @@ function HomePage() {
           <GridItem px="1rem" py="0.5rem">
             <Box>Strength</Box>
             <ButtonGroup spacing="0" size="sm">
-              <Button px="0" py="0" m="0" borderRadius="none">
-                1
-              </Button>
-              <Button px="0" py="0" m="0" borderRadius="none">
-                2
-              </Button>
-              <Button px="0" py="0" m="0" borderRadius="none">
-                3
-              </Button>
-              <Button px="0" py="0" m="0" borderRadius="none">
-                4
-              </Button>
-              <Button px="0" py="0" m="0" borderRadius="none">
-                5
-              </Button>
-              <Button px="0" py="0" m="0" borderRadius="none">
-                6
-              </Button>
-              <Button px="0" py="0" m="0" borderRadius="none">
-                7
-              </Button>
-              <Button px="0" py="0" m="0" borderRadius="none">
-                8
-              </Button>
+              <Button borderRadius="none">1</Button>
+              <Button borderRadius="none">2</Button>
+              <Button borderRadius="none">3</Button>
+              <Button borderRadius="none">4</Button>
+              <Button borderRadius="none">5</Button>
+              <Button borderRadius="none">6</Button>
+              <Button borderRadius="none">7</Button>
+              <Button borderRadius="none">8</Button>
             </ButtonGroup>
           </GridItem>
           {/* Box color */}
           <GridItem w="100%" h="10" py="0.5rem">
             <Box h="2rem">Color</Box>
             <Flex>
-              <Button class="btnBlack" py="1rem" m="0" />
-              <Button class="btnWhite" py="0" m="0" />
-              <Button class="btnBlack" py="0" m="0" />
+              <Button w="100%" class="btnBlack" py="1rem" m="0" />
+              <Button w="100%" class="btnWhite" py="0" m="0" />
+              <Button w="100%" class="btnBlack" py="0" m="0" />
             </Flex>
           </GridItem>
           {/* Box Time Control */}

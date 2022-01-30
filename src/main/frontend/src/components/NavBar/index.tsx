@@ -6,14 +6,26 @@ function NavBar() {
   return (
     <Flex>
       <Box>
-        <Button variant="link">TheChess</Button>
-        <Button variant="link">Home</Button>
-        <Button variant="link">Tutorial</Button>
-        <Button variant="link">Settings</Button>
+        <Button variant="link" p="0.5rem" m="0.5rem">
+          TheChess
+        </Button>
+        <Button variant="link" p="0.5rem" m="0.5rem">
+          Home
+        </Button>
+        <Button variant="link" p="0.5rem" m="0.5rem">
+          Tutorial
+        </Button>
+        <Button variant="link" p="0.5rem" m="0.5rem">
+          Settings
+        </Button>
       </Box>
       <Box ml="auto">
-        <Button variant="link">Register</Button>
-        <Button variant="link">Sign In</Button>
+        <Button variant="link" p="0.5rem" m="0.5rem">
+          Register
+        </Button>
+        <Button variant="link" p="0.5rem" m="0.5rem">
+          Sign In
+        </Button>
       </Box>
     </Flex>
   );
