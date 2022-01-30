@@ -21,6 +21,7 @@ module.exports = {
   },
   plugins: ["react", "@typescript-eslint", "prettier"],
   rules: {
+    "no-unused-vars": "off",
     "prettier/prettier": [
       "error",
       {
@@ -59,7 +60,8 @@ module.exports = {
           caseInsensitive: true
         }
       }
-    ]
+    ],
+    "no-plusplus": ["error", { allowForLoopAfterthoughts: true }]
   },
   settings: {
     "import/resolver": {
@@ -68,5 +70,8 @@ module.exports = {
         extensions: [".js", ".jsx", ".ts", ".tsx"]
       }
     }
+  },
+  globals: {
+    JSX: true
   }
 };

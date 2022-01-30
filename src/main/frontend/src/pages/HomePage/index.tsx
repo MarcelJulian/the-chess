@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import {
   Box,
@@ -22,6 +22,36 @@ import {
 import NavBar from "components/NavBar";
 
 function HomePage() {
+  // replace with store
+  const [isLogin, setIsLogin] = useState(false);
+  const [botStrength, setBotStrength] = useState(1);
+  const [botColor, setBotColor] = useState("random");
+  const [botTimeControlMode, setBotTimeControlMode] = useState("unlimited");
+  const [botTimeControlMinute, setBotTimeControlMinute] = useState(10);
+  const [botTimeControlIncrement, setBotTimeControlIncrement] = useState(0);
+
+  const generateBotStrengthGroupButton = () => {
+    const buttons: JSX.Element[] = [];
+
+    for (let i = 1; i < 9; i++) {
+      buttons.push(
+        <Button
+          borderLeftRadius={i === 1 ? "md" : "none"}
+          borderRightRadius={i === 8 ? "md" : "none"}
+          isActive={botStrength === i}
+          onClick={() => setBotStrength(i)}
+        >
+          {i}
+        </Button>
+      );
+    }
+    return (
+      <ButtonGroup spacing="0" size="xs">
+        {buttons}
+      </ButtonGroup>
+    );
+  };
+
   return (
     <Box>
       <NavBar />
@@ -71,16 +101,7 @@ function HomePage() {
           {/* Box Strength Level AI */}
           <GridItem px="1rem" py="0.5rem">
             <Box>Strength</Box>
-            <ButtonGroup spacing="0" size="sm">
-              <Button borderRadius="none">1</Button>
-              <Button borderRadius="none">2</Button>
-              <Button borderRadius="none">3</Button>
-              <Button borderRadius="none">4</Button>
-              <Button borderRadius="none">5</Button>
-              <Button borderRadius="none">6</Button>
-              <Button borderRadius="none">7</Button>
-              <Button borderRadius="none">8</Button>
-            </ButtonGroup>
+            {generateBotStrengthGroupButton()}
           </GridItem>
           {/* Box color */}
           <GridItem w="100%" h="10" py="0.5rem">
