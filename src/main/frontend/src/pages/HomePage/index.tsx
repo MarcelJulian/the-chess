@@ -39,7 +39,7 @@ function HomePage() {
           <Grid templateColumns="repeat(2, 50%)" gap={0}>
             <GridItem>
               <Center>
-                <Button w="90%" px="0" py="0" mx="0" variant="ghost">
+                <Button w="90%" variant="ghost">
                   Bot
                 </Button>
               </Center>
@@ -47,7 +47,7 @@ function HomePage() {
 
             <GridItem>
               <Center>
-                <Button w="90%" px="0" py="0" mx="0" variant="ghost">
+                <Button w="90%" variant="ghost">
                   Human
                 </Button>
               </Center>
