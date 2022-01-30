@@ -25,36 +25,29 @@ function HomePage() {
   return (
     <Box>
       <NavBar />
-      <Container />
       <Container>
         {/* Container Atas */}
         <Box border="2px" borderColor="gray.500" borderRadius="lg" h="6rem">
-          <GridItem w="100%" h="8" bg="transparent">
-            <Center w="500px" h="40px" bg="transparent">
+          <GridItem w="100%" bg="transparent">
+            <Center bg="transparent">
               <Text fontSize={20}>Play With</Text>
             </Center>
           </GridItem>
           {/* Play with atas */}
 
           {/* Grid Tengah */}
-          <Grid templateColumns="repeat(2, 0fr)" gap={0}>
-            <GridItem colSpan={2} w="250px" h="60px" bg="transparent">
-              <Center w="250px" h="60px" bg="transparent">
-                <Button variant="ghost" w="220px" h="50px">
+          <Grid templateColumns="repeat(2, 50%)" gap={0}>
+            <GridItem>
+              <Center>
+                <Button w="90%" px="0" py="0" mx="0" variant="ghost">
                   Bot
                 </Button>
               </Center>
             </GridItem>
 
-            <GridItem
-              colStart={3}
-              colEnd={5}
-              w="240px"
-              h="50px"
-              bg="transparent"
-            >
-              <Center w="230px" h="60px" bg="transparent">
-                <Button variant="ghost" w="220px" h="50px">
+            <GridItem>
+              <Center>
+                <Button w="90%" px="0" py="0" mx="0" variant="ghost">
                   Human
                 </Button>
               </Center>
