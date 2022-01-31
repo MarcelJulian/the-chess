@@ -13,8 +13,8 @@ import SettingsPage from "pages/SettingsPage/settingsPage";
 ReactDOM.render(
   <React.StrictMode>
     <ChakraProvider>
-      {/* <HomePage /> */}
-      {/* <HumanPage /> */}
+      <HomePage />
+      <HumanPage />
       <SettingsPage />
     </ChakraProvider>
   </React.StrictMode>,

@@ -57,37 +57,51 @@ function HomePage() {
       <NavBar />
       <Container>
         {/* Container Atas */}
-        <Box border="2px" borderColor="gray.500" borderRadius="lg" h="6rem">
-          <GridItem w="100%" bg="transparent">
-            <Center bg="transparent">
-              <Text fontSize={25}>Play With</Text>
+        <Grid
+          // border="1px"
+          borderColor="gray.800"
+          borderRadius="lg"
+          templateRows="repeat(2, 3fr)"
+          templateColumns="repeat(2, 5fr)"
+          border="1px"
+          gap={0}
+        >
+          <GridItem w="100%" h="10" bg="transparent" colSpan={2}>
+            <Center>
+              <Text fontSize={20}>Play With</Text>
             </Center>
           </GridItem>
-          {/* Play with atas */}
 
-          {/* Grid Tengah */}
-          <Grid templateColumns="repeat(2, 50%)" gap={0}>
-            <GridItem>
-              <Center>
-                <Button w="90%" variant="ghost">
-                  Bot
-                </Button>
-              </Center>
-            </GridItem>
+          <GridItem
+            w="100%"
+            h="10"
+            bg="transparent"
+            border="1px"
+            borderBottomLeftRadius="lg"
+            marginBottom="0%"
+          >
+            <Center>
+              <Button variant="ghost" w="99%">
+                Bot
+              </Button>
+            </Center>
+          </GridItem>
 
-            <GridItem>
-              <Center>
-                <Button w="90%" variant="ghost">
-                  Human
-                </Button>
-              </Center>
-            </GridItem>
-          </Grid>
-        </Box>
-        <hr />
-        <hr />
-        <hr />
-        <hr />
+          <GridItem
+            w="100%"
+            h="10"
+            bg="transparent"
+            border="1px"
+            borderBottomRightRadius="lg"
+            marginBottom="0%"
+          >
+            <Center>
+              <Button variant="ghost" w="99%">
+                Human
+              </Button>
+            </Center>
+          </GridItem>
+        </Grid>
 
         {/* Container Bawah */}
         <Grid
@@ -96,6 +110,7 @@ function HomePage() {
           borderRadius="lg"
           templateRows="repeat(4, 1fr)"
           templateColumns="repeat(2, 1fr)"
+          marginTop="5%"
           gap={0}
         >
           {/* Box Strength Level AI */}
