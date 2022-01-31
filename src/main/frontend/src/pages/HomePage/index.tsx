@@ -60,7 +60,7 @@ function HomePage() {
         <Box border="2px" borderColor="gray.500" borderRadius="lg" h="6rem">
           <GridItem w="100%" bg="transparent">
             <Center bg="transparent">
-              <Text fontSize={20}>Play With</Text>
+              <Text fontSize={25}>Play With</Text>
             </Center>
           </GridItem>
           {/* Play with atas */}
