@@ -15,9 +15,14 @@ import {
   SliderFilledTrack,
   SliderThumb,
   SliderTrack,
+  NumberInput,
   Stack,
   Select,
-  Switch
+  Switch,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInputField,
+  NumberInputStepper
 } from "@chakra-ui/react";
 
 import NavBar from "components/NavBar";
@@ -169,7 +174,13 @@ function SettingsPage() {
             // borderRadius="lg"
           >
             <Center>
-              <Text fontSize={15}>Pilihan box</Text>
+              <NumberInput size="sm" maxW={20} defaultValue={15} min={10}>
+                <NumberInputField />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
             </Center>
           </Box>
           {/* Tulisan Voice Control */}
