@@ -16,6 +16,7 @@ import {
   SliderThumb,
   SliderTrack,
   Stack,
+  Select,
   Switch
 } from "@chakra-ui/react";
 
@@ -55,95 +56,191 @@ function SettingsPage() {
   return (
     <Box>
       <NavBar />
-      <Container>
+      <Container marginTop="5%">
         {/* Container */}
         <Grid
           border="1px"
           borderColor="gray.800"
           borderRadius="lg"
           templateRows="repeat(5, 1fr)"
-          templateColumns="repeat(1, 5fr)"
+          templateColumns="repeat(2, 1fr)"
+          w="100%"
           gap={0}
         >
-          <Button
-            px="2rem"
-            py="3rem"
+          {/* Tulisan Board Theme */}
+          <Text
+            px="0.5rem"
+            py="0.5rem"
             bgColor="blue.200"
-            marginBottom="5%"
-            marginTop="10%"
-            marginLeft="10%"
-            marginRight="10%"
-            border="1px"
-            borderRadius="lg"
+            // marginBottom="0%"
+            marginTop="5%"
+            marginLeft="5%"
+            marginRight="5%"
+            // border="1px"
+            // borderRadius="lg"
+            fontSize={15}
           >
-            <Center>
-              <Text fontSize={25}>5asdasd+3</Text>
-            </Center>
-          </Button>
+            BoardTheme
+          </Text>
 
-          <Button
-            px="2rem"
-            py="3rem"
+          {/* Box pilihan Board Theme */}
+          <Box
+            px="0.5rem"
+            py="0.5rem"
             bgColor="blue.200"
-            marginBottom="5%"
-            marginTop="10%"
+            // marginBottom="0%"
+            marginTop="5%"
             marginLeft="10%"
             marginRight="10%"
-            border="1px"
-            borderRadius="lg"
+            // border="1px"
+            // borderRadius="lg"
           >
             <Center>
-              <Text fontSize={25}>10+0</Text>
+              <Select placeholder="Choose Theme set">
+                <option value="option1">Theme 1</option>
+                <option value="option2">Theme 2</option>
+                <option value="option3">Theme 3</option>
+              </Select>
             </Center>
-          </Button>
+          </Box>
 
-          <Button
-            px="2rem"
-            py="3rem"
+          {/* Tulisan Piece Set */}
+          <Text
+            px="0.5rem"
+            py="0.5rem"
             bgColor="blue.200"
-            marginBottom="5%"
-            marginTop="10%"
+            // marginBottom="0%"
+            // marginTop="15%"
+            marginLeft="5%"
+            marginRight="5%"
+            // border="1px"
+            // borderRadius="lg"
+            fontSize={15}
+          >
+            Piece Set
+          </Text>
+          {/* Box pilihan Piece Set */}
+          <Box
+            px="0.5rem"
+            py="0.5rem"
+            bgColor="blue.200"
+            // marginBottom="20%"
+            // marginTop="15%"
             marginLeft="10%"
             marginRight="10%"
-            border="1px"
-            borderRadius="lg"
+            // border="1px"
+            // borderRadius="lg"
           >
             <Center>
-              <Text fontSize={25}>10+5</Text>
+              <Select placeholder="Choose Piece Set">
+                <option value="option1">Piece 1</option>
+                <option value="option2">Piece 2</option>
+                <option value="option3">Piece 3</option>
+              </Select>
             </Center>
-          </Button>
+          </Box>
 
-          <Button
-            px="2rem"
-            py="3rem"
+          {/* Tulisan Sound */}
+          <Text
+            px="0.5rem"
+            py="0.5rem"
             bgColor="blue.200"
-            marginBottom="5%"
-            marginTop="10%"
-            marginLeft="10%"
-            marginRight="10%"
-            border="1px"
-            borderRadius="lg"
+            // marginBottom="0%"
+            // marginTop="15%"
+            marginLeft="5%"
+            marginRight="5%"
+            // border="1px"
+            // borderRadius="lg"
+            fontSize={15}
           >
-            <Center>
-              <Text fontSize={25}>15+10</Text>
-            </Center>
-          </Button>
+            Sound
+          </Text>
 
-          <Button
-            px="2rem"
-            py="3rem"
+          {/* Box pilihan Sound */}
+          <Box
+            px="0.5rem"
+            py="0.5rem"
             bgColor="blue.200"
-            marginBottom="5%"
-            marginTop="10%"
+            // marginBottom="15%"
+            // marginTop="0%"
             marginLeft="10%"
             marginRight="10%"
-            border="1px"
-            borderRadius="lg"
+            // border="1px"
+            // borderRadius="lg"
           >
             <Center>
-              <Text fontSize={25}>30+0</Text>
+              <Text fontSize={15}>Pilihan box</Text>
             </Center>
-          </Button>
+          </Box>
+          {/* Tulisan Voice Control */}
+          <Text
+            px="0.5rem"
+            py="0.5rem"
+            bgColor="blue.200"
+            // marginBottom="0%"
+            // marginTop="15%"
+            marginLeft="5%"
+            marginRight="5%"
+            // border="1px"
+            // borderRadius="lg"
+            fontSize={15}
+          >
+            Voice Control
+          </Text>
+
+          {/* Box pilihan Voice Control */}
+          <Box
+            px="0.5rem"
+            py="0.5rem"
+            bgColor="blue.200"
+            // marginBottom="15%"
+            // marginTop="0%"
+            marginLeft="10%"
+            marginRight="10%"
+            // border="1px"
+            // borderRadius="lg"
+          >
+            <Center>
+              <Stack direction="row">
+                <Switch colorScheme="teal" size="md" />
+              </Stack>
+            </Center>
+          </Box>
+
+          {/* Tulisan Blind mode */}
+          <Text
+            px="0.5rem"
+            py="0.5rem"
+            bgColor="blue.200"
+            marginBottom="5%"
+            // marginTop="15%"
+            marginLeft="5%"
+            marginRight="5%"
+            // border="1px"
+            // borderRadius="lg"
+            fontSize={15}
+          >
+            Blind Mode
+          </Text>
+
+          {/* Box pilihan Blind Mode */}
+          <Box
+            px="0.5rem"
+            py="0.5rem"
+            bgColor="blue.200"
+            marginBottom="5%"
+            // marginTop="0%"
+            marginLeft="10%"
+            marginRight="10%"
+            // border="1px"
+            // borderRadius="lg"
+          >
+            <Center>
+              <Stack direction="row">
+                <Switch colorScheme="teal" size="md" />
+              </Stack>
+            </Center>
+          </Box>
         </Grid>
       </Container>
     </Box>
