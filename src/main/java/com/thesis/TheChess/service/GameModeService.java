@@ -16,6 +16,8 @@ import com.thesis.TheChess.dto.OngoingGamesOutput;
 import com.thesis.TheChess.dto.OngoingGamesResult;
 import com.thesis.TheChess.dto.PlayWithBotInput;
 import com.thesis.TheChess.dto.PlayWithBotOutput;
+import com.thesis.TheChess.dto.PlayWithHumanInput;
+import com.thesis.TheChess.dto.PlayWithHumanOutput;
 
 @Service
 public class GameModeService {
@@ -70,7 +72,7 @@ public class GameModeService {
 			}
 		} catch (Exception e) {
 			System.out.println("hitOngoingGames ERROR - user_oauth >> " + user_oauth + " - exception >> " + e.getMessage());
-			throw new Exception(e.getMessage());
+			throw new Exception("ERROR hitOngoingGames >> " + e.getMessage());
 		}
 	}
 	
@@ -82,13 +84,13 @@ public class GameModeService {
 		
 		try {
 			validasiUserAuthorization(user_oauth);
-			result = hitChallengeAI(user_oauth, input);
+			result = hitChallengeAI(user_oauth, input);			//matchmaking
 //			TODO: set output data
 			
 			System.out.println("GameModeService - playWithBotService - END - user_oauth >> " + user_oauth + " - input >> " + input);
 			return output;
 		} catch (Exception e) {
-			System.out.println("GameModeService - playWithBotService - ERROR - user_oauth >> " + user_oauth + " - input >> " + input);
+			System.out.println("GameModeService - playWithBotService - ERROR - user_oauth >> " + user_oauth + " - input >> " + input + " - exception >> " + e.getMessage());
 			throw new Exception(e.getMessage());
 		}		
 	}
@@ -127,10 +129,81 @@ public class GameModeService {
 			}
 		} catch (Exception e) {
 			System.out.println("hitChallengeAI - ERROR - user_oauth >> " + user_oauth + " - input >> " + input + " - exception >> " + e.getMessage());
-			throw new Exception(e.getMessage());
+			throw new Exception("ERROR hitChallengeAI >> " + e.getMessage());
 		}		
 	}
 	
+	public PlayWithHumanOutput playWithHumanService(String user_oauth, PlayWithHumanInput input) throws Exception{
+		System.out.println("GameModeService - playWithHumanService - START - user_oauth >> " + user_oauth + " - input >> " + input);
+		
+		PlayWithHumanOutput output = new PlayWithHumanOutput();
+		
+		try {
+			validasiUserAuthorization(user_oauth);
+			hitCreateASeek(user_oauth, input);
+			hitStreamIncomingEvents(user_oauth);
+			
+			System.out.println("GameModeService - playWithHumanService - END - user_oauth >> " + user_oauth + " - input >> " + input);
+			return output;
+		} catch (Exception e) {
+			System.out.println("GameModeService - playWithHumanService - ERROR - user_oauth >> " + user_oauth + " - input >> " + input + " - exception >> " + e.getMessage());
+			throw new Exception(e.getMessage());
+		}	
+	}
+	
+	private void hitCreateASeek(String user_oauth, PlayWithHumanInput input) throws Exception{
+		System.out.println("hitCreateASeek - START - user_oauth >> " + user_oauth + " - input >> " + input);
+		
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+			headers.add("Authorization", user_oauth);
+
+			MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+			map.add("rated", "true");
+			map.add("time", input.getTime());
+			map.add("increment", input.getIncrement());
+			map.add("variant", "standard");
+			
+			HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map, headers);
+			System.out.println("hitCreateASeek - entity >> " + entity);
+			
+			String uri = lichess_url + "api/board/seek";
+			System.out.println("hitCreateASeek - uri >> " + uri);
+			
+			ResponseEntity<Void> responseHit = restTemplate.exchange(uri, HttpMethod.POST, entity, Void.class);
+			System.out.println("hitCreateASeek - responseHit >> " + responseHit);
+			
+			if (responseHit.getStatusCodeValue() == 200) {
+				System.out.println("hitCreateASeek - END - user_oauth >> " + user_oauth + " - input >> " + input + " - statusCodeValue >> " + responseHit.getStatusCodeValue());
+			} else {
+				throw new Exception("Failed Matchmaking; error code value >> " + responseHit.getStatusCodeValue());
+			}
+		} catch (Exception e) {
+			System.out.println("hitCreateASeek - ERROR - user_oauth >> " + user_oauth + " - input >> " + input + " - exception >> " + e.getMessage());
+			throw new Exception("ERROR hitCreateASeek >> " + e.getMessage());
+		}
+	}
+	
+	private void hitStreamIncomingEvents(String user_oauth) throws Exception{
+		System.out.println("hitStreamIncomingEvents - START - user_oauth >> " + user_oauth);
+		
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Authorization", user_oauth);
+			
+			String uri = lichess_url + "api/stream/event";
+			System.out.println("hitStreamIncomingEvents - uri >> " + uri);
+			
+//			TODO: hit + handle ndjson
+			
+			System.out.println("hitStreamIncomingEvents - END - user_oauth >> " + user_oauth);
+		} catch (Exception e) {
+			System.out.println("hitStreamIncomingEvents - START - user_oauth >> " + user_oauth);
+			throw new Exception("ERROR hitStreamIncomingEvents >> " + e.getMessage());
+		}
+	}
+
 	private void validasiUserAuthorization(String user_oauth) throws Exception{
 		mandatoryInputValidation("User Authorization", user_oauth);
 	}

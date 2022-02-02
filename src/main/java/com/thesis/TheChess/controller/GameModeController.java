@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.thesis.TheChess.dto.OngoingGamesOutput;
 import com.thesis.TheChess.dto.PlayWithBotInput;
 import com.thesis.TheChess.dto.PlayWithBotOutput;
+import com.thesis.TheChess.dto.PlayWithHumanInput;
+import com.thesis.TheChess.dto.PlayWithHumanOutput;
 import com.thesis.TheChess.service.GameModeService;
 
 @RestController
@@ -53,6 +55,21 @@ public class GameModeController {
 			System.out.println("GameModeController - playWithBotController - ERROR - user_oauth >> " + user_oauth + " - input >> " + input + " - exception >> " + e.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(output);
 		}
+	}
+	
+	@PostMapping(path = "play-with-human")
+	public ResponseEntity<PlayWithHumanOutput> playWithHumanController(@RequestHeader String user_oauth, @RequestBody PlayWithHumanInput input) throws Exception{
+		System.out.println("GameModeController - playWithHumanController - START - user_oauth >> " + user_oauth + " - input >> " + input);
 		
+		PlayWithHumanOutput output = null;
+		try {
+			output = service.playWithHumanService(user_oauth, input);
+			
+			System.out.println("GameModeController - playWithHumanController - END - user_oauth >> " + user_oauth + " - input >> " + input);
+			return ResponseEntity.status(HttpStatus.OK).body(output);			
+		} catch (Exception e) {
+			System.out.println("GameModeController - playWithHumanController - ERROR - user_oauth >> " + user_oauth + " - input >> " + input + " - exception >> " + e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(output);
+		}
 	}
 }
