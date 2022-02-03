@@ -28,36 +28,6 @@ import {
 import NavBar from "components/NavBar";
 
 function SettingsPage() {
-  // replace with store
-  const [isLogin, setIsLogin] = useState(false);
-  const [botStrength, setBotStrength] = useState(1);
-  const [botColor, setBotColor] = useState("random");
-  const [botTimeControlMode, setBotTimeControlMode] = useState("unlimited");
-  const [botTimeControlMinute, setBotTimeControlMinute] = useState(10);
-  const [botTimeControlIncrement, setBotTimeControlIncrement] = useState(0);
-
-  const generateBotStrengthGroupButton = () => {
-    const buttons: JSX.Element[] = [];
-
-    for (let i = 1; i < 9; i++) {
-      buttons.push(
-        <Button
-          borderLeftRadius={i === 1 ? "md" : "none"}
-          borderRightRadius={i === 8 ? "md" : "none"}
-          isActive={botStrength === i}
-          onClick={() => setBotStrength(i)}
-        >
-          {i}
-        </Button>
-      );
-    }
-    return (
-      <ButtonGroup spacing="0" size="xs">
-        {buttons}
-      </ButtonGroup>
-    );
-  };
-
   return (
     <Box>
       <NavBar />

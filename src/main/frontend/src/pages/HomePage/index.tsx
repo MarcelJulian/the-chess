@@ -16,7 +16,8 @@ import {
   SliderThumb,
   SliderTrack,
   Stack,
-  Switch
+  Switch,
+  border
 } from "@chakra-ui/react";
 
 import NavBar from "components/NavBar";
@@ -121,10 +122,59 @@ function HomePage() {
           {/* Box color */}
           <GridItem w="100%" h="10" py="0.5rem">
             <Box h="2rem">Color</Box>
-            <Flex>
-              <Button w="100%" class="btnBlack" py="1rem" m="0" />
-              <Button w="100%" class="btnWhite" py="0" m="0" />
-              <Button w="100%" class="btnBlack" py="0" m="0" />
+            <Flex justifyContent="space-evenly">
+              <Button
+                bgColor="black"
+                border="2px"
+                size="xs"
+                borderRadius="100%"
+                m="0"
+                isActive={botColor === "black"}
+                onClick={() => {
+                  setBotColor("black");
+                  console.log(botColor);
+                }}
+                _hover={{
+                  boxShadow:
+                    "0 0 1px 2px rgba(88, 144, 255, .75), 0 1px 1px rgba(0, 0, 0, .15)"
+                }}
+                _active={{}}
+              />
+              <Button
+                bgColor="white"
+                border="2px"
+                size="xs"
+                borderRadius="100%"
+                py="0"
+                m="0"
+                isActive={botColor === "white"}
+                onClick={() => {
+                  setBotColor("white");
+                  console.log(botColor);
+                }}
+                _hover={{
+                  boxShadow:
+                    "0 0 1px 2px rgba(88, 144, 255, .75), 0 1px 1px rgba(0, 0, 0, .15)"
+                }}
+                _active={{}}
+              />
+              <Button
+                bgColor="gray"
+                border="2px"
+                size="xs"
+                borderRadius="100%"
+                m="0"
+                isActive={botColor === "random"}
+                onClick={() => {
+                  setBotColor("random");
+                  console.log(botColor);
+                }}
+                _hover={{
+                  boxShadow:
+                    "0 0 1px 2px rgba(88, 144, 255, .75), 0 1px 1px rgba(0, 0, 0, .15)"
+                }}
+                _active={{}}
+              />
             </Flex>
           </GridItem>
           {/* Box Time Control */}
