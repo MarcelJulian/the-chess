@@ -1,9 +1,12 @@
 package com.thesis.TheChess.controller;
 
+import javax.websocket.server.PathParam;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -69,6 +72,26 @@ public class GameModeController {
 			return ResponseEntity.status(HttpStatus.OK).body(output);			
 		} catch (Exception e) {
 			System.out.println("GameModeController - playWithHumanController - ERROR - user_oauth >> " + user_oauth + " - input >> " + input + " - exception >> " + e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(output);
+		}
+	}
+	
+//	TODO: controller stream buat Stream Board game state
+	
+//	TODO: controller stream buat Stream incoming events
+	
+	@PostMapping(path = "abort-game/{game_id}")
+	public ResponseEntity<Boolean> abortGameController(@RequestHeader String user_oauth, @PathVariable String game_id) throws Exception{
+		System.out.println("GameModeController - abortGameController - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id);
+		
+		Boolean output = null;
+		try {
+			output = service.abortGameService(user_oauth, game_id);
+			
+			System.out.println("GameModeController - abortGameController - END - user_oauth >> " + user_oauth + " - game_id >> " + game_id);
+			return ResponseEntity.status(HttpStatus.OK).body(output);			
+		} catch (Exception e) {
+			System.out.println("GameModeController - abortGameController - ERROR - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - exception >> " + e.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(output);
 		}
 	}

@@ -11,6 +11,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import com.thesis.TheChess.dto.AbortGameResult;
 import com.thesis.TheChess.dto.ChallengeAIResult;
 import com.thesis.TheChess.dto.OngoingGamesOutput;
 import com.thesis.TheChess.dto.OngoingGamesResult;
@@ -67,7 +68,7 @@ public class GameModeService {
 				System.out.println("hitOngoingGames END - user_oauth >> " + user_oauth + " - output >> " + output);
 				return output;
 			} else {
-				throw new Exception("");
+				throw new Exception("Failed Get Ongoing Games; error code value >> " + responseHit.getStatusCodeValue());
 			}
 		} catch (Exception e) {
 			System.out.println("hitOngoingGames ERROR - user_oauth >> " + user_oauth + " - exception >> " + e.getMessage());
@@ -182,5 +183,59 @@ public class GameModeService {
 			throw new Exception("ERROR hitCreateASeek >> " + e.getMessage());
 		}
 	}
+	
 
+	public Boolean abortGameService(String user_oauth, String game_id) throws Exception{
+		System.out.println("GameModeService - abortGameService - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id);
+		
+		boolean result = false;
+		
+		try {
+			result = hitAbortGame(user_oauth, game_id);
+			
+			System.out.println("GameModeService - abortGameService - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id);
+			return result;
+		} catch (Exception e) {
+			System.out.println("GameModeService - abortGameService - ERROR - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - exception >> " + e.getMessage());
+			throw new Exception(e.getMessage());
+		}
+	}
+	
+	private boolean hitAbortGame(String user_oauth, String game_id) throws Exception{
+		System.out.println("hitAbortGame - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id);
+		
+		boolean result = false;
+		
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Authorization", user_oauth);
+			
+			HttpEntity request = new HttpEntity("", headers);
+			System.out.println("hitAbortGame - request >> " + request);
+			
+			String uri = lichess_url + "api/board/game/" + game_id + "/abort";
+			System.out.println("hitAbortGame - uri >> " + uri);
+			
+			ResponseEntity<AbortGameResult> responseHit = restTemplate.exchange(uri, HttpMethod.POST, request, AbortGameResult.class);
+			System.out.println("hitChallengeAI - responseHit >> " + responseHit);
+			
+			if (responseHit.getStatusCodeValue() == 200) {
+				AbortGameResult output = responseHit.getBody();
+				
+				if (output.getOk().equalsIgnoreCase("true")){
+					result = true;
+				}
+			} else {
+				throw new Exception("Failed Abort Game; error code value >> " + responseHit.getStatusCodeValue());
+			}
+			
+			System.out.println("hitAbortGame - END - user_oauth >> " + user_oauth + " - game_id >> " + game_id);
+			return result;
+		} catch (Exception e) {
+			System.out.println("hitAbortGame - ERROR - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - exception >> " + e.getMessage());
+			throw new Exception(e.getMessage());
+		}
+	}
+
+	
 }
