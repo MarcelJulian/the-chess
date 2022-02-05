@@ -34,7 +34,6 @@ public class GameModeService {
 		OngoingGamesResult result = null;
 		
 		try {
-			validasiUserAuthorization(user_oauth);
 			result = hitOngoingGames(user_oauth);
 			output.setGame_id(result.getNowPlaying().get(result.getNowPlaying().size()-1).getGameId());
 			
@@ -83,9 +82,8 @@ public class GameModeService {
 		ChallengeAIResult result = null;
 		
 		try {
-			validasiUserAuthorization(user_oauth);
 			result = hitChallengeAI(user_oauth, input);			//matchmaking
-//			TODO: set output data
+			output.setGame_id(result.getId());
 			
 			System.out.println("GameModeService - playWithBotService - END - user_oauth >> " + user_oauth + " - input >> " + input);
 			return output;
@@ -107,7 +105,8 @@ public class GameModeService {
 			map.add("level", input.getLevel());
 			map.add("clock.limit", input.getClock_limit());
 			map.add("clock.increment", input.getClock_increment());
-			map.add("days", input.getDays());
+//			map.add("days", input.getDays());	//cobain dulu butuh atau ga
+			map.add("color", input.getColor());
 			map.add("variant","standard");
 			
 			HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map, headers);
@@ -139,9 +138,7 @@ public class GameModeService {
 		PlayWithHumanOutput output = new PlayWithHumanOutput();
 		
 		try {
-			validasiUserAuthorization(user_oauth);
 			hitCreateASeek(user_oauth, input);
-			hitStreamIncomingEvents(user_oauth);
 			
 			System.out.println("GameModeService - playWithHumanService - END - user_oauth >> " + user_oauth + " - input >> " + input);
 			return output;
@@ -163,6 +160,7 @@ public class GameModeService {
 			map.add("rated", "true");
 			map.add("time", input.getTime());
 			map.add("increment", input.getIncrement());
+			map.add("days", Integer.toString(input.getDays()));	//katanya dia required
 			map.add("variant", "standard");
 			
 			HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map, headers);
@@ -184,33 +182,5 @@ public class GameModeService {
 			throw new Exception("ERROR hitCreateASeek >> " + e.getMessage());
 		}
 	}
-	
-	private void hitStreamIncomingEvents(String user_oauth) throws Exception{
-		System.out.println("hitStreamIncomingEvents - START - user_oauth >> " + user_oauth);
-		
-		try {
-			HttpHeaders headers = new HttpHeaders();
-			headers.add("Authorization", user_oauth);
-			
-			String uri = lichess_url + "api/stream/event";
-			System.out.println("hitStreamIncomingEvents - uri >> " + uri);
-			
-//			TODO: hit + handle ndjson
-			
-			System.out.println("hitStreamIncomingEvents - END - user_oauth >> " + user_oauth);
-		} catch (Exception e) {
-			System.out.println("hitStreamIncomingEvents - START - user_oauth >> " + user_oauth);
-			throw new Exception("ERROR hitStreamIncomingEvents >> " + e.getMessage());
-		}
-	}
 
-	private void validasiUserAuthorization(String user_oauth) throws Exception{
-		mandatoryInputValidation("User Authorization", user_oauth);
-	}
-	
-	public void mandatoryInputValidation(String field, String value) throws Exception {
-        if (value.equals("") || value == null) {
-            throw new Exception("CORP-00-002;"+field);	//TODO: coba contek error messagenya apa wkwk
-        }
-    }
 }

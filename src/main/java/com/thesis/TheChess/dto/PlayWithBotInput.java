@@ -14,5 +14,5 @@ public class PlayWithBotInput {
 	private String level;
 	private String clock_limit;
 	private String clock_increment;
-	private String days;
+	private String color;
 }

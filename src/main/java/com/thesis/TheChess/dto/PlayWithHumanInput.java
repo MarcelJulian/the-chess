@@ -13,4 +13,5 @@ import lombok.NoArgsConstructor;
 public class PlayWithHumanInput {
 	private String time;
 	private String increment;
+	private Integer days;
 }
