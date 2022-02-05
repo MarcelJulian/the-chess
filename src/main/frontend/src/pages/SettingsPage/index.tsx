@@ -30,7 +30,6 @@ import NavBar from "components/NavBar";
 function SettingsPage() {
   return (
     <Box>
-      <NavBar />
       <Container marginTop="5%">
         {/* Container */}
         <Grid

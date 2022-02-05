@@ -54,7 +54,6 @@ function HumanPage() {
 
   return (
     <Box>
-      <NavBar />
       <Container>
         {/* Container Atas */}
         {/* Container Atas */}

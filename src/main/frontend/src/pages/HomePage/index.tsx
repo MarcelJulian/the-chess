@@ -55,7 +55,6 @@ function HomePage() {
 
   return (
     <Box>
-      <NavBar />
       <Container>
         {/* Container Atas */}
         <Grid
@@ -132,7 +131,6 @@ function HomePage() {
                 isActive={botColor === "black"}
                 onClick={() => {
                   setBotColor("black");
-                  console.log(botColor);
                 }}
                 _hover={{
                   boxShadow:
@@ -150,7 +148,6 @@ function HomePage() {
                 isActive={botColor === "white"}
                 onClick={() => {
                   setBotColor("white");
-                  console.log(botColor);
                 }}
                 _hover={{
                   boxShadow:
@@ -167,7 +164,6 @@ function HomePage() {
                 isActive={botColor === "random"}
                 onClick={() => {
                   setBotColor("random");
-                  console.log(botColor);
                 }}
                 _hover={{
                   boxShadow:
