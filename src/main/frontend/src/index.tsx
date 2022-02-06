@@ -22,10 +22,11 @@ ReactDOM.render(
         <Routes>
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/" element={<HomePage />} />
-          {/* <HumanPage /> */}
-
-          {/* <BoardPage /> */}
         </Routes>
+
+        <HumanPage />
+
+        <BoardPage />
       </BrowserRouter>
     </ChakraProvider>
   </React.StrictMode>,
