@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+import { ChevronLeftIcon, CloseIcon, SmallCloseIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -23,7 +24,17 @@ import {
   NumberIncrementStepper,
   NumberInputField,
   NumberInputStepper,
-  grid
+  grid,
+  HStack,
+  Icon,
+  createIcon,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverHeader,
+  PopoverTrigger
 } from "@chakra-ui/react";
 
 import CBoard from "components/Board/chessBoard";
@@ -66,14 +77,14 @@ function BoardPage() {
         >
           {/* Grid kiri */}
           <Grid
-            w="100%"
-            marginTop="70%"
-            marginBottom="70%"
+            marginRight="10%"
+            marginTop="40%"
+            marginBottom="250%"
             border="1px"
             borderColor="gray.800"
             borderRadius="lg"
             templateRows="repeat(4, 1fr)"
-            templateColumns="repeat(1, 5fr)"
+            templateColumns="repeat(1, 1fr)"
             gap={0}
           >
             {/* isi kiri */}
@@ -101,61 +112,89 @@ function BoardPage() {
                 <Text fontSize={14}>*E4*</Text>
               </Center>
             </GridItem>
+
+            <Switch size="sm" />
           </Grid>
+
           {/* Grid tengah(board) */}
 
           <CBoard />
 
           {/* Grid kanan */}
           <Grid
-            marginTop="60%"
-            marginBottom="60%"
-            border="1px"
+            marginLeft="10%"
+            marginTop="20%"
+            marginBottom="180%"
             borderColor="gray.800"
-            borderRadius="lg"
-            templateRows="repeat(5, 1fr)"
-            templateColumns="repeat(2, 5fr)"
+            templateRows="repeat(8, 1fr)"
+            templateColumns="repeat(2, 1fr)"
             gap={0}
           >
-            <GridItem colSpan={2}>
-              <Center>
-                <Text fontSize={15}>
-                  <b>*Count down* </b>
-                </Text>
-              </Center>
+            <GridItem colSpan={2} paddingTop="10%">
+              <Text fontSize={15}>
+                <b>*Count down* </b>
+              </Text>
             </GridItem>
             <GridItem colSpan={2}>
-              <Center>
-                <Text fontSize={14}>*Player Name*</Text>
-              </Center>
+              <Text fontSize={14}>*Player Name*</Text>
             </GridItem>
-            {/* button draw */}
-            <GridItem>
+            {/* chess steps */}
+            <GridItem border="1px" />
+            <GridItem border="1px" />
+            <GridItem border="1px" />
+            <GridItem border="1px" />
+            <GridItem border="1px" />
+            <GridItem border="1px" />
+            <GridItem border="1px" />
+            <GridItem border="1px" />
+
+            {/* button undo */}
+            <GridItem paddingTop="5%">
               <Center>
                 <Button colorScheme="teal" variant="outline">
-                  Resign
+                  <HStack>
+                    {/* The default icon size is 1em (16px) */}
+                    <Icon as={ChevronLeftIcon} color="red.500" />
+                  </HStack>
                 </Button>
               </Center>
             </GridItem>
+
             {/* button resign */}
-            <GridItem>
+            <GridItem paddingTop="5%">
               <Center>
-                <Button colorScheme="teal" variant="outline">
-                  Draw
-                </Button>
+                <Popover>
+                  <PopoverTrigger>
+                    <Button colorScheme="teal" variant="outline">
+                      <HStack>
+                        {/* The default icon size is 1em (16px) */}
+                        <Icon as={SmallCloseIcon} color="red.500" />
+                      </HStack>
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <PopoverArrow />
+                    <PopoverCloseButton />
+                    <PopoverHeader>Resign Confirmation</PopoverHeader>
+                    <PopoverBody>
+                      <Button colorScheme="teal" variant="outline">
+                        <HStack>
+                          {/* The default icon size is 1em (16px) */}
+                          <Icon as={SmallCloseIcon} color="red.500" />
+                        </HStack>
+                      </Button>
+                    </PopoverBody>
+                  </PopoverContent>
+                </Popover>
               </Center>
             </GridItem>
             <GridItem colSpan={2} paddingTop="10%">
-              <Center>
-                <Text fontSize={15}>
-                  <b>*Count down* </b>
-                </Text>
-              </Center>
+              <Text fontSize={15}>
+                <b>*Count down* </b>
+              </Text>
             </GridItem>
             <GridItem colSpan={2}>
-              <Center>
-                <Text fontSize={14}>*Player Name*</Text>
-              </Center>
+              <Text fontSize={14}>*Player Name*</Text>
             </GridItem>
           </Grid>
         </Grid>
