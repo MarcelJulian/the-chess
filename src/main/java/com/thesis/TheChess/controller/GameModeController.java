@@ -1,7 +1,5 @@
 package com.thesis.TheChess.controller;
 
-import javax.websocket.server.PathParam;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -92,6 +90,38 @@ public class GameModeController {
 			return ResponseEntity.status(HttpStatus.OK).body(output);			
 		} catch (Exception e) {
 			System.out.println("GameModeController - abortGameController - ERROR - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - exception >> " + e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(output);
+		}
+	}
+	
+	@PostMapping(path = "resign-game/{game_id}")
+	public ResponseEntity<Boolean> resignGameController(@RequestHeader String user_oauth, @PathVariable String game_id) throws Exception{
+		System.out.println("GameModeController - resignGameController - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id);
+		
+		Boolean output = null;
+		try {
+			output = service.resignGameService(user_oauth, game_id);
+			
+			System.out.println("GameModeController - resignGameController - END - user_oauth >> " + user_oauth + " - game_id >> " + game_id);
+			return ResponseEntity.status(HttpStatus.OK).body(output);			
+		} catch (Exception e) {
+			System.out.println("GameModeController - resignGameController - ERROR - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - exception >> " + e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(output);
+		}
+	}
+	
+	@PostMapping(path = "handle-draw-offer/{game_id}/{accept}")
+	public ResponseEntity<Boolean> handleDrawOfferController(@RequestHeader String user_oauth, @PathVariable String game_id, @PathVariable String accept) throws Exception{
+		System.out.println("GameModeController - handleDrawOfferController - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - accept >> " + accept);
+		
+		Boolean output = null;
+		try {
+			output = service.handleDrawOfferService(user_oauth, game_id, accept);
+			
+			System.out.println("GameModeController - handleDrawOfferController - END - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - accept >> " + accept);
+			return ResponseEntity.status(HttpStatus.OK).body(output);			
+		} catch (Exception e) {
+			System.out.println("GameModeController - handleDrawOfferController - ERROR - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - accept >> " + accept + " - exception >> " + e.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(output);
 		}
 	}

@@ -11,8 +11,10 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import com.thesis.TheChess.dto.AbortGameResult;
+import com.thesis.TheChess.dto.AbortResignDrawOfferResult;
 import com.thesis.TheChess.dto.ChallengeAIResult;
+import com.thesis.TheChess.dto.CommonAbortResignDrawOfferResult;
+import com.thesis.TheChess.dto.LichessErrorResult;
 import com.thesis.TheChess.dto.OngoingGamesOutput;
 import com.thesis.TheChess.dto.OngoingGamesResult;
 import com.thesis.TheChess.dto.PlayWithBotInput;
@@ -23,7 +25,7 @@ import com.thesis.TheChess.dto.PlayWithHumanOutput;
 @Service
 public class GameModeService {
 
-	@Value("${lichess_url}")
+	@Value("${lichess_url}")	//	https://lichess.org/api/
     public String lichess_url;
 	
 	RestTemplate restTemplate = new RestTemplate();
@@ -56,7 +58,7 @@ public class GameModeService {
 			HttpEntity request = new HttpEntity("", headers);
 			System.out.println("hitOngoingGames - request >> " + request);
 			
-			String uri = lichess_url + "api/account/playing";
+			String uri = lichess_url + "account/playing";
 			System.out.println("hitOngoingGames - uri >> " + uri);
 			
 			ResponseEntity<OngoingGamesResult> responseHit = restTemplate.exchange(uri, HttpMethod.GET, request, OngoingGamesResult.class);
@@ -113,7 +115,7 @@ public class GameModeService {
 			HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map, headers);
 			System.out.println("hitChallengeAI - entity >> " + entity);
 			
-			String uri = lichess_url + "api/challenge/ai";
+			String uri = lichess_url + "challenge/ai";
 			System.out.println("hitChallengeAI - uri >> " + uri);
 
 			ResponseEntity<ChallengeAIResult> responseHit = restTemplate.exchange(uri, HttpMethod.POST, entity, ChallengeAIResult.class);
@@ -167,7 +169,7 @@ public class GameModeService {
 			HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map, headers);
 			System.out.println("hitCreateASeek - entity >> " + entity);
 			
-			String uri = lichess_url + "api/board/seek";
+			String uri = lichess_url + "board/seek";
 			System.out.println("hitCreateASeek - uri >> " + uri);
 			
 			ResponseEntity<Void> responseHit = restTemplate.exchange(uri, HttpMethod.POST, entity, Void.class);
@@ -183,7 +185,6 @@ public class GameModeService {
 			throw new Exception("ERROR hitCreateASeek >> " + e.getMessage());
 		}
 	}
-	
 
 	public Boolean abortGameService(String user_oauth, String game_id) throws Exception{
 		System.out.println("GameModeService - abortGameService - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id);
@@ -213,14 +214,14 @@ public class GameModeService {
 			HttpEntity request = new HttpEntity("", headers);
 			System.out.println("hitAbortGame - request >> " + request);
 			
-			String uri = lichess_url + "api/board/game/" + game_id + "/abort";
+			String uri = lichess_url + "board/game/" + game_id + "/abort";
 			System.out.println("hitAbortGame - uri >> " + uri);
 			
-			ResponseEntity<AbortGameResult> responseHit = restTemplate.exchange(uri, HttpMethod.POST, request, AbortGameResult.class);
+			ResponseEntity<AbortResignDrawOfferResult> responseHit = restTemplate.exchange(uri, HttpMethod.POST, request, AbortResignDrawOfferResult.class);
 			System.out.println("hitChallengeAI - responseHit >> " + responseHit);
 			
 			if (responseHit.getStatusCodeValue() == 200) {
-				AbortGameResult output = responseHit.getBody();
+				AbortResignDrawOfferResult output = responseHit.getBody();
 				
 				if (output.getOk().equalsIgnoreCase("true")){
 					result = true;
@@ -236,6 +237,114 @@ public class GameModeService {
 			throw new Exception(e.getMessage());
 		}
 	}
-
 	
+	public Boolean resignGameService(String user_oauth, String game_id) throws Exception{
+		System.out.println("GameModeService - resignGameService - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id);
+		
+		boolean result = false;
+		
+		try {
+			result = hitResignGame(user_oauth, game_id);
+			
+			System.out.println("GameModeService - resignGameService - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id);
+			return result;
+		} catch (Exception e) {
+			System.out.println("GameModeService - resignGameService - ERROR - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - exception >> " + e.getMessage());
+			throw new Exception(e.getMessage());
+		}
+	}
+	
+	private boolean hitResignGame(String user_oauth, String game_id) throws Exception{
+		System.out.println("hitResignGame - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id);
+		
+		boolean result = false;
+		
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Authorization", user_oauth);
+			
+			HttpEntity request = new HttpEntity("", headers);
+			System.out.println("hitResignGame - request >> " + request);
+			
+			String uri = lichess_url + "board/game/" + game_id + "/resign";
+			System.out.println("hitResignGame - uri >> " + uri);
+			
+			ResponseEntity<CommonAbortResignDrawOfferResult> responseHit = restTemplate.postForEntity(uri, request, CommonAbortResignDrawOfferResult.class);
+			System.out.println("hitResignGame - responseHit >> " + responseHit);
+			
+			if (responseHit.getStatusCodeValue() == 200) {
+				AbortResignDrawOfferResult output = responseHit.getBody().getOkObject();
+				
+				if (output.getOk().equalsIgnoreCase("true")){
+					result = true;
+				}
+			} else if (responseHit.getStatusCodeValue() == 400) {
+				LichessErrorResult error = responseHit.getBody().getErrorObject();
+				throw new Exception("Failed Resign Game; error >> " + error);
+			} else {
+				throw new Exception("Failed Resign Game; error code value >> " + responseHit.getStatusCodeValue());
+			}
+			
+			System.out.println("hitResignGame - END - user_oauth >> " + user_oauth + " - game_id >> " + game_id);
+			return result;
+		} catch (Exception e) {
+			System.out.println("hitResignGame - ERROR - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - exception >> " + e.getMessage());
+			throw new Exception(e.getMessage());
+		}
+	}
+	
+	public Boolean handleDrawOfferService(String user_oauth, String game_id, String accept) throws Exception{
+		System.out.println("GameModeService - handleDrawOfferService - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - accept >> " + accept);
+		
+		boolean result = false;
+		
+		try {
+			result = hithandleDrawOffer(user_oauth, game_id, accept);
+			
+			System.out.println("GameModeService - handleDrawOfferService - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - accept >> " + accept);
+			return result;
+		} catch (Exception e) {
+			System.out.println("GameModeService - handleDrawOfferService - ERROR - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - accept >> " + accept + " - exception >> " + e.getMessage());
+			throw new Exception(e.getMessage());
+		}
+	}
+	
+	private boolean hithandleDrawOffer(String user_oauth, String game_id, String accept) throws Exception{
+		System.out.println("hithandleDrawOffer - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - accept >> " + accept);
+		
+		boolean result = false;
+		
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Authorization", user_oauth);
+			
+			HttpEntity request = new HttpEntity("", headers);
+			System.out.println("hithandleDrawOffer - request >> " + request);
+			
+			String uri = lichess_url + "board/game/" + game_id + "/draw/" + accept;
+			System.out.println("hithandleDrawOffer - uri >> " + uri);
+			
+			ResponseEntity<CommonAbortResignDrawOfferResult> responseHit = restTemplate.postForEntity(uri, request, CommonAbortResignDrawOfferResult.class);
+			System.out.println("hithandleDrawOffer - responseHit >> " + responseHit);
+			
+			if (responseHit.getStatusCodeValue() == 200) {
+				AbortResignDrawOfferResult output = responseHit.getBody().getOkObject();
+				
+				if (output.getOk().equalsIgnoreCase("true")){
+					result = true;
+				}
+			} else if (responseHit.getStatusCodeValue() == 400) {
+				LichessErrorResult error = responseHit.getBody().getErrorObject();
+				throw new Exception("Failed Handle Draw Offer; error >> " + error);
+			} else {
+				throw new Exception("Failed Handle Draw Offer; error code value >> " + responseHit.getStatusCodeValue());
+			}
+			
+			System.out.println("hithandleDrawOffer - END - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - accept >> " + accept);
+			return result;
+		} catch (Exception e) {
+			System.out.println("hithandleDrawOffer - ERROR - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - accept >> " + accept + " - exception >> " + e.getMessage());
+			throw new Exception(e.getMessage());
+		}
+	}
 }

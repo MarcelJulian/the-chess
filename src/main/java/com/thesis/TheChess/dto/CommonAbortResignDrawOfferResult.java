@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AbortGameResult {
-
-	private String ok;
+public class CommonAbortResignDrawOfferResult {
+	private AbortResignDrawOfferResult okObject;
+	private LichessErrorResult errorObject;
 }
