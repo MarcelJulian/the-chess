@@ -1,17 +1,26 @@
 import React from "react";
 
-import { Box, Button, Flex, Link } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  FormControl,
+  FormLabel,
+  Input,
+  Link
+} from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 
 type NavBarButtonProps = {
   to: string;
   text: string;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
 };
 
-function NavBarButton({ to, text }: NavBarButtonProps) {
+function NavBarButton({ to, text, onClick = undefined }: NavBarButtonProps) {
   return (
     <Link as={RouterLink} to={to}>
-      <Button variant="link" p="0.5rem" m="0.5rem">
+      <Button variant="link" p="0.5rem" m="0.5rem" onClick={onClick}>
         {text}
       </Button>
     </Link>

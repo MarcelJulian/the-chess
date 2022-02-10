@@ -32,6 +32,9 @@ module.exports = {
       2,
       { extensions: [".js", ".jsx", ".ts", ".tsx"] }
     ],
+    "react/require-default-props": "off",
+    "react/destructuring-assignment": "off",
+    "react/jsx-props-no-spreading": "off",
     "react/jsx-uses-react": "off",
     "react/react-in-jsx-scope": "off",
     "import/extensions": 0,

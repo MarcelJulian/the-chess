@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { PropsWithChildren, useState } from "react";
 
 import {
   Box,
@@ -17,7 +17,9 @@ import {
   SliderTrack,
   Stack,
   Switch,
-  border
+  useRadio,
+  useRadioGroup,
+  UseRadioProps
 } from "@chakra-ui/react";
 
 import NavBar from "components/NavBar";
@@ -47,7 +49,7 @@ function HomePage() {
       );
     }
     return (
-      <ButtonGroup spacing="0" size="xs">
+      <ButtonGroup spacing="0" size="sm">
         {buttons}
       </ButtonGroup>
     );
@@ -104,23 +106,21 @@ function HomePage() {
         </Grid>
 
         {/* Container Bawah */}
-        <Grid
+        <Flex
           border="1px"
           borderColor="gray.800"
           borderRadius="lg"
-          templateRows="repeat(4, 1fr)"
-          templateColumns="repeat(2, 1fr)"
           marginTop="5%"
-          gap={0}
+          flexDir="column"
         >
           {/* Box Strength Level AI */}
-          <GridItem px="1rem" py="0.5rem">
-            <Box>Strength</Box>
-            {generateBotStrengthGroupButton()}
-          </GridItem>
+          <Box px="1rem" py="0.5rem">
+            <Center mb="0.5rem">Strength</Center>
+            <Center>{generateBotStrengthGroupButton()}</Center>
+          </Box>
           {/* Box color */}
-          <GridItem w="100%" h="10" py="0.5rem">
-            <Box h="2rem">Color</Box>
+          <Box w="100%" py="0.5rem">
+            <Center mb="0.5rem">Color</Center>
             <Flex justifyContent="space-evenly">
               <Button
                 bgColor="black"
@@ -172,13 +172,13 @@ function HomePage() {
                 _active={{}}
               />
             </Flex>
-          </GridItem>
+          </Box>
           {/* Box Time Control */}
-          <GridItem w="100%" h="10" px="1rem" py="1rem">
-            <Box>Time Control</Box>
-          </GridItem>
+          <Box w="100%" px="1rem" py="1rem">
+            <Center>Time Control</Center>
+          </Box>
           {/* Box Toggle */}
-          <GridItem w="100%" h="5" bg="transparent" py="1rem">
+          <Box w="100%" h="5" bg="transparent" py="1rem">
             <Grid templateColumns="repeat(3, 1fr)" gap={0}>
               <GridItem w="100%" h="10" bg="transparen">
                 <Text fontSize={13}>Unlimited</Text>
@@ -192,10 +192,10 @@ function HomePage() {
                 <Text fontSize={13}>Real-Time</Text>
               </GridItem>
             </Grid>
-          </GridItem>
+          </Box>
 
           {/* Box Minute Per Side */}
-          <GridItem w="100%" h="1" bg="transparent">
+          <Box w="100%" bg="transparent">
             <Box px="1rem" py="0.5rem">
               Minute Per Side :{" "}
             </Box>
@@ -207,10 +207,10 @@ function HomePage() {
                 <SliderThumb />
               </Slider>
             </Box>
-          </GridItem>
+          </Box>
 
           {/* Box Minute Per Side */}
-          <GridItem w="100%" h="1" bg="transparent">
+          <Box w="100%" bg="transparent">
             <Box py="0.5rem">Increment in second : </Box>
             <Box paddingRight={5}>
               <Slider aria-label="slider-ex-1" defaultValue={10}>
@@ -220,16 +220,48 @@ function HomePage() {
                 <SliderThumb />
               </Slider>
             </Box>
-          </GridItem>
+          </Box>
 
           {/* Box START */}
-          <GridItem w="100%" h="10" bg="transparent" colSpan={2}>
+          <Box w="100%" h="10" bg="transparent" colSpan={2}>
             <Center>
               <Button colorScheme="blue">Start</Button>
             </Center>
-          </GridItem>
-        </Grid>
+          </Box>
+        </Flex>
       </Container>
+    </Box>
+  );
+}
+
+function RadioCard(props: PropsWithChildren<UseRadioProps>) {
+  const { getInputProps, getCheckboxProps } = useRadio(props);
+
+  const input = getInputProps();
+  const checkbox = getCheckboxProps();
+
+  return (
+    <Box as="label">
+      <input {...input} />
+      <Box
+        {...checkbox}
+        cursor="pointer"
+        borderWidth="1px"
+        borderRadius="md"
+        boxShadow="md"
+        _checked={{
+          bg: "teal.600",
+          color: "white",
+          borderColor: "teal.600"
+        }}
+        _focus={{
+          boxShadow: "outline"
+        }}
+        px={5}
+        py={3}
+      >
+        {props.children}
+      </Box>
     </Box>
   );
 }
