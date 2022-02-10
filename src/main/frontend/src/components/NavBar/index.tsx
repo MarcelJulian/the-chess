@@ -1,17 +1,32 @@
-import React from "react";
+import React, { RefObject } from "react";
 
-import { Box, Button, Flex, Link } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  FormControl,
+  FormLabel,
+  Input,
+  Link
+} from "@chakra-ui/react";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import TextField from "@material-ui/core/TextField";
 import { Link as RouterLink } from "react-router-dom";
 
 type NavBarButtonProps = {
   to: string;
   text: string;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
 };
 
-function NavBarButton({ to, text }: NavBarButtonProps) {
+function NavBarButton({ to, text, onClick = undefined }: NavBarButtonProps) {
   return (
     <Link as={RouterLink} to={to}>
-      <Button variant="link" p="0.5rem" m="0.5rem">
+      <Button variant="link" p="0.5rem" m="0.5rem" onClick={onClick}>
         {text}
       </Button>
     </Link>
@@ -19,6 +34,16 @@ function NavBarButton({ to, text }: NavBarButtonProps) {
 }
 
 function NavBar() {
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <Flex>
       <Box>
@@ -31,10 +56,45 @@ function NavBar() {
       <Box ml="auto">
         {/* TODO: */}
         <NavBarButton to="/" text="Register" />
-        <NavBarButton to="/" text="Sign In" />
+        <NavBarButton onClick={handleClickOpen} to="/" text="Sign In" />
+
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="form-dialog-title"
+        >
+          <DialogTitle id="form-dialog-title">Sign In</DialogTitle>
+          <DialogContent>
+            {/* <DialogContentText>Sign In</DialogContentText> */}
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="Username/Email"
+              type=""
+              fullWidth
+            />
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="Password"
+              type="password"
+              fullWidth
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Sign In
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Box>
     </Flex>
   );
 }
 
 export default NavBar;
+function useDisclosure(): { isOpen: any; onOpen: any; onClose: any } {
+  throw new Error("Function not implemented.");
+}

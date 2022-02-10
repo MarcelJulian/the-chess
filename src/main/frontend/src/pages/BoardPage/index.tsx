@@ -112,7 +112,7 @@ function BoardPage() {
                 <Text fontSize={14}>*E4*</Text>
               </Center>
             </GridItem>
-
+            {/* yang ini diganti icon mic */}
             <Switch size="sm" />
           </Grid>
 
