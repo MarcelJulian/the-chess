@@ -11,7 +11,7 @@ import {
 
 function CBoard() {
   const generateBox = () => {
-    const boxes: JSX.Element[] = [];
+    const boxes = [];
     for (let j = 0; j < 4; j++) {
       for (let i = 0; i < 4; i++) {
         boxes.push(<Box border="1px" bgColor="gray.800" />);

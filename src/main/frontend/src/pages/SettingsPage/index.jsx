@@ -25,8 +25,6 @@ import {
   NumberInputStepper
 } from "@chakra-ui/react";
 
-import NavBar from "components/NavBar";
-
 function SettingsPage() {
   return (
     <Box>

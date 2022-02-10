@@ -37,15 +37,14 @@ import {
   PopoverTrigger
 } from "@chakra-ui/react";
 
-import CBoard from "components/Board/chessBoard";
-import NavBar from "components/NavBar";
+import CBoard from "../../components/Board/chessBoard";
 
 function BoardPage() {
   // replace with store
   const [botStrength, setBotStrength] = useState(1);
 
   const generateBoard = () => {
-    const buttons: JSX.Element[] = [];
+    const buttons = [];
 
     for (let i = 1; i < 12; i++) {
       buttons.push(

@@ -11,13 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 
-type NavBarButtonProps = {
-  to: string;
-  text: string;
-  onClick?: React.MouseEventHandler<HTMLButtonElement>;
-};
-
-function NavBarButton({ to, text, onClick = undefined }: NavBarButtonProps) {
+function NavBarButton({ to, text, onClick }) {
   return (
     <Link as={RouterLink} to={to}>
       <Button variant="link" p="0.5rem" m="0.5rem" onClick={onClick}>

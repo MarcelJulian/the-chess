@@ -6,11 +6,11 @@ import { ChakraProvider } from "@chakra-ui/react";
 import ReactDOM from "react-dom";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import NavBar from "components/NavBar";
-import BoardPage from "pages/BoardPage";
-import HomePage from "pages/HomePage";
-import HumanPage from "pages/HumanPage";
-import SettingsPage from "pages/SettingsPage";
+import NavBar from "./components/NavBar";
+import BoardPage from "./pages/BoardPage";
+import HomePage from "./pages/HomePage";
+import HumanPage from "./pages/HumanPage";
+import SettingsPage from "./pages/SettingsPage";
 
 // import HumanPage from "pages/HumanPage";
 

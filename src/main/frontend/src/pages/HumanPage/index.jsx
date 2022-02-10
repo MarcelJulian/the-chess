@@ -19,8 +19,6 @@ import {
   Switch
 } from "@chakra-ui/react";
 
-import NavBar from "components/NavBar";
-
 function HumanPage() {
   // replace with store
   const [isLogin, setIsLogin] = useState(false);
@@ -31,7 +29,7 @@ function HumanPage() {
   const [botTimeControlIncrement, setBotTimeControlIncrement] = useState(0);
 
   const generateBotStrengthGroupButton = () => {
-    const buttons: JSX.Element[] = [];
+    const buttons = [];
 
     for (let i = 1; i < 9; i++) {
       buttons.push(

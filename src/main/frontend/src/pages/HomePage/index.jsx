@@ -22,8 +22,6 @@ import {
   UseRadioProps
 } from "@chakra-ui/react";
 
-import NavBar from "components/NavBar";
-
 function HomePage() {
   // replace with store
   const [isLogin, setIsLogin] = useState(false);
@@ -34,7 +32,7 @@ function HomePage() {
   const [botTimeControlIncrement, setBotTimeControlIncrement] = useState(0);
 
   const generateBotStrengthGroupButton = () => {
-    const buttons: JSX.Element[] = [];
+    const buttons = [];
 
     for (let i = 1; i < 9; i++) {
       buttons.push(
@@ -234,7 +232,7 @@ function HomePage() {
   );
 }
 
-function RadioCard(props: PropsWithChildren<UseRadioProps>) {
+function RadioCard(props) {
   const { getInputProps, getCheckboxProps } = useRadio(props);
 
   const input = getInputProps();

@@ -8,10 +8,8 @@ module.exports = {
     "airbnb",
     "prettier",
     "plugin:import/errors",
-    "plugin:import/warnings",
-    "plugin:import/typescript"
+    "plugin:import/warnings"
   ],
-  parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaFeatures: {
       jsx: true
@@ -19,7 +17,7 @@ module.exports = {
     ecmaVersion: "latest",
     sourceType: "module"
   },
-  plugins: ["react", "@typescript-eslint", "prettier"],
+  plugins: ["react", "prettier"],
   rules: {
     "no-unused-vars": "off",
     "prettier/prettier": [
@@ -28,14 +26,12 @@ module.exports = {
         endOfLine: "auto"
       }
     ],
-    "react/jsx-filename-extension": [
-      2,
-      { extensions: [".js", ".jsx", ".ts", ".tsx"] }
-    ],
+    "react/jsx-filename-extension": [2, { extensions: [".js", ".jsx"] }],
     "react/require-default-props": "off",
     "react/destructuring-assignment": "off",
     "react/jsx-props-no-spreading": "off",
     "react/jsx-uses-react": "off",
+    "react/prop-types": "off",
     "react/react-in-jsx-scope": "off",
     "import/extensions": 0,
     "import/order": [
@@ -70,7 +66,7 @@ module.exports = {
     "import/resolver": {
       node: {
         paths: ["src"],
-        extensions: [".js", ".jsx", ".ts", ".tsx"]
+        extensions: [".js", ".jsx"]
       }
     }
   },
