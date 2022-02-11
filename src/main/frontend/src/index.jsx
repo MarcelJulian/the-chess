@@ -11,6 +11,7 @@ import BoardPage from "./pages/BoardPage";
 import HomePage from "./pages/HomePage";
 import HumanPage from "./pages/HumanPage";
 import SettingsPage from "./pages/SettingsPage";
+import SettingsPageDialog from "./pages/SettingsPage/idx";
 
 // import HumanPage from "pages/HumanPage";
 
@@ -26,9 +27,10 @@ ReactDOM.render(
 
         <HumanPage />
 
-        <BoardPage />
+        {/* <BoardPage /> */}
       </BrowserRouter>
     </ChakraProvider>
+    <SettingsPageDialog />
   </React.StrictMode>,
   document.getElementById("root")
 );

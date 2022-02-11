@@ -87,3 +87,5 @@ function NavBar() {
     </Flex>
   );
 }
+
+export default NavBar;

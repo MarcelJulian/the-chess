@@ -21,6 +21,40 @@ import {
   useRadioGroup,
   UseRadioProps
 } from "@chakra-ui/react";
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
+import { amber, deepOrange, grey } from "@mui/material/colors";
+import { ThemeProvider, useTheme, createTheme } from "@mui/material/styles";
+
+const getDesignTokens = (mode) => ({
+  palette: {
+    mode,
+    primary: {
+      ...amber,
+      ...(mode === "dark" && {
+        main: amber[300]
+      })
+    },
+    ...(mode === "dark" && {
+      background: {
+        default: deepOrange[900],
+        paper: deepOrange[900]
+      }
+    }),
+    text: {
+      ...(mode === "light"
+        ? {
+            primary: grey[900],
+            secondary: grey[800]
+          }
+        : {
+            primary: "#fff",
+            secondary: grey[500]
+          })
+    }
+  }
+});
+const darkModeTheme = createTheme(getDesignTokens("dark"));
 
 function HomePage() {
   // replace with store
