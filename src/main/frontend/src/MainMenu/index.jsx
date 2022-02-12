@@ -43,7 +43,7 @@ function Item(props) {
     />
   );
 }
-const heights = [150, 30, 90, 70, 90, 100, 150, 30, 50, 80];
+
 export default function MainMenu() {
   return (
     <Paper elevation={3} style={{ height: "100%", width: "100%" }}>

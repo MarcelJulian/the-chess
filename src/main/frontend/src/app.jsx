@@ -17,6 +17,7 @@ import Typography from "@mui/material/Typography";
 import { height, width } from "@mui/system";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+import GBoard from "./components/Board";
 import NavBar from "./components/NavBar";
 import MainMenu from "./MainMenu";
 import HomePage from "./pages/HomePage";
@@ -78,7 +79,8 @@ export default function App() {
       <Paper elevation={3} style={{ height: "100%" }}>
         <NavBar />
         <Routes>
-          <Route path="/" element={<MainMenu />} />
+          <Route path="/" element={<GBoard />} />
+          {/* <Route path="/" element={<MainMenu />} /> */}
           <Route path="/settings" element={<SettingsPageDialog />} />
         </Routes>
       </Paper>
