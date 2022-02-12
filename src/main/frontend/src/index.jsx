@@ -17,19 +17,19 @@ import SettingsPageDialog from "./pages/SettingsPage/idx";
 
 ReactDOM.render(
   <React.StrictMode>
-    <ChakraProvider>
-      <BrowserRouter>
-        <NavBar />
-        <Routes>
-          <Route path="/settings" element={<SettingsPage />} />
-          <Route path="/" element={<HomePage />} />
-        </Routes>
+    {/* <ChakraProvider> */}
+    <BrowserRouter>
+      <NavBar />
+      <Routes>
+        <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/" element={<HomePage />} />
+      </Routes>
 
-        <HumanPage />
+      <HumanPage />
 
-        {/* <BoardPage /> */}
-      </BrowserRouter>
-    </ChakraProvider>
+      {/* <BoardPage /> */}
+    </BrowserRouter>
+    {/* </ChakraProvider> */}
     <SettingsPageDialog />
   </React.StrictMode>,
   document.getElementById("root")
