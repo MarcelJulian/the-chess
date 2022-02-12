@@ -1,24 +1,21 @@
 import React from "react";
 
-import { Box, Button, Flex, Link } from "@chakra-ui/react";
-import MaterialBox from "@material-ui/core/Box";
-import MaterialButton from "@material-ui/core/Button";
+import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import MaterialLink from "@material-ui/core/Link";
+import Link from "@material-ui/core/Link";
 import TextField from "@material-ui/core/TextField";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import { Link as RouterLink } from "react-router-dom";
 
 function NavBarButton({ to, text, onClick }) {
   return (
-    <MaterialLink component={RouterLink} to={to}>
-      <MaterialButton
+    <Link component={RouterLink} to={to}>
+      <Button
         variant="link"
         p="0.5rem"
         m="0.5rem"
@@ -26,8 +23,8 @@ function NavBarButton({ to, text, onClick }) {
         sx={{ display: "block" }}
       >
         {text}
-      </MaterialButton>
-    </MaterialLink>
+      </Button>
+    </Link>
   );
 }
 
@@ -45,14 +42,14 @@ function NavBar() {
   return (
     <AppBar>
       <Toolbar disableGutters>
-        <MaterialBox display="flex">
+        <Box display="flex">
           <NavBarButton to="/" text="TheChess" />
           <NavBarButton to="/" text="Home" />
           {/* TODO:tutorial page */}
           <NavBarButton to="/" text="Tutorial" />
           <NavBarButton to="/settings" text="Settings" />
-        </MaterialBox>
-        <MaterialBox display="flex" ml="auto">
+        </Box>
+        <Box display="flex" ml="auto">
           {/* TODO: */}
           <NavBarButton to="/" text="Register" />
           <NavBarButton onClick={handleClickOpen} to="/" text="Sign In" />
@@ -83,12 +80,12 @@ function NavBar() {
               />
             </DialogContent>
             <DialogActions>
-              <MaterialButton onClick={handleClose} color="primary">
+              <Button onClick={handleClose} color="primary">
                 Sign In
-              </MaterialButton>
+              </Button>
             </DialogActions>
           </Dialog>
-        </MaterialBox>
+        </Box>
       </Toolbar>
     </AppBar>
   );
