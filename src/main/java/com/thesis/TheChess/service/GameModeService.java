@@ -25,8 +25,8 @@ import com.thesis.TheChess.dto.PlayWithHumanOutput;
 @Service
 public class GameModeService {
 
-	@Value("${lichess_url}")	//	https://lichess.org/api/
-    public String lichess_url;
+	@Value("${lichess_api_url}")	//	https://lichess.org/api/
+    public String lichess_api_url;
 	
 	RestTemplate restTemplate = new RestTemplate();
 	
@@ -58,7 +58,7 @@ public class GameModeService {
 			HttpEntity request = new HttpEntity("", headers);
 			System.out.println("hitOngoingGames - request >> " + request);
 			
-			String uri = lichess_url + "account/playing";
+			String uri = lichess_api_url + "account/playing";
 			System.out.println("hitOngoingGames - uri >> " + uri);
 			
 			ResponseEntity<OngoingGamesResult> responseHit = restTemplate.exchange(uri, HttpMethod.GET, request, OngoingGamesResult.class);
@@ -115,7 +115,7 @@ public class GameModeService {
 			HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map, headers);
 			System.out.println("hitChallengeAI - entity >> " + entity);
 			
-			String uri = lichess_url + "challenge/ai";
+			String uri = lichess_api_url + "challenge/ai";
 			System.out.println("hitChallengeAI - uri >> " + uri);
 
 			ResponseEntity<ChallengeAIResult> responseHit = restTemplate.exchange(uri, HttpMethod.POST, entity, ChallengeAIResult.class);
@@ -169,7 +169,7 @@ public class GameModeService {
 			HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map, headers);
 			System.out.println("hitCreateASeek - entity >> " + entity);
 			
-			String uri = lichess_url + "board/seek";
+			String uri = lichess_api_url + "board/seek";
 			System.out.println("hitCreateASeek - uri >> " + uri);
 			
 			ResponseEntity<Void> responseHit = restTemplate.exchange(uri, HttpMethod.POST, entity, Void.class);
@@ -214,7 +214,7 @@ public class GameModeService {
 			HttpEntity request = new HttpEntity("", headers);
 			System.out.println("hitAbortGame - request >> " + request);
 			
-			String uri = lichess_url + "board/game/" + game_id + "/abort";
+			String uri = lichess_api_url + "board/game/" + game_id + "/abort";
 			System.out.println("hitAbortGame - uri >> " + uri);
 			
 			ResponseEntity<AbortResignDrawOfferResult> responseHit = restTemplate.exchange(uri, HttpMethod.POST, request, AbortResignDrawOfferResult.class);
@@ -266,7 +266,7 @@ public class GameModeService {
 			HttpEntity request = new HttpEntity("", headers);
 			System.out.println("hitResignGame - request >> " + request);
 			
-			String uri = lichess_url + "board/game/" + game_id + "/resign";
+			String uri = lichess_api_url + "board/game/" + game_id + "/resign";
 			System.out.println("hitResignGame - uri >> " + uri);
 			
 			ResponseEntity<CommonAbortResignDrawOfferResult> responseHit = restTemplate.postForEntity(uri, request, CommonAbortResignDrawOfferResult.class);
@@ -321,7 +321,7 @@ public class GameModeService {
 			HttpEntity request = new HttpEntity("", headers);
 			System.out.println("hithandleDrawOffer - request >> " + request);
 			
-			String uri = lichess_url + "board/game/" + game_id + "/draw/" + accept;
+			String uri = lichess_api_url + "board/game/" + game_id + "/draw/" + accept;
 			System.out.println("hithandleDrawOffer - uri >> " + uri);
 			
 			ResponseEntity<CommonAbortResignDrawOfferResult> responseHit = restTemplate.postForEntity(uri, request, CommonAbortResignDrawOfferResult.class);
