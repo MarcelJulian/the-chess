@@ -17,8 +17,6 @@ public class UserService {
 		LoginOutput output = null;
 		
 		try {
-			validasiLoginInput(input);
-			
 //			TODO:buat hit ke API lichess cb liat ke DownloadSPPJSPPK (dia gapake ResultServiceOutput)
 			
 			System.out.println("UserService - loginService - END - input >> " + input);
@@ -29,15 +27,5 @@ public class UserService {
 			return null;
 		}
 	}
-	
-	private void validasiLoginInput(LoginInput data) throws Exception{
-		mandatoryInputValidation("User ID", data.getUser_id());
-	}
-	
-	public void mandatoryInputValidation(String field, String value) throws Exception {
-        if (value.equals("")) {
-            throw new Exception("CORP-00-002;"+field);	//TODO: coba contek error messagenya apa wkwk
-        }
-    }
 	
 }
