@@ -18,6 +18,8 @@ import {
   Stack,
   Switch
 } from "@chakra-ui/react";
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
 import MaterialBox from "@mui/material/Box";
 import MaterialButton from "@mui/material/Button";
 import MaterialButtonGroup from "@mui/material/ButtonGroup";
@@ -29,36 +31,6 @@ import { ThemeProvider, useTheme, createTheme } from "@mui/material/styles";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Typography from "@mui/material/Typography";
-
-const getDesignTokens = (mode) => ({
-  palette: {
-    mode,
-    primary: {
-      ...amber,
-      ...(mode === "dark" && {
-        main: amber[300]
-      })
-    },
-    ...(mode === "dark" && {
-      background: {
-        default: deepOrange[900],
-        paper: deepOrange[900]
-      }
-    }),
-    text: {
-      ...(mode === "light"
-        ? {
-            primary: grey[900],
-            secondary: grey[800]
-          }
-        : {
-            primary: "#fff",
-            secondary: grey[500]
-          })
-    }
-  }
-});
-const darkModeTheme = createTheme(getDesignTokens("dark"));
 
 function HomePage() {
   // replace with store

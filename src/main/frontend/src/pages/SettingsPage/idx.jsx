@@ -1,8 +1,10 @@
 import * as React from "react";
 
+import { ButtonGroup, Card } from "@material-ui/core";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import VolumeDown from "@mui/icons-material/VolumeDown";
 import VolumeUp from "@mui/icons-material/VolumeUp";
+import { Button } from "@mui/material";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -28,17 +30,14 @@ function Item(props) {
   const { sx, ...other } = props;
   return (
     <Box
+      borderRadius="1rem"
+      boxShadow="3"
       sx={{
-        bgcolor: (theme) =>
-          theme.palette.mode === "dark" ? "#101010" : "#fff",
-        color: (theme) =>
-          theme.palette.mode === "dark" ? "grey.300" : "grey.800",
-        // border: "1px solid",
-        borderColor: (theme) =>
-          theme.palette.mode === "dark" ? "grey.800" : "grey.300",
-        p: 2,
+        // p: 2,
         // m: 1,
         // borderRadius: 2,
+        marginLeft: "2%",
+        marginRight: "2%",
         fontSize: "1rem",
         fontWeight: "700",
         ...sx
@@ -70,87 +69,129 @@ function SettingsPageDialog() {
       <CssBaseline />
       <Container>
         <Box
+          marginLeft="30%"
+          marginRight="30%"
+          marginBottom="5%"
           border="1px solid"
           borderRadius="1rem"
           boxShadow="3"
-          borderColor="black"
-          p="0.5rem"
-          marginLeft="30%"
-          marginRight="30%"
+          // p="0.5rem"
           //   textAlign="Start"
           justifyContent="center"
-          sx={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)" }}
+          sx={{ display: "grid", gridTemplateColumns: "repeat(1, 1fr)" }}
         >
-          <Item mt="10%">Board Theme</Item>
           <Item>
-            <Box justifyContent="Center">
-              <FormControl variant="standard" sx={{ m: 0, minWidth: "100%" }}>
-                <InputLabel id="demo-simple-select-standard-label">
-                  Choose Tile
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-standard-label"
-                  id="demo-simple-select-standard"
-                  onChange={handleChangeTile}
-                  label="Age"
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography>Board Theme</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography>Pilihan - pilihan board.</Typography>
+              </AccordionDetails>
+            </Accordion>
+          </Item>
+          <Item>
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography>Piece Set</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography>Pilihan - pilihan piece.</Typography>
+              </AccordionDetails>
+            </Accordion>
+          </Item>
+          <Item>
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography>Sound</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Stack
+                  //   spacing={0}
+                  direction="row"
+                  //   sx={{ mb: 5 }}
+                  alignItems="center"
                 >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value={10}>Pilihan 1</MenuItem>
-                  <MenuItem value={20}>Pilihan 2</MenuItem>
-                  <MenuItem value={30}>Pilihan 3</MenuItem>
-                </Select>
-              </FormControl>
-            </Box>
+                  <VolumeDown />
+                  <Slider
+                    aria-label="Volume"
+                    value={value}
+                    onChange={handleChange}
+                  />
+                  <VolumeUp />
+                </Stack>
+              </AccordionDetails>
+            </Accordion>
           </Item>
-          <Item mt="10%">Piece Set</Item>
           <Item>
-            <Box>
-              <FormControl variant="standard" sx={{ m: 0, minWidth: "100%" }}>
-                <InputLabel id="demo-simple-select-standard-label">
-                  Choose Piece Set
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-standard-label"
-                  id="demo-simple-select-standard"
-                  onChange={handleChangeTile}
-                  label="Age"
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography>Voice Control</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box
+                  elevation={10}
+                  border="1px solid"
+                  borderRadius="1rem"
+                  boxShadow="3"
+                  marginLeft="30%"
+                  marginRight="30%"
+                  justifyContent="center"
+                  sx={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(2, 1fr)"
+                  }}
                 >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value={10}>Pilihan 1</MenuItem>
-                  <MenuItem value={20}>Pilihan 2</MenuItem>
-                  <MenuItem value={30}>Pilihan 3</MenuItem>
-                </Select>
-              </FormControl>
-            </Box>
+                  <Button sx={{ width: "100%", height: "100%" }}>On</Button>
+                  <Button sx={{ width: "100%", height: "100%" }}>Off</Button>
+                </Box>
+              </AccordionDetails>
+            </Accordion>
           </Item>
-          <Item mt="5%">Sound</Item>
           <Item>
-            <Stack
-              //   spacing={0}
-              direction="row"
-              //   sx={{ mb: 5 }}
-              alignItems="center"
-            >
-              <VolumeDown />
-              <Slider
-                aria-label="Volume"
-                value={value}
-                onChange={handleChange}
-              />
-              <VolumeUp />
-            </Stack>
-          </Item>
-          <Item>Voice Control</Item>
-          <Item>2</Item>
-          <Item>Blind Mode</Item>
-          <Item>2</Item>
-          <Item>Theme</Item>
-          <Item>
-            <ToggleColorMode />
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography>Blind Mode</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box
+                  elevation={10}
+                  border="1px solid"
+                  borderRadius="1rem"
+                  boxShadow="3"
+                  marginLeft="30%"
+                  marginRight="30%"
+                  justifyContent="center"
+                  sx={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(2, 1fr)"
+                  }}
+                >
+                  <Button sx={{ width: "100%", height: "100%" }}>On</Button>
+                  <Button sx={{ width: "100%", height: "100%" }}>Off</Button>
+                </Box>
+              </AccordionDetails>
+            </Accordion>
           </Item>
           {/* <Slider disabled defaultValue={30} aria-label="Disabled slider" /> */}
         </Box>
