@@ -33,10 +33,6 @@ function Item(props) {
     <Box
       textAlign="center"
       sx={{
-        // m: 1,
-        // borderRadius: 2,
-        // fontSize: "1rem",
-        // fontWeight: "700",
         ...sx
       }}
       {...other}
@@ -54,8 +50,8 @@ export default function MainMenu() {
           borderRadius="1rem"
           boxShadow="3"
           // p="0.1rem"
-          marginLeft="30%"
-          marginRight="30%"
+          marginLeft="10%"
+          marginRight="10%"
           justifyContent="center"
           sx={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)" }}
         >

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 
 import {
-  Box,
   Button,
   ButtonGroup,
   Container,
@@ -20,7 +19,7 @@ import {
 } from "@chakra-ui/react";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
-import MaterialBox from "@mui/material/Box";
+import Box from "@mui/material/Box";
 import MaterialButton from "@mui/material/Button";
 import MaterialButtonGroup from "@mui/material/ButtonGroup";
 import Card from "@mui/material/Card";
@@ -75,39 +74,76 @@ function HomePage() {
   };
 
   return (
-    <MaterialBox sx={{ marginTop: "6rem" }}>
+    <Box sx={{ marginTop: "5%" }}>
       <MaterialContainer>
         {/* Container Atas */}
-        <Card sx={{ marginBottom: "1rem" }}>
-          <MaterialBox
+        <Card elevation={1} sx={{ marginBottom: "2rem" }}>
+          <Box
             display="flex"
             flexDirection="column"
             alignItems="center"
-            sx={{ paddingY: "1rem" }}
+            // sx={{ paddingY: "1rem" }}
           >
-            <Typography variant="h4">Play With</Typography>
-
-            <MaterialBox
-              display="flex"
-              justifyContent="space-evenly"
-              sx={{ width: "100%" }}
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "repeat(2, 1fr)",
+                width: "100%",
+                height: "100%"
+              }}
             >
-              <MaterialButton variant="ghost" sx={{ width: "48%" }}>
-                Bot
-              </MaterialButton>
+              <Box
+                gridColumn="span 2"
+                marginTop="1%"
+                // marginBottom="2%"
+                borderBottom="1px solid"
+                // sx={{
+                //   width: "100%",
+                //   height: "100%"
+                // }}
+              >
+                <Typography
+                  variant="h4"
+                  color="primary"
+                  sx={{ textAlign: "center" }}
+                >
+                  Play With
+                </Typography>
+              </Box>
 
-              <MaterialButton variant="ghost" sx={{ width: "48%" }}>
-                Human
+              <Box
+                borderRight="1px solid"
+                marginBottom="1px"
+                marginTop="1px"
+                sx={{
+                  width: "100%"
+                  // height: "100%"
+                }}
+              >
+                <MaterialButton variant="ghost" sx={{ width: "100%" }}>
+                  <Typography
+                    variant="h5"
+                    color="primary"
+                    sx={{ textAlign: "center" }}
+                  >
+                    Bot
+                  </Typography>
+                </MaterialButton>
+              </Box>
+              <MaterialButton variant="ghost" sx={{ width: "100%" }}>
+                <Typography variant="h5" color="primary">
+                  Human
+                </Typography>
               </MaterialButton>
-            </MaterialBox>
-          </MaterialBox>
+            </Box>
+          </Box>
         </Card>
 
         {/* Container Bawah */}
         <Card sx={{ marginBottom: "1rem" }}>
-          <MaterialBox display="flex" flexDirection="column">
+          <Box display="flex" flexDirection="column">
             {/* Box Strength Level AI */}
-            <MaterialBox
+            <Box
               display="flex"
               flexDirection="column"
               alignItems="center"
@@ -117,7 +153,7 @@ function HomePage() {
                 Strength
               </Typography>
               {generateBotStrengthGroupButton()}
-            </MaterialBox>
+            </Box>
             {/* Box color */}
             <Box w="100%" py="0.5rem">
               <Center mb="0.5rem">Color</Center>
@@ -133,7 +169,7 @@ function HomePage() {
                     setBotColor("black");
                   }}
                   _hover={{
-                    boxShadow:
+                    BoxShadow:
                       "0 0 1px 2px rgba(88, 144, 255, .75), 0 1px 1px rgba(0, 0, 0, .15)"
                   }}
                   _active={{}}
@@ -150,7 +186,7 @@ function HomePage() {
                     setBotColor("white");
                   }}
                   _hover={{
-                    boxShadow:
+                    BoxShadow:
                       "0 0 1px 2px rgba(88, 144, 255, .75), 0 1px 1px rgba(0, 0, 0, .15)"
                   }}
                   _active={{}}
@@ -166,7 +202,7 @@ function HomePage() {
                     setBotColor("random");
                   }}
                   _hover={{
-                    boxShadow:
+                    BoxShadow:
                       "0 0 1px 2px rgba(88, 144, 255, .75), 0 1px 1px rgba(0, 0, 0, .15)"
                   }}
                   _active={{}}
@@ -174,10 +210,8 @@ function HomePage() {
               </Flex>
             </Box>
             {/* Box Time Control */}
-            <MaterialBox
-              sx={{ display: "flex", width: "100%", padding: "1rem" }}
-            >
-              <MaterialBox sx={{ mx: "auto" }}>Time Control</MaterialBox>
+            <Box sx={{ display: "flex", width: "100%", padding: "1rem" }}>
+              <Box sx={{ mx: "auto" }}>Time Control</Box>
               <ToggleButtonGroup
                 color="primary"
                 value={botTimeControlMode}
@@ -187,7 +221,7 @@ function HomePage() {
                 <ToggleButton value="unlimited">Unlimited</ToggleButton>
                 <ToggleButton value="realtime">Real Time</ToggleButton>
               </ToggleButtonGroup>
-            </MaterialBox>
+            </Box>
             {/* Box Toggle */}
             <Box w="100%" h="5" bg="transparent" py="1rem">
               <Grid templateColumns="repeat(3, 1fr)" gap={0}>
@@ -236,10 +270,10 @@ function HomePage() {
                 <Button colorScheme="blue">Start</Button>
               </Center>
             </Box>
-          </MaterialBox>
+          </Box>
         </Card>
       </MaterialContainer>
-    </MaterialBox>
+    </Box>
   );
 }
 

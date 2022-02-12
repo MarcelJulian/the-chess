@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { blue, brown, deepOrange } from "@material-ui/core/colors";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
+import { Card } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { blueGrey, green } from "@mui/material/colors";
@@ -44,32 +45,30 @@ function GBoard() {
       }
     }
     return (
-      <Box
-        border="1px solid"
-        borderLeft="1px"
-        borderRight="1px"
-        borderColor="gray.800"
-        sx={{
-          display: "grid",
-          gridTemplateColumns: "repeat(8, 1fr)",
-          gridTemplateRows: "repeat(8, 1fr)",
-          width: "30rem",
-          height: "30rem"
-        }}
-        gap={0}
-      >
-        {boxes}
-      </Box>
+      <Card elevation={3} style={{ height: "100%", width: "100%" }}>
+        <Box
+          marginLeft="30%"
+          border="1px solid"
+          borderLeft="1px"
+          borderRight="1px"
+          borderColor="gray.800"
+          sx={{
+            justifyContent: "center",
+            display: "grid",
+            gridTemplateColumns: "repeat(8, 1fr)",
+            gridTemplateRows: "repeat(8, 1fr)",
+            width: "30rem",
+            height: "30rem"
+          }}
+          gap={0}
+        >
+          {boxes}
+        </Box>
+      </Card>
     );
   };
 
-  return (
-    <Paper elevation={3} style={{ height: "100%", width: "100%" }}>
-      <Box>
-        <Container justifyContent="center">{generateBox()}</Container>
-      </Box>
-    </Paper>
-  );
+  return <Container>{generateBox()}</Container>;
 }
 
 export default GBoard;

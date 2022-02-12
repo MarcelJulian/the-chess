@@ -47,8 +47,7 @@ export default function App() {
 
   const darkTheme = createTheme({
     palette: {
-      mode: "dark",
-      primary: blue
+      mode: "dark"
     }
   });
   const greenTheme = createTheme({
@@ -64,7 +63,7 @@ export default function App() {
   return (
     <ThemeProvider theme={darkMode ? darkTheme : greenTheme}>
       {/* <Switch checked={darkMode} onChange={() => setDarkMode(!darkMode)} /> */}
-      <IconButton
+      {/* <IconButton
         onClick={() => {
           setDarkMode(!darkMode);
         }}
@@ -74,15 +73,34 @@ export default function App() {
       >
         <Brightness7Icon />
         <Brightness4Icon />
-      </IconButton>
+      </IconButton> */}
 
       <Paper elevation={3} style={{ height: "100%" }}>
         <NavBar />
+        <HomePage />
+        <HumanPage />
+        <SettingsPageDialog />
+        <GBoard />
         <Routes>
-          <Route path="/" element={<GBoard />} />
-          {/* <Route path="/" element={<MainMenu />} /> */}
+          {/* <Route path="/" element={<NavBar />} /> */}
+          {/* <Route path="/" element={<GBoard />} /> */}
+          {/* <Route path="/" element={<HumanPage />} /> */}
+          {/* <Route path="/" element={<HomePage />} /> */}
+          <Route path="/" element={<MainMenu />} />
           <Route path="/settings" element={<SettingsPageDialog />} />
         </Routes>
+
+        <IconButton
+          onClick={() => {
+            setDarkMode(!darkMode);
+          }}
+          onChange={<Brightness4Icon />}
+          color="inherit"
+          // Brightness4Icon
+        >
+          <Brightness7Icon />
+          <Brightness4Icon />
+        </IconButton>
       </Paper>
 
       {/* <Paper elevation={3} /> */}
