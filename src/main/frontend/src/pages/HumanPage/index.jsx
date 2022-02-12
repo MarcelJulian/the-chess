@@ -4,31 +4,31 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
 
-function TimeControlButton({ timeControl }) {
+function TimeControlButton({ label }) {
   return (
     <Button
       variant="contained"
       size="large"
+      fullWidth
       sx={{
-        width: "100%",
-        minHeight: "8rem",
-        fontSize: "2rem"
+        minHeight: "8rem"
       }}
     >
-      {timeControl}
+      <Typography variant="h4">{label}</Typography>
     </Button>
   );
 }
 
 function HumanPage() {
   const timeControlButtons = [
-    <TimeControlButton timeControl="5+3" />,
-    <TimeControlButton timeControl="10+0" />,
-    <TimeControlButton timeControl="10+5" />,
-    <TimeControlButton timeControl="15+10" />,
-    <TimeControlButton timeControl="30+0" />,
-    <TimeControlButton timeControl="30+20" />
+    <TimeControlButton label="5+3" />,
+    <TimeControlButton label="10+0" />,
+    <TimeControlButton label="10+5" />,
+    <TimeControlButton label="15+10" />,
+    <TimeControlButton label="30+0" />,
+    <TimeControlButton label="30+20" />
   ];
 
   const wrapWithGridItem = (components) =>
