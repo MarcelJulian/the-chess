@@ -1,10 +1,11 @@
 import React from "react";
 
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { borderRadius } from "@mui/system";
 
 function TimeControlButton({ label }) {
   return (
@@ -39,14 +40,12 @@ function HumanPage() {
     ));
 
   return (
-    <Box>
-      <Container>
-        {/* Container Bawah */}
-        <Grid container spacing={2}>
-          {wrapWithGridItem(timeControlButtons)}
-        </Grid>
-      </Container>
-    </Box>
+    <Container>
+      {/* Container Bawah */}
+      <Grid container spacing={2}>
+        {wrapWithGridItem(timeControlButtons)}
+      </Grid>
+    </Container>
   );
 }
 

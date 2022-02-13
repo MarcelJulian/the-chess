@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 
+import { background } from "@chakra-ui/react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
-import { amber, deepOrange, grey } from "@mui/material/colors";
+import { grey } from "@mui/material/colors";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Slider from "@mui/material/Slider";
@@ -11,6 +12,9 @@ import { ThemeProvider, useTheme, createTheme } from "@mui/material/styles";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Typography from "@mui/material/Typography";
+import { borderRadius } from "@mui/system";
+
+import HumanPage from "../HumanPage";
 
 function SectionBox(props) {
   return (
@@ -30,6 +34,14 @@ function SectionBoxTitle({ label }) {
     <Typography variant="h5" sx={{ marginBottom: "0.5rem" }}>
       {label}
     </Typography>
+  );
+}
+
+function CardTitle({ label }) {
+  return (
+    <Box display="flex" justifyContent="center">
+      <Typography variant="h4">{label}</Typography>
+    </Box>
   );
 }
 
@@ -60,6 +72,8 @@ function BotColorButtonGroup({ botColor, handleBotColorChange }) {
     </ToggleButtonGroup>
   );
 }
+
+// TODO: refactor
 
 function HomePage() {
   // replace with store
@@ -108,10 +122,10 @@ function HomePage() {
   };
 
   return (
-    <Box sx={{ marginTop: "5%" }}>
+    <Box sx={{ marginTop: "1rem" }}>
       <Container>
         {/* Container Atas */}
-        <Card elevation={1} sx={{ marginBottom: "2rem" }}>
+        {/* <Card elevation={1} sx={{ marginBottom: "2rem" }}>
           <Box
             display="flex"
             flexDirection="column"
@@ -171,78 +185,116 @@ function HomePage() {
               </Button>
             </Box>
           </Box>
-        </Card>
-
+        </Card> */}
         {/* Container Bawah */}
-        <Card sx={{ marginBottom: "1rem" }}>
-          <Box display="flex" flexDirection="column">
-            {/* Box Strength Level AI */}
-            <SectionBox>
-              <SectionBoxTitle label="Strength" />
-              {generateBotStrengthGroupButton()}
-            </SectionBox>
-            {/* Box color */}
-            <SectionBox>
-              <SectionBoxTitle label="Color" />
-              <BotColorButtonGroup
-                botColor={botColor}
-                handleBotColorChange={handleBotColorChange}
-              />
-            </SectionBox>
-            {/* Box Time Control */}
-            <SectionBox>
-              <SectionBoxTitle label="Time Control" />
-              <ToggleButtonGroup
-                color="primary"
-                value={botTimeControlMode}
-                exclusive
-                onChange={handleBotTimeControlModeChange}
-              >
-                <ToggleButton value="unlimited">
-                  <Typography variant="button" sx={{ paddingX: "0.5rem" }}>
-                    Unlimited
-                  </Typography>
-                </ToggleButton>
-                <ToggleButton value="realtime">
-                  <Typography variant="button" sx={{ paddingX: "0.5rem" }}>
-                    Real Time
-                  </Typography>
-                </ToggleButton>
-              </ToggleButtonGroup>
-            </SectionBox>
-            {/* Box Minute Per Side */}
-            <SectionBox>
-              <SectionBoxTitle
-                label={`Minutes Per Side: ${botTimeControlMinute}`}
-              />
-              <Slider
-                value={botTimeControlMinute}
-                onChange={handleBotTimeControlMinuteChange}
-                max={180}
-              />
-            </SectionBox>
-            {/* Box Minute Per Side */}
-            <SectionBox>
-              <SectionBoxTitle
-                label={`Increment in Second: ${botTimeControlIncrement}`}
-              />
-              <Slider
-                value={botTimeControlIncrement}
-                onChange={handleBotTimeControlIncrementChange}
-                max={180}
-              />
-            </SectionBox>
-            {/* Box START */}
-            <Button
-              variant="contained"
-              disabled={
-                botTimeControlMinute === 0 && botTimeControlIncrement === 0
-              }
+
+        <Box display="flex" justifyContent="space-between">
+          <Card
+            sx={{
+              marginBottom: "1rem",
+              borderRadius: "16px",
+              width: "48%",
+              paddingTop: "1rem",
+              backgroundColor: grey[100]
+            }}
+          >
+            <CardTitle label="Play with Bot" />
+            <Box
+              display="flex"
+              flexDirection="column"
+              sx={{ paddingX: "4rem" }}
             >
-              Start
-            </Button>
-          </Box>
-        </Card>
+              {/* Box Strength Level AI */}
+              <SectionBox>
+                <SectionBoxTitle label="Strength" />
+                {generateBotStrengthGroupButton()}
+              </SectionBox>
+              {/* Box color */}
+              <SectionBox>
+                <SectionBoxTitle label="Color" />
+                <BotColorButtonGroup
+                  botColor={botColor}
+                  handleBotColorChange={handleBotColorChange}
+                />
+              </SectionBox>
+              {/* Box Time Control */}
+              <SectionBox>
+                <SectionBoxTitle label="Time Control" />
+                <ToggleButtonGroup
+                  color="primary"
+                  value={botTimeControlMode}
+                  exclusive
+                  onChange={handleBotTimeControlModeChange}
+                >
+                  <ToggleButton value="unlimited">
+                    <Typography variant="button" sx={{ paddingX: "0.5rem" }}>
+                      Unlimited
+                    </Typography>
+                  </ToggleButton>
+                  <ToggleButton value="realtime">
+                    <Typography variant="button" sx={{ paddingX: "0.5rem" }}>
+                      Real Time
+                    </Typography>
+                  </ToggleButton>
+                </ToggleButtonGroup>
+              </SectionBox>
+              {/* Box Minute Per Side */}
+              <SectionBox>
+                <SectionBoxTitle
+                  label={`Minutes Per Side: ${botTimeControlMinute}`}
+                />
+                <Slider
+                  value={botTimeControlMinute}
+                  onChange={handleBotTimeControlMinuteChange}
+                  max={180}
+                />
+              </SectionBox>
+              {/* Box Minute Per Side */}
+              <SectionBox>
+                <SectionBoxTitle
+                  label={`Increment in Second: ${botTimeControlIncrement}`}
+                />
+                <Slider
+                  value={botTimeControlIncrement}
+                  onChange={handleBotTimeControlIncrementChange}
+                  max={180}
+                />
+              </SectionBox>
+            </Box>
+            {/* Box START */}
+            <Box display="flex">
+              <Button
+                variant="contained"
+                fullWidth
+                disabled={
+                  botTimeControlMinute === 0 && botTimeControlIncrement === 0
+                }
+              >
+                Start
+              </Button>
+            </Box>
+          </Card>
+          <Card
+            sx={{
+              marginBottom: "1rem",
+              borderRadius: "16px",
+              width: "48%",
+              backgroundColor: grey[100]
+            }}
+          >
+            <Box
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+              sx={{ height: "100%", paddingTop: "1rem" }}
+            >
+              <CardTitle label="Play with Human" />
+              <Box display="flex" alignItems="center" sx={{ height: "100%" }}>
+                <HumanPage />
+              </Box>
+            </Box>
+          </Card>
+        </Box>
       </Container>
     </Box>
   );

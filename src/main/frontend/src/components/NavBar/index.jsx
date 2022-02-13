@@ -40,54 +40,57 @@ function NavBar() {
   };
 
   return (
-    <AppBar>
-      <Toolbar disableGutters>
-        <Box display="flex">
-          <NavBarButton to="/" text="TheChess" />
-          <NavBarButton to="/" text="Home" />
-          {/* TODO:tutorial page */}
-          <NavBarButton to="/" text="Tutorial" />
-          <NavBarButton to="/settings" text="Settings" />
-        </Box>
-        <Box display="flex" ml="auto">
-          {/* TODO: */}
-          <NavBarButton to="/" text="Register" />
-          <NavBarButton onClick={handleClickOpen} to="/" text="Sign In" />
+    <>
+      <AppBar position="fixed">
+        <Toolbar disableGutters>
+          <Box display="flex">
+            <NavBarButton to="/" text="TheChess" />
+            <NavBarButton to="/" text="Home" />
+            {/* TODO:tutorial page */}
+            <NavBarButton to="/" text="Tutorial" />
+            <NavBarButton to="/settings" text="Settings" />
+          </Box>
+          <Box display="flex" ml="auto">
+            {/* TODO: */}
+            <NavBarButton to="/" text="Register" />
+            <NavBarButton onClick={handleClickOpen} to="/" text="Sign In" />
 
-          <Dialog
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="form-dialog-title"
-          >
-            <DialogTitle id="form-dialog-title">Sign In</DialogTitle>
-            <DialogContent>
-              {/* <DialogContentText>Sign In</DialogContentText> */}
-              <TextField
-                autoFocus
-                margin="dense"
-                id="name"
-                label="Username/Email"
-                type=""
-                fullWidth
-              />
-              <TextField
-                autoFocus
-                margin="dense"
-                id="name"
-                label="Password"
-                type="password"
-                fullWidth
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleClose} color="primary">
-                Sign In
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </Box>
-      </Toolbar>
-    </AppBar>
+            <Dialog
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="form-dialog-title"
+            >
+              <DialogTitle id="form-dialog-title">Sign In</DialogTitle>
+              <DialogContent>
+                {/* <DialogContentText>Sign In</DialogContentText> */}
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="name"
+                  label="Username/Email"
+                  type=""
+                  fullWidth
+                />
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="name"
+                  label="Password"
+                  type="password"
+                  fullWidth
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose} color="primary">
+                  Sign In
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </Box>
+        </Toolbar>
+      </AppBar>
+      <Toolbar />
+    </>
   );
 }
 
