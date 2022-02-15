@@ -32,7 +32,7 @@ public class UserController {
 			System.out.println("UserController - loginController END");
 			return redirectView;
 		} catch (Exception e) {
-			System.out.println("UserController - loginController ERROR");
+			System.out.println("UserController - loginController ERROR - error >> " + e.getMessage());
 			return redirectView;
 		}
 	}
@@ -47,7 +47,7 @@ public class UserController {
 			
 			return ResponseEntity.status(HttpStatus.OK).body(output);
 		} catch (Exception e) {
-			System.out.println("UserController - callbackController - ERROR");
+			System.out.println("UserController - callbackController - ERROR - error >> " + e.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 		}
 	}
