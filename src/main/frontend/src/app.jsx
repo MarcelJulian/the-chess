@@ -1,21 +1,19 @@
 import React, { useState } from "react";
 
-import { blue, brown, deepOrange } from "@material-ui/core/colors";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import Box from "@mui/material/Box";
-import { blueGrey, green, grey } from "@mui/material/colors";
+import { blueGrey, brown } from "@mui/material/colors";
+import CssBaseline from "@mui/material/CssBaseline";
 import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
-import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Routes, Route } from "react-router-dom";
 
 import GBoard from "./components/Board";
 import NavBar from "./components/NavBar";
 import MainMenu from "./MainMenu";
 import HomePage from "./pages/HomePage";
-import HumanPage from "./pages/HumanPage";
-import SettingsPage from "./pages/SettingsPage";
 import SettingsPageDialog from "./pages/SettingsPage/idx";
 
 function Item(props) {
@@ -45,13 +43,11 @@ export default function App() {
   });
   const greenTheme = createTheme({
     palette: {
-      primary: blueGrey,
-      secondary: brown,
-      neutral: {
-        dark: grey[900],
-        main: grey[500],
-        light: grey[100]
-      }
+      primary: { main: blueGrey[800] },
+      secondary: brown
+    },
+    typography: {
+      fontFamily: "Poppins"
     }
   });
   const theme = createTheme({
@@ -60,6 +56,7 @@ export default function App() {
 
   return (
     <ThemeProvider theme={darkMode ? darkTheme : greenTheme}>
+      <CssBaseline />
       {/* <Switch checked={darkMode} onChange={() => setDarkMode(!darkMode)} /> */}
       {/* <IconButton
         onClick={() => {

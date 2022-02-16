@@ -1,11 +1,8 @@
 import React, { useState } from "react";
 
-import { Card } from "@material-ui/core";
-import { brown } from "@material-ui/core/colors";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import Masonry from "@mui/lab/Masonry";
 import {
   Stack,
   Accordion,
@@ -25,7 +22,6 @@ import Paper from "@mui/material/Paper";
 import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 import Switch from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
-import { height, width } from "@mui/system";
 
 function Item(props) {
   const { sx, ...other } = props;

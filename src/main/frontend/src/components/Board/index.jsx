@@ -1,12 +1,9 @@
 import React, { useState } from "react";
 
-import { blue, brown, deepOrange } from "@material-ui/core/colors";
-import Brightness4Icon from "@mui/icons-material/Brightness4";
-import Brightness7Icon from "@mui/icons-material/Brightness7";
 import { Card } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import { blueGrey, green } from "@mui/material/colors";
+import { blueGrey, green, blue, brown, deepOrange } from "@mui/material/colors";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
@@ -14,7 +11,6 @@ import Paper from "@mui/material/Paper";
 import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 import Switch from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
-import { height, width } from "@mui/system";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function GBoard() {

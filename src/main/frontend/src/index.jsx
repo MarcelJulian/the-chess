@@ -8,12 +8,8 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./app";
 
 ReactDOM.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-    {/* <MainMenu /> */}
-    {/* <SettingsPageDialog /> */}
-  </React.StrictMode>,
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>,
   document.getElementById("root")
 );

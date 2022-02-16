@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 
-import { background } from "@chakra-ui/react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
@@ -12,7 +11,6 @@ import { ThemeProvider, useTheme, createTheme } from "@mui/material/styles";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Typography from "@mui/material/Typography";
-import { borderRadius } from "@mui/system";
 
 import HumanPage from "../HumanPage";
 
@@ -31,7 +29,10 @@ function SectionBox(props) {
 
 function SectionBoxTitle({ label }) {
   return (
-    <Typography variant="h5" sx={{ marginBottom: "0.5rem" }}>
+    <Typography
+      variant="h5"
+      sx={{ marginBottom: "0.5rem", fontFamily: "Poppins" }}
+    >
       {label}
     </Typography>
   );
@@ -39,8 +40,10 @@ function SectionBoxTitle({ label }) {
 
 function CardTitle({ label }) {
   return (
-    <Box display="flex" justifyContent="center">
-      <Typography variant="h4">{label}</Typography>
+    <Box display="flex" justifyContent="center" sx={{ fontFamily: "Poppins" }}>
+      <Typography variant="h4" sx={{ fontFamily: "Poppins" }}>
+        {label}
+      </Typography>
     </Box>
   );
 }
@@ -72,8 +75,6 @@ function BotColorButtonGroup({ botColor, handleBotColorChange }) {
     </ToggleButtonGroup>
   );
 }
-
-// TODO: refactor
 
 function HomePage() {
   // replace with store
@@ -124,70 +125,6 @@ function HomePage() {
   return (
     <Box sx={{ marginTop: "1rem" }}>
       <Container>
-        {/* Container Atas */}
-        {/* <Card elevation={1} sx={{ marginBottom: "2rem" }}>
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            // sx={{ paddingY: "1rem" }}
-          >
-            <Box
-              sx={{
-                display: "grid",
-                gridTemplateColumns: "repeat(2, 1fr)",
-                width: "100%",
-                height: "100%"
-              }}
-            >
-              <Box
-                gridColumn="span 2"
-                marginTop="1%"
-                // marginBottom="2%"
-                borderBottom="1px solid"
-                // sx={{
-                //   width: "100%",
-                //   height: "100%"
-                // }}
-              >
-                <Typography
-                  variant="h4"
-                  color="primary"
-                  sx={{ textAlign: "center" }}
-                >
-                  Play With
-                </Typography>
-              </Box>
-
-              <Box
-                borderRight="1px solid"
-                marginBottom="1px"
-                marginTop="1px"
-                sx={{
-                  width: "100%"
-                  // height: "100%"
-                }}
-              >
-                <Button variant="ghost" sx={{ width: "100%" }}>
-                  <Typography
-                    variant="h5"
-                    color="primary"
-                    sx={{ textAlign: "center" }}
-                  >
-                    Bot
-                  </Typography>
-                </Button>
-              </Box>
-              <Button variant="ghost" sx={{ width: "100%" }}>
-                <Typography variant="h5" color="primary">
-                  Human
-                </Typography>
-              </Button>
-            </Box>
-          </Box>
-        </Card> */}
-        {/* Container Bawah */}
-
         <Box display="flex" justifyContent="space-between">
           <Card
             sx={{
