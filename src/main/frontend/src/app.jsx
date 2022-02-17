@@ -12,7 +12,6 @@ import { Routes, Route } from "react-router-dom";
 
 import GBoard from "./components/Board";
 import NavBar from "./components/NavBar";
-import MainMenu from "./MainMenu";
 import HomePage from "./pages/HomePage";
 import SettingsPageDialog from "./pages/SettingsPage/idx";
 
@@ -72,15 +71,11 @@ export default function App() {
 
       <Paper elevation={3} style={{ height: "100%" }}>
         <NavBar />
-        {/* <HomePage /> */}
-        {/* <HumanPage /> */}
         {/* <SettingsPageDialog />
         <GBoard /> */}
         <Routes>
           {/* <Route path="/" element={<NavBar />} /> */}
           {/* <Route path="/" element={<GBoard />} /> */}
-          {/* <Route path="/" element={<HumanPage />} /> */}
-          {/* <Route path="/" element={<HomePage />} /> */}
           <Route path="/" element={<HomePage />} />
           <Route path="/settings" element={<SettingsPageDialog />} />
         </Routes>
