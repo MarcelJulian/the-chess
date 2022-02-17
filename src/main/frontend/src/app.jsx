@@ -38,6 +38,9 @@ export default function App() {
   const darkTheme = createTheme({
     palette: {
       mode: "dark"
+    },
+    typography: {
+      fontFamily: "Poppins"
     }
   });
   const greenTheme = createTheme({
@@ -79,7 +82,7 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/settings" element={<SettingsPageDialog />} />
         </Routes>
-
+        <GBoard />
         <IconButton
           onClick={() => {
             setDarkMode(!darkMode);
