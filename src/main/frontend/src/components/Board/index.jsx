@@ -8,6 +8,8 @@ import FirstPageIcon from "@mui/icons-material/FirstPage";
 import FlagIcon from "@mui/icons-material/Flag";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
+import MicIcon from "@mui/icons-material/Mic";
+import MicOffIcon from "@mui/icons-material/MicOff";
 import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore";
 import StarHalfIcon from "@mui/icons-material/StarHalf";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
@@ -21,6 +23,7 @@ import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
 import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 import Switch from "@mui/material/Switch";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -75,7 +78,7 @@ function GBoard() {
       }
     }
     return (
-      <Card elevation={3} style={{ height: "100%", width: "100%" }}>
+      <Card elevation={3}>
         <Box
           border="1px solid"
           borderRadius="1rem"
@@ -87,14 +90,14 @@ function GBoard() {
         >
           <Card
             variant="outlined"
-            elevation={8}
+            elevation={4}
             style={{
-              marginTop: "35%",
+              marginTop: "30%",
               marginLeft: "15%",
               marginBottom: "25%",
-              height: "10rem",
+              height: "13rem",
               width: "15rem",
-              borderRadius: "1rem",
+              borderRadius: "0.5rem",
               justifyContent: "center"
             }}
           >
@@ -120,6 +123,14 @@ function GBoard() {
             >
               Your Input :
             </Typography>
+            <Box marginTop="15%">
+              <IconButton>
+                <MicIcon />
+              </IconButton>
+              <IconButton>
+                <MicOffIcon />
+              </IconButton>
+            </Box>
           </Card>
           <Box
             border="1px solid"
@@ -148,6 +159,16 @@ function GBoard() {
               <Grid item xs={12}>
                 <Item
                   sx={{
+                    fontSize: "200%",
+                    justifyContent: "center"
+                  }}
+                >
+                  05 : 00
+                </Item>
+              </Grid>
+              <Grid item xs={12}>
+                <Item
+                  sx={{
                     justifyContent: "center"
                   }}
                 >
@@ -161,14 +182,16 @@ function GBoard() {
                     display: "flex"
                   }}
                 >
-                  <IconButton
-                    sx={{
-                      h: "100%",
-                      w: "100%"
-                    }}
-                  >
-                    <CachedIcon />
-                  </IconButton>
+                  <Tooltip title="Flip Board">
+                    <IconButton
+                      sx={{
+                        h: "100%",
+                        w: "100%"
+                      }}
+                    >
+                      <CachedIcon />
+                    </IconButton>
+                  </Tooltip>
                 </Item>
               </Grid>
               <Grid border="1px solid" item xs={2}>
@@ -246,14 +269,16 @@ function GBoard() {
                     display: "flex"
                   }}
                 >
-                  <IconButton
-                    sx={{
-                      h: "100%",
-                      w: "100%"
-                    }}
-                  >
-                    <TravelExploreIcon />
-                  </IconButton>
+                  <Tooltip title="Analysis Board">
+                    <IconButton
+                      sx={{
+                        h: "100%",
+                        w: "100%"
+                      }}
+                    >
+                      <TravelExploreIcon />
+                    </IconButton>
+                  </Tooltip>
                 </Item>
               </Grid>
               <Grid border="1px solid" item xs={2}>
@@ -273,7 +298,7 @@ function GBoard() {
                     display: "flex"
                   }}
                 >
-                  langkah
+                  -
                 </Item>
               </Grid>
               <Grid border="1px solid" item xs={5}>
@@ -283,7 +308,7 @@ function GBoard() {
                     display: "flex"
                   }}
                 >
-                  langkah
+                  -
                 </Item>
               </Grid>
               <Grid border="1px solid" item xs={2}>
@@ -303,7 +328,7 @@ function GBoard() {
                     display: "flex"
                   }}
                 >
-                  langkah
+                  -
                 </Item>
               </Grid>
               <Grid border="1px solid" item xs={5}>
@@ -313,7 +338,7 @@ function GBoard() {
                     display: "flex"
                   }}
                 >
-                  langkah
+                  -
                 </Item>
               </Grid>
               <Grid border="1px solid" item xs={2}>
@@ -333,7 +358,7 @@ function GBoard() {
                     display: "flex"
                   }}
                 >
-                  langkah
+                  -
                 </Item>
               </Grid>
               <Grid border="1px solid" item xs={5}>
@@ -343,7 +368,17 @@ function GBoard() {
                     display: "flex"
                   }}
                 >
-                  langkah
+                  -
+                </Item>
+              </Grid>
+              <Grid item xs={12}>
+                <Item
+                  sx={{
+                    fontSize: "200%",
+                    justifyContent: "center"
+                  }}
+                >
+                  05 : 00
                 </Item>
               </Grid>
               <Grid item xs={12}>
@@ -364,9 +399,11 @@ function GBoard() {
                     display: "flex"
                   }}
                 >
-                  <IconButton>
-                    <SettingsBackupRestoreIcon />
-                  </IconButton>
+                  <Tooltip title="Undo">
+                    <IconButton>
+                      <SettingsBackupRestoreIcon />
+                    </IconButton>
+                  </Tooltip>
                 </Item>
               </Grid>
               <Grid item xs={4}>
@@ -377,9 +414,11 @@ function GBoard() {
                     display: "flex"
                   }}
                 >
-                  <IconButton>
-                    <StarHalfIcon />
-                  </IconButton>
+                  <Tooltip title="Draw">
+                    <IconButton>
+                      <StarHalfIcon />
+                    </IconButton>
+                  </Tooltip>
                 </Item>
               </Grid>
               <Grid item xs={4}>
@@ -391,9 +430,11 @@ function GBoard() {
                     display: "flex"
                   }}
                 >
-                  <IconButton>
-                    <FlagIcon />
-                  </IconButton>
+                  <Tooltip title="Resign">
+                    <IconButton>
+                      <FlagIcon />
+                    </IconButton>
+                  </Tooltip>
                 </Item>
               </Grid>
             </Grid>
