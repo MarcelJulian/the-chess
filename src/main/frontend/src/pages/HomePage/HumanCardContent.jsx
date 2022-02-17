@@ -3,9 +3,7 @@ import React from "react";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
-import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { borderRadius } from "@mui/system";
 
 function TimeControlButton({ label }) {
   return (
@@ -22,7 +20,7 @@ function TimeControlButton({ label }) {
   );
 }
 
-function HumanPage() {
+function HumanCardContent() {
   const timeControlButtons = [
     <TimeControlButton label="5+3" />,
     <TimeControlButton label="10+0" />,
@@ -41,7 +39,6 @@ function HumanPage() {
 
   return (
     <Container>
-      {/* Container Bawah */}
       <Grid container spacing={2}>
         {wrapWithGridItem(timeControlButtons)}
       </Grid>
@@ -49,4 +46,4 @@ function HumanPage() {
   );
 }
 
-export default HumanPage;
+export default HumanCardContent;
