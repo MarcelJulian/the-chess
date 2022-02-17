@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class LoginOutput {
-
+public class LichessTokenResult {
+	private String token_type;
+	private String access_token;
+	private String expires_in;
 }

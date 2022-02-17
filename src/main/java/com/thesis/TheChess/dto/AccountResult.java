@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AccountResponse {
+public class AccountResult {
 	private String id;
 	private String username;
 	private boolean online;
