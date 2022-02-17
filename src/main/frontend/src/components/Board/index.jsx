@@ -1,5 +1,16 @@
 import React, { useState } from "react";
 
+import CachedIcon from "@mui/icons-material/Cached";
+import FastForwardIcon from "@mui/icons-material/FastForward";
+import FastRewindIcon from "@mui/icons-material/FastRewind";
+import FastRewind from "@mui/icons-material/FastRewind";
+import FirstPageIcon from "@mui/icons-material/FirstPage";
+import FlagIcon from "@mui/icons-material/Flag";
+import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
+import LastPageIcon from "@mui/icons-material/LastPage";
+import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore";
+import StarHalfIcon from "@mui/icons-material/StarHalf";
+import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 import { Card } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -17,8 +28,9 @@ function Item(props) {
   const { sx, ...other } = props;
   return (
     <Box
-      borderRadius="1rem"
-      boxShadow="3"
+      // borderRadius="1rem"
+      // boxShadow="3"
+      // border="1px solid"
       sx={{
         // p: 2,
         // m: 1,
@@ -126,7 +138,266 @@ function GBoard() {
           >
             {boxes}
           </Box>
-          <Item>test</Item>
+          <Box
+            marginTop="30%"
+            marginLeft="10%"
+            marginRight="10%"
+            sx={{ flexGrow: 1 }}
+          >
+            <Grid container spacing={0}>
+              <Grid item xs={12}>
+                <Item
+                  sx={{
+                    justifyContent: "center"
+                  }}
+                >
+                  username
+                </Item>
+              </Grid>
+              <Grid border="1px solid" item xs={2}>
+                <Item
+                  sx={{
+                    justifyContent: "center",
+                    display: "flex"
+                  }}
+                >
+                  <IconButton
+                    sx={{
+                      h: "100%",
+                      w: "100%"
+                    }}
+                  >
+                    <CachedIcon />
+                  </IconButton>
+                </Item>
+              </Grid>
+              <Grid border="1px solid" item xs={2}>
+                <Item
+                  sx={{
+                    justifyContent: "center",
+                    display: "flex"
+                  }}
+                >
+                  <IconButton
+                    sx={{
+                      h: "100%",
+                      w: "100%"
+                    }}
+                  >
+                    <FastRewind />
+                  </IconButton>
+                </Item>
+              </Grid>
+              <Grid border="1px solid" item xs={2}>
+                <Item
+                  sx={{
+                    justifyContent: "center",
+                    display: "flex"
+                  }}
+                >
+                  <IconButton
+                    sx={{
+                      h: "100%",
+                      w: "100%"
+                    }}
+                  >
+                    <FirstPageIcon />
+                  </IconButton>
+                </Item>
+              </Grid>
+              <Grid border="1px solid" item xs={2}>
+                <Item
+                  sx={{
+                    justifyContent: "center",
+                    display: "flex"
+                  }}
+                >
+                  <IconButton
+                    sx={{
+                      h: "100%",
+                      w: "100%"
+                    }}
+                  >
+                    <LastPageIcon />
+                  </IconButton>
+                </Item>
+              </Grid>
+              <Grid border="1px solid" item xs={2}>
+                <Item
+                  sx={{
+                    justifyContent: "center",
+                    display: "flex"
+                  }}
+                >
+                  <IconButton
+                    sx={{
+                      h: "100%",
+                      w: "100%"
+                    }}
+                  >
+                    <FastForwardIcon />
+                  </IconButton>
+                </Item>
+              </Grid>
+              <Grid border="1px solid" item xs={2}>
+                <Item
+                  sx={{
+                    justifyContent: "center",
+                    display: "flex"
+                  }}
+                >
+                  <IconButton
+                    sx={{
+                      h: "100%",
+                      w: "100%"
+                    }}
+                  >
+                    <TravelExploreIcon />
+                  </IconButton>
+                </Item>
+              </Grid>
+              <Grid border="1px solid" item xs={2}>
+                <Item
+                  sx={{
+                    justifyContent: "center",
+                    display: "flex"
+                  }}
+                >
+                  1
+                </Item>
+              </Grid>
+              <Grid border="1px solid" item xs={5}>
+                <Item
+                  sx={{
+                    justifyContent: "center",
+                    display: "flex"
+                  }}
+                >
+                  langkah
+                </Item>
+              </Grid>
+              <Grid border="1px solid" item xs={5}>
+                <Item
+                  sx={{
+                    justifyContent: "center",
+                    display: "flex"
+                  }}
+                >
+                  langkah
+                </Item>
+              </Grid>
+              <Grid border="1px solid" item xs={2}>
+                <Item
+                  sx={{
+                    justifyContent: "center",
+                    display: "flex"
+                  }}
+                >
+                  2
+                </Item>
+              </Grid>
+              <Grid border="1px solid" item xs={5}>
+                <Item
+                  sx={{
+                    justifyContent: "center",
+                    display: "flex"
+                  }}
+                >
+                  langkah
+                </Item>
+              </Grid>
+              <Grid border="1px solid" item xs={5}>
+                <Item
+                  sx={{
+                    justifyContent: "center",
+                    display: "flex"
+                  }}
+                >
+                  langkah
+                </Item>
+              </Grid>
+              <Grid border="1px solid" item xs={2}>
+                <Item
+                  sx={{
+                    justifyContent: "center",
+                    display: "flex"
+                  }}
+                >
+                  3
+                </Item>
+              </Grid>
+              <Grid border="1px solid" item xs={5}>
+                <Item
+                  sx={{
+                    justifyContent: "center",
+                    display: "flex"
+                  }}
+                >
+                  langkah
+                </Item>
+              </Grid>
+              <Grid border="1px solid" item xs={5}>
+                <Item
+                  sx={{
+                    justifyContent: "center",
+                    display: "flex"
+                  }}
+                >
+                  langkah
+                </Item>
+              </Grid>
+              <Grid item xs={12}>
+                <Item
+                  sx={{
+                    justifyContent: "center"
+                  }}
+                >
+                  username
+                </Item>
+              </Grid>
+              <Grid item xs={4}>
+                <Item
+                  marginLeft="50%"
+                  marginTop="30%"
+                  sx={{
+                    justifyContent: "center",
+                    display: "flex"
+                  }}
+                >
+                  <IconButton>
+                    <SettingsBackupRestoreIcon />
+                  </IconButton>
+                </Item>
+              </Grid>
+              <Grid item xs={4}>
+                <Item
+                  marginTop="30%"
+                  sx={{
+                    justifyContent: "center",
+                    display: "flex"
+                  }}
+                >
+                  <IconButton>
+                    <StarHalfIcon />
+                  </IconButton>
+                </Item>
+              </Grid>
+              <Grid item xs={4}>
+                <Item
+                  marginTop="30%"
+                  marginRight="50%"
+                  sx={{
+                    justifyContent: "center",
+                    display: "flex"
+                  }}
+                >
+                  <IconButton>
+                    <FlagIcon />
+                  </IconButton>
+                </Item>
+              </Grid>
+            </Grid>
+          </Box>
         </Box>
       </Card>
     );

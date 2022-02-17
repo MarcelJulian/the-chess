@@ -60,7 +60,7 @@ function HomePage() {
               borderRadius: "16px",
               width: "48%",
               paddingTop: "1rem",
-              backgroundColor: grey[100]
+              backgroundColor: "secondary"
             }}
           >
             <CardTitle label="Play with Bot" />
@@ -85,7 +85,7 @@ function HomePage() {
               marginBottom: "1rem",
               borderRadius: "16px",
               width: "48%",
-              backgroundColor: grey[100]
+              backgroundColor: "secondary"
             }}
           >
             <Box
