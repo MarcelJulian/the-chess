@@ -3,10 +3,17 @@ import React from "react";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Typography from "@mui/material/Typography";
+import { useSelector, useDispatch } from "react-redux";
+
+import { setColor } from "store/reducers/botFormSlice";
 
 import { BotColorEnum } from "./LocalEnums";
 
-function BotColorButtonGroup({ botColor, handleBotColorChange }) {
+function BotColorButtonGroup() {
+  const botColor = useSelector((state) => state.botForm.color);
+  const dispatch = useDispatch();
+  const handleBotColorChange = (_, value) => dispatch(setColor(value));
+
   return (
     <ToggleButtonGroup
       value={botColor}

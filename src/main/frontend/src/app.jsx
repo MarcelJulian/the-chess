@@ -92,7 +92,6 @@ export default function App() {
           <Brightness4Icon />
         </IconButton>
       </Paper>
-
       {/* <Paper elevation={3} /> */}
     </ThemeProvider>
   );

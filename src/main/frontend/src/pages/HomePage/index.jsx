@@ -5,50 +5,18 @@ import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import { grey } from "@mui/material/colors";
 import Container from "@mui/material/Container";
+import { useSelector } from "react-redux";
 
 import BotCardContent from "./BotCardContent";
 import CardTitle from "./CardTitle";
 import HumanCardContent from "./HumanCardContent";
-import { BotColorEnum, BotTimeControlEnum } from "./LocalEnums";
 
 function HomePage() {
   // replace with store
   const [isLogin, setIsLogin] = useState(false);
-  const [botStrength, setBotStrength] = useState(1);
-  const [botColor, setBotColor] = useState(BotColorEnum.Random);
-  const [botTimeControlMode, setBotTimeControlMode] = useState(
-    BotTimeControlEnum.Unlimited.value
+  const { botTimeControlMinute, botTimeControlIncrement } = useSelector(
+    (state) => state.botForm
   );
-  const [botTimeControlMinute, setBotTimeControlMinute] = useState(10);
-  const [botTimeControlIncrement, setBotTimeControlIncrement] = useState(0);
-
-  const botStates = {
-    botStrength,
-    botColor,
-    botTimeControlMode,
-    botTimeControlMinute,
-    botTimeControlIncrement
-  };
-
-  const handleBotStrengthChange = (_, strength) => setBotStrength(strength);
-
-  const handleBotColorChange = (_, color) => setBotColor(color);
-
-  const handleBotTimeControlModeChange = (_, mode) =>
-    setBotTimeControlMode(mode);
-
-  const handleBotTimeControlMinuteChange = (_, minute) =>
-    setBotTimeControlMinute(minute);
-  const handleBotTimeControlIncrementChange = (_, increment) =>
-    setBotTimeControlIncrement(increment);
-
-  const botStateHandler = {
-    handleBotStrengthChange,
-    handleBotColorChange,
-    handleBotTimeControlModeChange,
-    handleBotTimeControlMinuteChange,
-    handleBotTimeControlIncrementChange
-  };
 
   return (
     <Box sx={{ marginTop: "1rem" }}>
@@ -64,10 +32,7 @@ function HomePage() {
             }}
           >
             <CardTitle label="Play with Bot" />
-            <BotCardContent
-              botStates={botStates}
-              botStateHandler={botStateHandler}
-            />
+            <BotCardContent />
             <Box display="flex">
               <Button
                 variant="contained"

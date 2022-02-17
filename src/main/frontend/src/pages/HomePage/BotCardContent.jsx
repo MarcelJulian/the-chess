@@ -2,55 +2,42 @@ import React from "react";
 
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
-import ToggleButton from "@mui/material/ToggleButton";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import Typography from "@mui/material/Typography";
+import { useSelector, useDispatch } from "react-redux";
+
+import {
+  setTimeControlMinute,
+  setTimeControlIncrement
+} from "store/reducers/botFormSlice";
 
 import BotColorButtonGroup from "./BotColorButtonGroup";
 import BotStrengthButtonGroup from "./BotStrengthButtonGroup";
 import BotTimeControlButtonGroup from "./BotTimeControlButtonGroup";
 import CardContentBox from "./CardContentBox";
 
-// import CustomToggleButton from "../../components/CustomToggleButton";
+function BotCardContent() {
+  const { botTimeControlMinute, botTimeControlIncrement } = useSelector(
+    (state) => state.botForm
+  );
 
-function BotCardContent({ botStates, botStateHandler }) {
-  const {
-    botStrength,
-    botColor,
-    botTimeControlMode,
-    botTimeControlMinute,
-    botTimeControlIncrement
-  } = botStates;
-  const {
-    handleBotStrengthChange,
-    handleBotColorChange,
-    handleBotTimeControlModeChange,
-    handleBotTimeControlMinuteChange,
-    handleBotTimeControlIncrementChange
-  } = botStateHandler;
+  const dispatch = useDispatch();
+  const handleBotTimeControlMinuteChange = (_, value) =>
+    dispatch(setTimeControlMinute(value));
+  const handleBotTimeControlIncrementChange = (_, value) =>
+    dispatch(setTimeControlIncrement(value));
 
   return (
     <Box display="flex" flexDirection="column" sx={{ paddingX: "4rem" }}>
       {/* Box Strength Level AI */}
       <CardContentBox label="Strength">
-        <BotStrengthButtonGroup
-          botStrength={botStrength}
-          handleBotStrengthChange={handleBotStrengthChange}
-        />
+        <BotStrengthButtonGroup />
       </CardContentBox>
       {/* Box color */}
       <CardContentBox label="Color">
-        <BotColorButtonGroup
-          botColor={botColor}
-          handleBotColorChange={handleBotColorChange}
-        />
+        <BotColorButtonGroup />
       </CardContentBox>
       {/* Box Time Control */}
       <CardContentBox label="Time Control">
-        <BotTimeControlButtonGroup
-          botTimeControlMode={botTimeControlMode}
-          handleBotTimeControlModeChange={handleBotTimeControlModeChange}
-        />
+        <BotTimeControlButtonGroup />
       </CardContentBox>
       {/* Box Minute Per Side */}
       <CardContentBox label={`Minutes Per Side: ${botTimeControlMinute}`}>

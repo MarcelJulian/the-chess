@@ -20,6 +20,7 @@ module.exports = {
   plugins: ["react", "prettier"],
   rules: {
     "no-unused-vars": "off",
+    "no-param-reassign": "off",
     "prettier/prettier": [
       "error",
       {

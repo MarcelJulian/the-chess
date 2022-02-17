@@ -3,13 +3,20 @@ import React from "react";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Typography from "@mui/material/Typography";
+import { useSelector, useDispatch } from "react-redux";
+
+import { setTimeControlMode } from "store/reducers/botFormSlice";
 
 import { BotTimeControlEnum } from "./LocalEnums";
 
-function BotTimeControlButtonGroup({
-  botTimeControlMode,
-  handleBotTimeControlModeChange
-}) {
+function BotTimeControlButtonGroup() {
+  const botTimeControlMode = useSelector(
+    (state) => state.botForm.timeControlMode
+  );
+  const dispatch = useDispatch();
+  const handleBotTimeControlModeChange = (_, value) =>
+    dispatch(setTimeControlMode(value));
+
   return (
     <ToggleButtonGroup
       color="primary"
