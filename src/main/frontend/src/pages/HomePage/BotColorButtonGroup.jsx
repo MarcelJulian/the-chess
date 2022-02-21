@@ -19,7 +19,6 @@ function BotColorButtonGroup() {
       value={botColor}
       exclusive
       onChange={handleBotColorChange}
-      size="large"
       sx={{ border: 1 }}
     >
       {Object.values(BotColorEnum).map((value) => (

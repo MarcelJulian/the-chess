@@ -19,7 +19,6 @@ function BotStrengthGroupButton() {
       value={botStrength}
       exclusive
       onChange={handleBotStrengthChange}
-      size="large"
       sx={{ border: 1 }}
     >
       {buttonValues.map((value) => (

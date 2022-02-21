@@ -19,10 +19,10 @@ function BotTimeControlButtonGroup() {
 
   return (
     <ToggleButtonGroup
-      color="primary"
       value={botTimeControlMode}
       exclusive
       onChange={handleBotTimeControlModeChange}
+      sx={{ border: 1 }}
     >
       {Object.values(BotTimeControlEnum).map(({ value, label }) => (
         <ToggleButton value={value} disableFocusRipple disableRipple>
