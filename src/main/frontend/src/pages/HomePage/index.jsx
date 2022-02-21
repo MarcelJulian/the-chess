@@ -14,9 +14,11 @@ import HumanCardContent from "./HumanCardContent";
 function HomePage() {
   // replace with store
   const [isLogin, setIsLogin] = useState(false);
-  const { botTimeControlMinute, botTimeControlIncrement } = useSelector(
-    (state) => state.botForm
-  );
+  // will be used for login service
+  const botForm = useSelector((state) => state.botForm);
+  const { timeControlMinute, timeControlIncrement } = botForm;
+  const isBotButtonDisabled =
+    timeControlMinute === 0 && timeControlIncrement === 0;
 
   return (
     <Box sx={{ marginTop: "1rem" }}>
@@ -37,9 +39,7 @@ function HomePage() {
               <Button
                 variant="contained"
                 fullWidth
-                disabled={
-                  botTimeControlMinute === 0 && botTimeControlIncrement === 0
-                }
+                disabled={isBotButtonDisabled}
               >
                 Start
               </Button>
