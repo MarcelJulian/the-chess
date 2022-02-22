@@ -2,6 +2,7 @@ package com.thesis.TheChess.service;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 import java.util.Base64;
 
@@ -40,34 +41,6 @@ public class UserService {
 	
 	RestTemplate restTemplate = new RestTemplate();
 	
-//	public RedirectView loginService(HttpServletRequest request) throws Exception{
-//		System.out.println("UserService - loginService START - request >> " + request);
-//		
-//		RedirectView output = null;
-//		
-//		try {
-//			String verifier = createVerifier();
-//			System.out.println("verifier: " + verifier);
-//			String challenge = createChallenge(verifier);
-//			System.out.println("challenge: " + challenge);
-//			
-////			req.session.codeVerifier = verifier
-//			HttpSession session = request.getSession();
-//			session.setAttribute("codeVerifier", verifier);
-//			
-//			String url = chess_url + "oauth?response_type=code&client_id=" + client_id + "&redirect_uri=" + chess_url + "&scope=board:play&code_challenge_method=S256&code_challenge=" + challenge;
-//			
-//			output = new RedirectView();
-//			output.setUrl(url);
-//			
-//			System.out.println("UserService - loginService END - output: " + output);
-//			return output;
-//		} catch (Exception e) {
-//			System.out.println("UserService - loginService ERROR - error: " + e.getMessage());
-//			throw new Exception("ERROR loginService >> " + e.getMessage());
-//		}
-//	}
-	
 	public String loginService(HttpServletRequest request) throws Exception{
 		System.out.println("UserService - loginService START - request >> " + request);
 		
@@ -81,7 +54,7 @@ public class UserService {
 			HttpSession session = request.getSession();
 			session.setAttribute("codeVerifier", verifier);
 			
-			String url = chess_url + "oauth?response_type=code&client_id=" + client_id + "&redirect_uri=" + chess_url + "/callback&scope=board:play&code_challenge_method=S256&code_challenge=" + challenge;
+			String url = lichess_url + "oauth?response_type=code&client_id=" + client_id + "&redirect_uri=" + chess_url + "callback-the-chess&scope=board:play&code_challenge_method=S256&code_challenge=" + challenge;
 			
 			System.out.println("UserService - loginService END - output: " + url);
 			return url;
@@ -97,10 +70,10 @@ public class UserService {
 	}
 
 //	const createVerifier = () => base64URLEncode(crypto.randomBytes(32));
-	private String createVerifier() throws NoSuchAlgorithmException {
+	private String createVerifier() throws NoSuchAlgorithmException, NoSuchProviderException {
 		/* Source: https://howtodoinjava.com/java/java-security/how-to-generate-secure-password-hash-md5-sha-pbkdf2-bcrypt-examples/ */
 		SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
-		byte[] salt = new byte[32];
+		byte[] salt = new byte[512];
 		sr.nextBytes(salt);
 		return base64URLEncode(salt.toString());
 	}
@@ -109,7 +82,7 @@ public class UserService {
 	private String sha256(String salt) {
 		/* Source: https://howtodoinjava.com/java/java-security/how-to-generate-secure-password-hash-md5-sha-pbkdf2-bcrypt-examples/ */
 		String generatedPassword = null;
-		String passwordToHash = "password";
+		String passwordToHash = "passwordForTheChessThesisBinus";
 		
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -145,10 +118,11 @@ public class UserService {
 //			const verifier = req.session.codeVerifier;
 			HttpSession session = request.getSession();
 			session_value = (String) session.getAttribute("codeVerifier");
+			System.out.println("session_value >> " + session_value);
 			
 //			const lichessToken = await getLichessToken(req.query.code, verifier, url)
-			authCode = request.getQueryString();	//TODO: ini gatau dapet codenya gmn
-			
+			authCode = request.getParameter("code");
+
 			lichess_token = getLichessToken(authCode, session_value);
 			
 //			const lichessUser = await getLichessUser(lichessToken.access_token)
@@ -177,7 +151,7 @@ public class UserService {
 			map.add("grant_type", "authorization_code");
 			map.add("code", authCode);
 			map.add("code_verifier", verifier);
-			map.add("redirect_uri", chess_url + "/callback");
+			map.add("redirect_uri", chess_url + "callback-the-chess");
 			map.add("client_id", client_id);
 			
 			HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map, headers);
