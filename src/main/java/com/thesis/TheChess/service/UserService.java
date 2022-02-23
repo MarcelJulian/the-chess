@@ -1,5 +1,6 @@
 package com.thesis.TheChess.service;
 
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -45,12 +46,9 @@ public class UserService {
 		System.out.println("UserService - loginService START - request >> " + request);
 		
 		try {
-			String verifier = createVerifier();
-			System.out.println("verifier: " + verifier);
-			String challenge = createChallenge(verifier);
-			System.out.println("challenge: " + challenge);
+			String verifier = generateCodeVerifier();
+			String challenge = generateCodeChallange(verifier);
 			
-//			req.session.codeVerifier = verifier
 			HttpSession session = request.getSession();
 			session.setAttribute("codeVerifier", verifier);
 			
@@ -63,46 +61,21 @@ public class UserService {
 			throw new Exception("ERROR loginService >> " + e.getMessage());
 		}
 	}
-
-//	const createChallenge = (verifier) => base64URLEncode(sha256(verifier));
-	private String createChallenge(String verifier) {
-		return base64URLEncode(sha256(verifier));
-	}
-
-//	const createVerifier = () => base64URLEncode(crypto.randomBytes(32));
-	private String createVerifier() throws NoSuchAlgorithmException, NoSuchProviderException {
-		/* Source: https://howtodoinjava.com/java/java-security/how-to-generate-secure-password-hash-md5-sha-pbkdf2-bcrypt-examples/ */
-		SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
-		byte[] salt = new byte[512];
-		sr.nextBytes(salt);
-		return base64URLEncode(salt.toString());
-	}
 	
-//	const sha256 = (buffer) => crypto.createHash('sha256').update(buffer).digest();
-	private String sha256(String salt) {
-		/* Source: https://howtodoinjava.com/java/java-security/how-to-generate-secure-password-hash-md5-sha-pbkdf2-bcrypt-examples/ */
-		String generatedPassword = null;
-		String passwordToHash = "passwordForTheChessThesisBinus";
-		
-		try {
-			MessageDigest md = MessageDigest.getInstance("SHA-256");
-            md.update(salt.getBytes());
-            
-            byte[] bytes = md.digest(passwordToHash.getBytes());
-            
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < bytes.length; i++) {
-                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 32).substring(1));
-            }
-            generatedPassword = sb.toString();
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		}
-		return generatedPassword;
-	}
-
-	private String base64URLEncode(String str) {
-		return Base64.getEncoder().encodeToString(str.getBytes()).replace("+", "-").replace("/", "_").replace("=", "");
+	private String generateCodeVerifier() throws UnsupportedEncodingException {
+        SecureRandom secureRandom = new SecureRandom();
+        byte[] codeVerifier = new byte[32];
+        secureRandom.nextBytes(codeVerifier);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(codeVerifier);
+    }
+	
+	private String generateCodeChallange(String codeVerifier) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+	    byte[] bytes = codeVerifier.getBytes("US-ASCII");
+	    MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+	    messageDigest.update(bytes, 0, bytes.length);
+	    byte[] digest = messageDigest.digest();
+	    
+	    return Base64.getUrlEncoder().withoutPadding().encodeToString(digest);
 	}
 
 	public String callbackService(HttpServletRequest request) throws Exception{
@@ -115,17 +88,10 @@ public class UserService {
 		String username = "";
 		
 		try {
-//			const verifier = req.session.codeVerifier;
 			HttpSession session = request.getSession();
 			session_value = (String) session.getAttribute("codeVerifier");
-			System.out.println("session_value >> " + session_value);
-			
-//			const lichessToken = await getLichessToken(req.query.code, verifier, url)
 			authCode = request.getParameter("code");
-
 			lichess_token = getLichessToken(authCode, session_value);
-			
-//			const lichessUser = await getLichessUser(lichessToken.access_token)
 			username = getLichessUser(lichess_token);
 			
 			output = "Logged in as " + username;
@@ -167,7 +133,7 @@ public class UserService {
 				LichessTokenResult result = responseHit.getBody();
 				output = result.getAccess_token();
 
-				System.out.println("getLichessToken END - authCode: " + authCode + " - verifier: " + verifier);
+				System.out.println("getLichessToken END - authCode: " + authCode + " - verifier: " + verifier + " - accessToken: " + output);
 				return output;
 			} else {
 				throw new Exception("Failed getting token");
@@ -185,9 +151,9 @@ public class UserService {
 		
 		try {
 			HttpHeaders headers = new HttpHeaders();
-			headers.add("Authorization", lichess_token);
+			headers.add("Authorization", "Bearer " + lichess_token);
 			
-			HttpEntity request = new HttpEntity("", headers);
+			HttpEntity request = new HttpEntity(headers);
 			System.out.println("getLichessUser - request >> " + request);
 			
 			String uri = lichess_api_url + "account";

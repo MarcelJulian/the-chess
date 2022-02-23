@@ -16,8 +16,8 @@ public class UserProfile {
 	private String bio;
 	private String firstName;
 	private String lastName;
-	private Integer fideRating;
-	private Integer uscfRating;
-	private Integer ecfRating;
+	private String fideRating;
+	private String uscfRating;
+	private String ecfRating;
 	private String links;
 }

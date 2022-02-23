@@ -30,10 +30,10 @@ public class UserPerfs {
 	@NoArgsConstructor
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	public class Perfs {
-		private Integer games;
-		private Integer rating;
-		private Integer rd;
-		private Integer prog;
+		private String games;
+		private String rating;
+		private String rd;
+		private String prog;
 		private boolean prov;
 	}
 }

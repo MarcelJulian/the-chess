@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserPlayTime {
-	private Integer total;
-	private Integer tv;
+	private String total;
+	private String tv;
 }

@@ -11,13 +11,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserCount {
-	private Integer all;
-	private Integer rated;
-	private Integer ai;
-	private Integer draw;
-	private Integer drawH;
-	private Integer loss;
-	private Integer lossH;
-	private Integer win;
-	private Integer winH;
+	private String all;
+	private String rated;
+	private String ai;
+	private String draw;
+	private String drawH;
+	private String loss;
+	private String lossH;
+	private String win;
+	private String winH;
 }
