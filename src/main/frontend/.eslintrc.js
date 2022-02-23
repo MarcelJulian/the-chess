@@ -32,6 +32,7 @@ module.exports = {
     "react/destructuring-assignment": "off",
     "react/jsx-props-no-spreading": "off",
     "react/jsx-uses-react": "off",
+    "react/jsx-no-bind": "off",
     "react/prop-types": "off",
     "react/react-in-jsx-scope": "off",
     "import/extensions": 0,
