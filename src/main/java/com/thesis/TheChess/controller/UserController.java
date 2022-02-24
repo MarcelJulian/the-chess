@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.thesis.TheChess.dto.CallbackOutput;
 import com.thesis.TheChess.service.UserService;
 
 @RestController
@@ -22,23 +23,6 @@ import com.thesis.TheChess.service.UserService;
 public class UserController {
 	@Autowired
 	UserService service;
-	
-//	@GetMapping(path = "login-the-chess")
-//	public RedirectView loginController(HttpServletRequest request) throws Exception{
-//		System.out.println("UserController - loginController START");
-//		
-//		RedirectView redirectView = null;
-//
-//		try {
-//			redirectView = service.loginService(request);
-//			
-//			System.out.println("UserController - loginController END");
-//			return redirectView;
-//		} catch (Exception e) {
-//			System.out.println("UserController - loginController ERROR - error >> " + e.getMessage());
-//			return redirectView;
-//		}
-//	}
 	
 	@GetMapping(path = "login-the-chess")
 	public void loginController(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
@@ -57,17 +41,17 @@ public class UserController {
 	}
 	
 	@GetMapping(path = "callback-the-chess")
-	public ResponseEntity<String> callbackController(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+	public ResponseEntity<CallbackOutput> callbackController(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
 		System.out.println("UserController - callbackController - START");
 		
-		String output = null;
+		CallbackOutput output = null;
 		
 		try {
 			output = service.callbackService(request);
 			return ResponseEntity.status(HttpStatus.OK).body(output);
 		} catch (Exception e) {
 			System.out.println("UserController - callbackController - ERROR - error >> " + e.getMessage());
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(output);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 		}
 	}
 }

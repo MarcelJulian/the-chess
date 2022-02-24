@@ -23,6 +23,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.thesis.TheChess.dto.AccountResult;
+import com.thesis.TheChess.dto.CallbackOutput;
 import com.thesis.TheChess.dto.LichessTokenResult;
 
 @Service
@@ -78,10 +79,10 @@ public class UserService {
 	    return Base64.getUrlEncoder().withoutPadding().encodeToString(digest);
 	}
 
-	public String callbackService(HttpServletRequest request) throws Exception{
+	public CallbackOutput callbackService(HttpServletRequest request) throws Exception{
 		System.out.println("UserService - callbackService START");
 		
-		String output = "";
+		CallbackOutput output = null;
 		String session_value = "";
 		String authCode = "";
 		String lichess_token = "";
@@ -93,10 +94,9 @@ public class UserService {
 			authCode = request.getParameter("code");
 			lichess_token = getLichessToken(authCode, session_value);
 			username = getLichessUser(lichess_token);
-			
-			output = "Logged in as " + username;
-			
-			System.out.println("UserService - callbackService END");
+			output = new CallbackOutput(lichess_token, username);
+	
+			System.out.println("UserService - callbackService END - output >> " + output);
 			return output;
 		} catch (Exception e) {
 			System.out.println("UserService - callbackService ERROR - error >> " + e.getMessage());
