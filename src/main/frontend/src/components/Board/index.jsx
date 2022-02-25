@@ -59,11 +59,13 @@ function Board() {
       position={game.fen()}
       onPieceDrop={onDrop}
       customBoardStyle={{
-        borderRadius: "4px",
+        borderRadius: "10px",
         boxShadow: "0 5px 15px rgba(0, 0, 0, 0.5)"
       }}
-      //   customDarkSquareStyle={{ backgroundColor: "#779952" }}
-      //   customLightSquareStyle={{ backgroundColor: "#edeed1" }}
+      // customDarkSquareStyle={{ backgroundColor: "#8d6f71" }}
+      customDarkSquareStyle={{ backgroundColor: "#769656" }}
+      // customLightSquareStyle={{ backgroundColor: "white" }}
+      customLightSquareStyle={{ backgroundColor: "#edeed1" }}
       customPieces={customPieces()}
       ref={chessboardRef}
     />
