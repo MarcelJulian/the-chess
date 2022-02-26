@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +26,7 @@ public class UserController {
 	UserService service;
 	
 	@GetMapping(path = "login-the-chess")
-	public void loginController(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+	public ResponseEntity<Void> loginController(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
 		System.out.println("UserController - loginController START");
 		
 		String output = null;
@@ -34,9 +35,23 @@ public class UserController {
 			output = service.loginService(request);
 			
 			System.out.println("UserController - loginController END");
+			
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Access-Control-Allow-Origin", "*");
+			headers.add("Access-Control-Allow-Headers", "Content-Type");
+			headers.add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+			
 			response.sendRedirect(output);
+			return ResponseEntity.status(HttpStatus.OK).headers(headers).body(null);
 		} catch (Exception e) {
 			System.out.println("UserController - loginController ERROR - error >> " + e.getMessage());
+			
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Access-Control-Allow-Origin", "*");
+			headers.add("Access-Control-Allow-Headers", "Content-Type");
+			headers.add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+			
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(headers).body(null);
 		}
 	}
 	
@@ -48,10 +63,22 @@ public class UserController {
 		
 		try {
 			output = service.callbackService(request);
-			return ResponseEntity.status(HttpStatus.OK).body(output);
+			
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Access-Control-Allow-Origin", "*");
+			headers.add("Access-Control-Allow-Headers", "Content-Type");
+			headers.add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+			
+			return ResponseEntity.status(HttpStatus.OK).headers(headers).body(output);
 		} catch (Exception e) {
 			System.out.println("UserController - callbackController - ERROR - error >> " + e.getMessage());
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+			
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Access-Control-Allow-Origin", "*");
+			headers.add("Access-Control-Allow-Headers", "Content-Type");
+			headers.add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+			
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(headers).body(null);
 		}
 	}
 }
