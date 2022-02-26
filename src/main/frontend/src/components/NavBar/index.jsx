@@ -12,6 +12,8 @@ import TextField from "@mui/material/TextField";
 import Toolbar from "@mui/material/Toolbar";
 import { Link as RouterLink } from "react-router-dom";
 
+import signIn from "services/authService";
+
 function NavBarButton({ to, text, onClick }) {
   return (
     <Link component={RouterLink} to={to}>
@@ -39,6 +41,14 @@ function NavBar() {
     setOpen(false);
   };
 
+  const signInHandler = async () => {
+    const response = await signIn();
+    console.log(
+      "🚀 ~ file: index.jsx ~ line 46 ~ signInHandler ~ response",
+      response
+    );
+  };
+
   return (
     <>
       <AppBar position="fixed">
@@ -53,7 +63,7 @@ function NavBar() {
           <Box display="flex" ml="auto">
             {/* TODO: */}
             <NavBarButton to="/" text="Register" />
-            <NavBarButton onClick={handleClickOpen} to="/" text="Sign In" />
+            <NavBarButton onClick={signInHandler} to="/" text="Sign In" />
 
             <Dialog
               open={open}
