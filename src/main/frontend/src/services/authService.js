@@ -4,7 +4,8 @@ const signIn = async () => {
   try {
     // let url = "/api/apps";
     const url = "/login-the-chess";
-    const response = await axios.post(url);
+    // harusnya post ???
+    const response = await axios.get(url);
 
     return { status: response.OutputSchema.Status };
   } catch (err) {
