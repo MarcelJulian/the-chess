@@ -36,13 +36,14 @@ public class UserController {
 			
 			System.out.println("UserController - loginController END");
 			
-			HttpHeaders headers = new HttpHeaders();
-			headers.add("Access-Control-Allow-Origin", "*");
-			headers.add("Access-Control-Allow-Headers", "Content-Type");
-			headers.add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+//			HttpHeaders headers = new HttpHeaders();
+//			headers.add("Access-Control-Allow-Origin", "*");
+//			headers.add("Access-Control-Allow-Headers", "Content-Type");
+//			headers.add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
 			
-			response.sendRedirect(output);
-			return ResponseEntity.status(HttpStatus.OK).headers(headers).body(null);
+//			response.sendRedirect(output);
+//			return ResponseEntity.status(HttpStatus.OK).headers(headers).body(null);
+			return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).header(HttpHeaders.LOCATION, output).build();
 		} catch (Exception e) {
 			System.out.println("UserController - loginController ERROR - error >> " + e.getMessage());
 			
