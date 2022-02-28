@@ -26,7 +26,8 @@ public class UserController {
 	UserService service;
 	
 	@GetMapping(path = "login-the-chess")
-	public ResponseEntity<Void> loginController(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+//	public ResponseEntity<Void> loginController(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+	public ResponseEntity<String> loginController(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
 		System.out.println("UserController - loginController START");
 		
 		String output = null;
@@ -36,14 +37,15 @@ public class UserController {
 			
 			System.out.println("UserController - loginController END");
 			
-//			HttpHeaders headers = new HttpHeaders();
-//			headers.add("Access-Control-Allow-Origin", "*");
-//			headers.add("Access-Control-Allow-Headers", "Content-Type");
-//			headers.add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Access-Control-Allow-Origin", "*");
+			headers.add("Access-Control-Allow-Headers", "Content-Type");
+			headers.add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
 			
 //			response.sendRedirect(output);
 //			return ResponseEntity.status(HttpStatus.OK).headers(headers).body(null);
-			return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).header(HttpHeaders.LOCATION, output).build();
+//			return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).header(HttpHeaders.LOCATION, output).build();
+			return ResponseEntity.status(HttpStatus.OK).headers(headers).body(output);
 		} catch (Exception e) {
 			System.out.println("UserController - loginController ERROR - error >> " + e.getMessage());
 			
