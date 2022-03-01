@@ -1,18 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import Container from "@mui/material/Container";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useSearchParams } from "react-router-dom";
+
+import { signIn } from "store/reducers/sessionSlice";
 
 import BotCardContent from "./BotCardContent";
 import CardTitle from "./CardTitle";
 import HumanCardContent from "./HumanCardContent";
 
 function HomePage() {
-  // replace with store
-  const [isLogin, setIsLogin] = useState(false);
+  const { isSignedIn } = useSelector((state) => state.session);
+  const dispatch = useDispatch();
+
+  const [searchParams, _] = useSearchParams();
+
+  useEffect(() => {
+    if (!isSignedIn) {
+      const accessToken = searchParams.get("access-token");
+      const username = searchParams.get("username");
+
+      if (accessToken !== null && username !== null) {
+        dispatch(signIn({ accessToken, username }));
+      }
+    }
+  }, [searchParams]);
 
   return (
     <Box sx={{ marginTop: "1rem" }}>

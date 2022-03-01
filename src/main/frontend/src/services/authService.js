@@ -1,8 +1,7 @@
 import axios from "axios";
 
-const openInNewTab = (url) => {
-  const newWindow = window.open(url, "_blank", "noopener,noreferrer");
-  if (newWindow) newWindow.opener = null;
+const openUrl = (url) => {
+  window.open(url, "_self");
 };
 
 const signIn = async () => {
@@ -12,16 +11,11 @@ const signIn = async () => {
     // harusnya post ???
     const response = await axios.get(url);
 
-    console.log(
-      "🚀 ~ file: authService.js ~ line 9 ~ signIn ~ response",
-      response
-    );
+    if (response.status === 200) openUrl(response.data);
 
-    openInNewTab(response.data);
-
-    return { status: response.Status };
+    return { status: response.status };
   } catch (err) {
-    return { status: err.response.OutputSchema.Status };
+    return { status: err.response.status, statusText: err.response.statusText };
   }
 };
 
