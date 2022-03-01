@@ -2,6 +2,7 @@ package com.thesis.TheChess.dto;
 
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
@@ -14,30 +15,56 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ChallengeAIResult {
 	private String id;
-	private boolean rated;
-	private String variant;
+	private String rated;
+	private Variant variant;
 	private String speed;
 	private String perf;
-	private Integer createdAt;
-	private Integer lastMoveAt;
-	private String status;
+	private String createdAt;
+	private String lastMoveAt;
+	private Status status;
 	private Players players;
 	private String initialFen;
 	private String winner;
 	private Opening opening;
 	private String moves;
 	private String pgn;
-	private Integer daysPerTurn;
+	private String daysPerTurn;
 	private ArrayList<Analysis> analysis;
 	private String tournament;
 	private String swiss;
 	private Clock clock;
+	private String fen;
+	private String turns;
+	private String startedAtTurn;
+	private String source;
+	
+	
 	
 	@Data
 	@AllArgsConstructor
 	@NoArgsConstructor
 	@JsonIgnoreProperties(ignoreUnknown = true)
-	public class Players{
+	public static class Variant {
+		private String key;
+		private String name;
+		@JsonAlias("short")
+		private String short_key;
+	}
+	
+	@Data
+	@AllArgsConstructor
+	@NoArgsConstructor
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	public static class Status{
+		private String id;
+		private String name;
+	}
+	
+	@Data
+	@AllArgsConstructor
+	@NoArgsConstructor
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	public static class Players{
 		private Pieces white;
 		private Pieces black;
 	}
@@ -46,13 +73,13 @@ public class ChallengeAIResult {
 	@AllArgsConstructor
 	@NoArgsConstructor
 	@JsonIgnoreProperties(ignoreUnknown = true)
-	public class Pieces{
+	public static class Pieces{
 		private User user;
-		private Integer rating;
-		private Integer ratingDiff;
+		private String rating;
+		private String ratingDiff;
 		private String name;
-		private Boolean provisional;
-		private Integer aiLevel;
+		private String provisional;
+		private String aiLevel;
 		private PieceAnalysis analysis;
 		private String team;
 	}
@@ -61,10 +88,10 @@ public class ChallengeAIResult {
 	@AllArgsConstructor
 	@NoArgsConstructor
 	@JsonIgnoreProperties(ignoreUnknown = true)
-	public class User{
+	public static class User{
 		private String name;
 		private String title;
-		private boolean patron;
+		private String patron;
 		private String id;
 	}
 	
@@ -72,7 +99,7 @@ public class ChallengeAIResult {
 	@AllArgsConstructor
 	@NoArgsConstructor
 	@JsonIgnoreProperties(ignoreUnknown = true)
-	public class PieceAnalysis{
+	public static class PieceAnalysis{
 		private Integer inaccuracy;
 		private Integer mistake;
 		private Integer blunder;
@@ -83,18 +110,18 @@ public class ChallengeAIResult {
 	@AllArgsConstructor
 	@NoArgsConstructor
 	@JsonIgnoreProperties(ignoreUnknown = true)
-	public class Opening{
+	public static class Opening{
 		private String eco;
 		private String name;
-		private Integer ply;
+		private String ply;
 	}
 	
 	@Data
 	@AllArgsConstructor
 	@NoArgsConstructor
 	@JsonIgnoreProperties(ignoreUnknown = true)
-	public class Analysis{
-		private Integer eval;
+	public static class Analysis{
+		private String eval;
 		private String best;
 		private String variation;
 		private Judgement judgment;
@@ -104,7 +131,7 @@ public class ChallengeAIResult {
 	@AllArgsConstructor
 	@NoArgsConstructor
 	@JsonIgnoreProperties(ignoreUnknown = true)
-		public class Judgement{
+	public static class Judgement{
 		private String name;
 		private String comment;
 	}
@@ -113,9 +140,9 @@ public class ChallengeAIResult {
 	@AllArgsConstructor
 	@NoArgsConstructor
 	@JsonIgnoreProperties(ignoreUnknown = true)
-	public class Clock{
-		private Integer initial;
-		private Integer increment;
-		private Integer totalTime;
+	public static class Clock{
+		private String initial;
+		private String increment;
+		private String totalTime;
 	}
 }

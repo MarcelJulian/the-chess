@@ -19,7 +19,7 @@ public class OngoingGamesResult {
 	@AllArgsConstructor
 	@NoArgsConstructor
 	@JsonIgnoreProperties(ignoreUnknown = true)
-	public class OngoingGamesDetail {
+	public static class OngoingGamesDetail {
 		private String fullId;
 		private String gameId;
 		private String fen;
@@ -31,13 +31,14 @@ public class OngoingGamesResult {
 		private String rated;
 		private Opponent opponent;
 		private String isMyTurn;
+		private String secondsLeft;
 	}
 	
 	@Data
 	@AllArgsConstructor
 	@NoArgsConstructor
 	@JsonIgnoreProperties(ignoreUnknown = true)
-	public class Variant {
+	public static class Variant {
 		private String key;
 		private String name;
 	}
@@ -46,10 +47,10 @@ public class OngoingGamesResult {
 	@AllArgsConstructor
 	@NoArgsConstructor
 	@JsonIgnoreProperties(ignoreUnknown = true)
-	public class Opponent {
+	public static class Opponent {
 		private String id;
 		private String username;
-		private Integer rating;
+		private String rating;
 	}
 }
 
