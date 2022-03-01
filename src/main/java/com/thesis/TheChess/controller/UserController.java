@@ -59,35 +59,6 @@ public class UserController {
 		}
 	}
 	
-	/*
-	@GetMapping(path = "callback-the-chess")
-	public ResponseEntity<CallbackOutput> callbackController(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-		System.out.println("UserController - callbackController - START");
-		
-		CallbackOutput output = null;
-		
-		try {
-			output = service.callbackService(request);
-			
-			HttpHeaders headers = new HttpHeaders();
-			headers.add("Access-Control-Allow-Origin", "*");
-			headers.add("Access-Control-Allow-Headers", "Content-Type");
-			headers.add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-			
-			return ResponseEntity.status(HttpStatus.OK).headers(headers).body(output);
-		} catch (Exception e) {
-			System.out.println("UserController - callbackController - ERROR - error >> " + e.getMessage());
-			
-			HttpHeaders headers = new HttpHeaders();
-			headers.add("Access-Control-Allow-Origin", "*");
-			headers.add("Access-Control-Allow-Headers", "Content-Type");
-			headers.add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-			
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(headers).body(null);
-		}
-	}
-	*/
-	
 	@GetMapping(path = "callback-the-chess")
 	public RedirectView callbackController(HttpServletRequest request, HttpServletResponse response, RedirectAttributes ra) throws Exception{
 		System.out.println("UserController - callbackController - START");
