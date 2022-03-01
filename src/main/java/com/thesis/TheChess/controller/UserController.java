@@ -30,7 +30,7 @@ public class UserController {
 	@Autowired
 	UserService service;
 	
-	@GetMapping(path = "login-the-chess")
+	@GetMapping(path = "api/login-the-chess")
 	public ResponseEntity<String> loginController(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
 		System.out.println("UserController - loginController START");
 		
@@ -59,7 +59,7 @@ public class UserController {
 		}
 	}
 	
-	@GetMapping(path = "callback-the-chess")
+	@GetMapping(path = "api/callback-the-chess")
 	public RedirectView callbackController(HttpServletRequest request, HttpServletResponse response, RedirectAttributes ra) throws Exception{
 		System.out.println("UserController - callbackController - START");
 		
