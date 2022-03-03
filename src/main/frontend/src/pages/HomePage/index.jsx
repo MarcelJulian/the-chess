@@ -7,8 +7,12 @@ import Container from "@mui/material/Container";
 import { useSelector, useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 
+import getOnGoingGames from "services/gameService";
 import { signIn } from "store/reducers/sessionSlice";
-import { showSuccessToast } from "store/reducers/uiSlice";
+import {
+  showSuccessToast,
+  showRequestErrorToast
+} from "store/reducers/uiSlice";
 
 import BotCardContent from "./BotCardContent";
 import CardTitle from "./CardTitle";
@@ -30,7 +34,15 @@ function HomePage() {
         dispatch(showSuccessToast("Sign in success!"));
       }
     }
-  }, [searchParams]);
+  }, [searchParams, isSignedIn]);
+
+  useEffect(async () => {
+    if (isSignedIn) {
+      const response = await getOnGoingGames();
+      if (response.status === 200) dispatch(showSuccessToast(response.data));
+      else dispatch(showRequestErrorToast(response));
+    }
+  });
 
   return (
     <Box sx={{ marginTop: "1rem" }}>

@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import signInToLichess from "services/authService";
 import { signOut } from "store/reducers/sessionSlice";
-import { showErrorToast } from "store/reducers/uiSlice";
+import { showRequestErrorToast } from "store/reducers/uiSlice";
 
 import NavBarButton from "./NavBarButton";
 import RouteLinkButton from "./RouteLinkButton";
@@ -16,10 +16,7 @@ function AuthButtonGroup() {
   const dispatch = useDispatch();
   const signInHandler = async () => {
     const response = await signInToLichess();
-    if (response.status !== 200)
-      dispatch(
-        showErrorToast(`Error Code: ${response.status} ${response.statusText}`)
-      );
+    if (response.status !== 200) dispatch(showRequestErrorToast(response));
   };
 
   return (
