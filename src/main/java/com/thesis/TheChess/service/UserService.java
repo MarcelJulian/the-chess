@@ -53,7 +53,7 @@ public class UserService {
 			HttpSession session = request.getSession();
 			session.setAttribute("codeVerifier", verifier);
 			
-			String url = lichess_url + "oauth?response_type=code&client_id=" + client_id + "&redirect_uri=" + chess_url + "callback-the-chess&scope=board:play&code_challenge_method=S256&code_challenge=" + challenge;
+			String url = lichess_url + "oauth?response_type=code&client_id=" + client_id + "&redirect_uri=" + chess_url + "api/callback-the-chess&scope=board:play&code_challenge_method=S256&code_challenge=" + challenge;
 			
 			System.out.println("UserService - loginService END - output: " + url);
 			return url;
