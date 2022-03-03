@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 
 import { signIn } from "store/reducers/sessionSlice";
+import { showSuccessToast } from "store/reducers/uiSlice";
 
 import BotCardContent from "./BotCardContent";
 import CardTitle from "./CardTitle";
@@ -26,6 +27,7 @@ function HomePage() {
 
       if (accessToken !== null && username !== null) {
         dispatch(signIn({ accessToken, username }));
+        dispatch(showSuccessToast("Sign in success!"));
       }
     }
   }, [searchParams]);
@@ -33,6 +35,7 @@ function HomePage() {
   return (
     <Box sx={{ marginTop: "1rem" }}>
       <Container>
+        {/* TODO: isSignedIn === false, show what? */}
         <Box display="flex" justifyContent="space-between">
           <BotCard />
           <HumanCard />

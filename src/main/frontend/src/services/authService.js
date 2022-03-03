@@ -4,11 +4,9 @@ const openUrl = (url) => {
   window.open(url, "_self");
 };
 
-const signIn = async () => {
+const signInToLichess = async () => {
   try {
-    // let url = "/api/apps";
-    const url = "/login-the-chess";
-    // harusnya post ???
+    const url = "/api/login-the-chess";
     const response = await axios.get(url);
 
     if (response.status === 200) openUrl(response.data);
@@ -19,4 +17,4 @@ const signIn = async () => {
   }
 };
 
-export default signIn;
+export default signInToLichess;
