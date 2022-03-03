@@ -40,7 +40,7 @@ function Board() {
           style={{
             width: squareWidth,
             height: squareWidth,
-            backgroundImage: `url(/ver3/${p}.png)`,
+            backgroundImage: `url(${process.env.PUBLIC_URL}/ver3/${p}.png)`,
             backgroundSize: "100%"
           }}
         />
