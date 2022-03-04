@@ -1,8 +1,6 @@
 import axios from "axios";
-import { useSelector } from "react-redux";
 
-const getOnGoingGames = async () => {
-  const accessToken = useSelector((state) => state.session.accessToken);
+const getOnGoingGames = async (accessToken) => {
   const headerConfig = {
     headers: {
       oauth: accessToken
