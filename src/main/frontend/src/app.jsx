@@ -12,6 +12,7 @@ import { Routes, Route } from "react-router-dom";
 import GamePage from "pages/GamePage";
 
 import NavBar from "./components/NavBar";
+import Toast from "./components/Toast";
 import HomePage from "./pages/HomePage";
 import SettingsPageDialog from "./pages/SettingsPage/idx";
 
@@ -57,6 +58,7 @@ export default function App() {
           <Brightness7Icon />
           <Brightness4Icon />
         </IconButton>
+        <Toast />
       </Paper>
     </ThemeProvider>
   );

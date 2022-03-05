@@ -1,22 +1,65 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import Container from "@mui/material/Container";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useSearchParams, useNavigate } from "react-router-dom";
+
+import getOnGoingGames from "services/gameService";
+import { signIn } from "store/reducers/sessionSlice";
+import { showSuccessToast } from "store/reducers/uiSlice";
 
 import BotCardContent from "./BotCardContent";
 import CardTitle from "./CardTitle";
 import HumanCardContent from "./HumanCardContent";
 
 function HomePage() {
-  // replace with store
-  const [isLogin, setIsLogin] = useState(false);
+  const { isSignedIn, accessToken } = useSelector((state) => state.session);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [searchParams, _] = useSearchParams();
+
+  useEffect(() => {
+    if (!isSignedIn) {
+      const tempAccessToken = searchParams.get("access-token");
+      const tempUsername = searchParams.get("username");
+
+      if (tempAccessToken !== null && tempUsername !== null) {
+        dispatch(
+          signIn({ accessToken: tempAccessToken, username: tempUsername })
+        );
+        dispatch(showSuccessToast("Sign in success!"));
+        // remove search param
+        navigate("/");
+      }
+    }
+  }, [searchParams, isSignedIn]);
+
+  useEffect(() => {
+    const apiHandler = async () => {
+      if (isSignedIn) {
+        const response = await getOnGoingGames(accessToken);
+        if (response.status === 200) {
+          const gameId = response.data.game_id;
+          // todo
+          console.log(
+            "🚀 ~ file: index.jsx ~ line 44 ~ apiHandler ~ gameId",
+            gameId
+          );
+        }
+      }
+    };
+
+    apiHandler();
+  }, [isSignedIn]);
 
   return (
     <Box sx={{ marginTop: "1rem" }}>
       <Container>
+        {/* TODO: isSignedIn === false, show what? */}
         <Box display="flex" justifyContent="space-between">
           <BotCard />
           <HumanCard />
