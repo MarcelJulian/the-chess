@@ -25,8 +25,8 @@ public class GameModeController {
 	@Autowired
 	GameModeService service;
 
-	@GetMapping(path = "get-ongoing-games")
-	public ResponseEntity<OngoingGamesOutput> getOngoingGamesController(@RequestHeader String user_oauth) throws Exception{
+	@GetMapping(path = "api/ongoing-games")
+	public ResponseEntity<OngoingGamesOutput> getOngoingGamesController(@RequestHeader("oauth") String user_oauth) throws Exception{
 		System.out.println("GameModeController - getOngoingGamesController - START - user_oauth >> " + user_oauth);
 		
 		OngoingGamesOutput output = null;
@@ -42,8 +42,8 @@ public class GameModeController {
 		}
 	}
 	
-	@PostMapping(path = "play-with-bot")
-	public ResponseEntity<PlayWithBotOutput> playWithBotController(@RequestHeader String user_oauth, @RequestBody PlayWithBotInput input) throws Exception{
+	@PostMapping(path = "api/play-with-bot")
+	public ResponseEntity<PlayWithBotOutput> playWithBotController(@RequestHeader("oauth")  String user_oauth, @RequestBody PlayWithBotInput input) throws Exception{
 		System.out.println("GameModeController - playWithBotController - START - user_oauth >> " + user_oauth + " - input >> " + input);
 		
 		PlayWithBotOutput output = null;
@@ -58,8 +58,8 @@ public class GameModeController {
 		}
 	}
 	
-	@PostMapping(path = "play-with-human")
-	public ResponseEntity<PlayWithHumanOutput> playWithHumanController(@RequestHeader String user_oauth, @RequestBody PlayWithHumanInput input) throws Exception{
+	@PostMapping(path = "api/play-with-human")
+	public ResponseEntity<PlayWithHumanOutput> playWithHumanController(@RequestHeader("oauth")  String user_oauth, @RequestBody PlayWithHumanInput input) throws Exception{
 		System.out.println("GameModeController - playWithHumanController - START - user_oauth >> " + user_oauth + " - input >> " + input);
 		
 		PlayWithHumanOutput output = null;
@@ -78,8 +78,8 @@ public class GameModeController {
 	
 //	TODO: controller stream buat Stream incoming events
 	
-	@PostMapping(path = "abort-game/{game_id}")
-	public ResponseEntity<Boolean> abortGameController(@RequestHeader String user_oauth, @PathVariable String game_id) throws Exception{
+	@PostMapping(path = "api/abort-game/{game_id}")
+	public ResponseEntity<Boolean> abortGameController(@RequestHeader("oauth") String user_oauth, @PathVariable String game_id) throws Exception{
 		System.out.println("GameModeController - abortGameController - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id);
 		
 		Boolean output = null;
@@ -94,8 +94,8 @@ public class GameModeController {
 		}
 	}
 	
-	@PostMapping(path = "resign-game/{game_id}")
-	public ResponseEntity<Boolean> resignGameController(@RequestHeader String user_oauth, @PathVariable String game_id) throws Exception{
+	@PostMapping(path = "api/resign-game/{game_id}")
+	public ResponseEntity<Boolean> resignGameController(@RequestHeader("oauth") String user_oauth, @PathVariable String game_id) throws Exception{
 		System.out.println("GameModeController - resignGameController - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id);
 		
 		Boolean output = null;
@@ -110,8 +110,8 @@ public class GameModeController {
 		}
 	}
 	
-	@PostMapping(path = "handle-draw-offer/{game_id}/{accept}")
-	public ResponseEntity<Boolean> handleDrawOfferController(@RequestHeader String user_oauth, @PathVariable String game_id, @PathVariable String accept) throws Exception{
+	@PostMapping(path = "api/handle-draw-offer/{game_id}/{accept}")
+	public ResponseEntity<Boolean> handleDrawOfferController(@RequestHeader("oauth") String user_oauth, @PathVariable String game_id, @PathVariable String accept) throws Exception{
 		System.out.println("GameModeController - handleDrawOfferController - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - accept >> " + accept);
 		
 		Boolean output = null;

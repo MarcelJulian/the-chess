@@ -38,7 +38,12 @@ public class GameModeService {
 		
 		try {
 			result = hitOngoingGames(user_oauth);
-			output.setGame_id(result.getNowPlaying().get(result.getNowPlaying().size()-1).getGameId());
+			
+			if (result.getNowPlaying().size() == 0) {
+				output.setGame_id("");
+			} else {
+				output.setGame_id(result.getNowPlaying().get(result.getNowPlaying().size()-1).getGameId());				
+			}
 			
 			System.out.println("GameModeService - ongoingGamesService - END - user_oauth >> " + user_oauth);
 			return output;
@@ -53,7 +58,7 @@ public class GameModeService {
 		
 		try {
 			HttpHeaders headers = new HttpHeaders();
-			headers.add("Authorization", user_oauth);
+			headers.add("Authorization", "Bearer " + user_oauth);
 			
 			HttpEntity request = new HttpEntity("", headers);
 			System.out.println("hitOngoingGames - request >> " + request);
@@ -102,7 +107,7 @@ public class GameModeService {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-			headers.add("Authorization", user_oauth);
+			headers.add("Authorization", "Bearer " + user_oauth);
 
 			MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 			map.add("level", input.getLevel());
@@ -120,8 +125,8 @@ public class GameModeService {
 
 			ResponseEntity<ChallengeAIResult> responseHit = restTemplate.exchange(uri, HttpMethod.POST, entity, ChallengeAIResult.class);
 			System.out.println("hitChallengeAI - responseHit >> " + responseHit);
-			
-			if (responseHit.getStatusCodeValue() == 200) {
+
+			if (responseHit.getStatusCodeValue() == 201 || responseHit.getStatusCodeValue() == 200) {
 				ChallengeAIResult output = responseHit.getBody();
 				
 				System.out.println("hitChallengeAI - END - user_oauth >> " + user_oauth + " - input >> " + input + " - output >> " + output);
@@ -157,13 +162,13 @@ public class GameModeService {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-			headers.add("Authorization", user_oauth);
+			headers.add("Authorization", "Bearer " + user_oauth);
 
 			MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 			map.add("rated", "true");
 			map.add("time", input.getTime());
 			map.add("increment", input.getIncrement());
-			map.add("days", Integer.toString(input.getDays()));	//katanya dia required
+			map.add("days", input.getDays());	//katanya dia required
 			map.add("variant", "standard");
 			
 			HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map, headers);
@@ -209,7 +214,7 @@ public class GameModeService {
 		
 		try {
 			HttpHeaders headers = new HttpHeaders();
-			headers.add("Authorization", user_oauth);
+			headers.add("Authorization", "Bearer " + user_oauth);
 			
 			HttpEntity request = new HttpEntity("", headers);
 			System.out.println("hitAbortGame - request >> " + request);
@@ -261,7 +266,7 @@ public class GameModeService {
 		
 		try {
 			HttpHeaders headers = new HttpHeaders();
-			headers.add("Authorization", user_oauth);
+			headers.add("Authorization", "Bearer " + user_oauth);
 			
 			HttpEntity request = new HttpEntity("", headers);
 			System.out.println("hitResignGame - request >> " + request);
@@ -316,7 +321,7 @@ public class GameModeService {
 		
 		try {
 			HttpHeaders headers = new HttpHeaders();
-			headers.add("Authorization", user_oauth);
+			headers.add("Authorization", "Bearer " + user_oauth);
 			
 			HttpEntity request = new HttpEntity("", headers);
 			System.out.println("hithandleDrawOffer - request >> " + request);

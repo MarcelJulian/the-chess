@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.view.RedirectView;
 
 import com.thesis.TheChess.dto.AccountResult;
 import com.thesis.TheChess.dto.CallbackOutput;
@@ -53,7 +52,7 @@ public class UserService {
 			HttpSession session = request.getSession();
 			session.setAttribute("codeVerifier", verifier);
 			
-			String url = lichess_url + "oauth?response_type=code&client_id=" + client_id + "&redirect_uri=" + chess_url + "callback-the-chess&scope=board:play&code_challenge_method=S256&code_challenge=" + challenge;
+			String url = lichess_url + "oauth?response_type=code&client_id=" + client_id + "&redirect_uri=" + chess_url + "api/callback-the-chess&scope=board:play&code_challenge_method=S256&code_challenge=" + challenge;
 			
 			System.out.println("UserService - loginService END - output: " + url);
 			return url;
@@ -117,7 +116,7 @@ public class UserService {
 			map.add("grant_type", "authorization_code");
 			map.add("code", authCode);
 			map.add("code_verifier", verifier);
-			map.add("redirect_uri", chess_url + "callback-the-chess");
+			map.add("redirect_uri", chess_url + "api/callback-the-chess");
 			map.add("client_id", client_id);
 			
 			HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map, headers);
