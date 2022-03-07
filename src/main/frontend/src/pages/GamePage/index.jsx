@@ -47,50 +47,7 @@ function GamePage() {
           gridTemplateColumns: "repeat(3, 1fr)"
         }}
       >
-        <Card
-          variant="outlined"
-          elevation={4}
-          style={{
-            marginTop: "30%",
-            marginLeft: "15%",
-            marginBottom: "25%",
-            height: "13rem",
-            width: "15rem",
-            borderRadius: "0.5rem",
-            justifyContent: "center"
-          }}
-        >
-          <Typography
-            variant="h6"
-            sx={{
-              marginTop: "2rem",
-              marginBottom: "2rem",
-              fontFamily: "Poppins",
-              fontSize: "14",
-              textAlign: "center"
-            }}
-          >
-            Movement :
-          </Typography>
-          <Typography
-            variant="h6"
-            sx={{
-              marginTop: "0.5rem",
-              fontFamily: "Poppins",
-              textAlign: "center"
-            }}
-          >
-            Your Input :
-          </Typography>
-          <Box marginTop="15%">
-            <IconButton>
-              <MicIcon />
-            </IconButton>
-            <IconButton>
-              <MicOffIcon />
-            </IconButton>
-          </Box>
-        </Card>
+        {/* <VoiceCard /> */}
         <Board />
         <Box
           marginTop="30%"
@@ -118,201 +75,44 @@ function GamePage() {
                 username
               </Item>
             </Grid>
-            <Grid border="1px solid" item xs={2}>
-              <Item
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                <Tooltip title="Flip Board">
-                  <IconButton
-                    sx={{
-                      h: "100%",
-                      w: "100%"
-                    }}
-                  >
-                    <CachedIcon />
-                  </IconButton>
-                </Tooltip>
-              </Item>
+            <Grid border="1px solid" item xs={3}>
+              <IconButtonGridItemContainer icon={<FastRewind />} />
+            </Grid>
+            <Grid border="1px solid" item xs={3}>
+              <IconButtonGridItemContainer icon={<FirstPageIcon />} />
+            </Grid>
+            <Grid border="1px solid" item xs={3}>
+              <IconButtonGridItemContainer icon={<LastPageIcon />} />
+            </Grid>
+            <Grid border="1px solid" item xs={3}>
+              <IconButtonGridItemContainer icon={<FastForwardIcon />} />
             </Grid>
             <Grid border="1px solid" item xs={2}>
-              <Item
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                <IconButton
-                  sx={{
-                    h: "100%",
-                    w: "100%"
-                  }}
-                >
-                  <FastRewind />
-                </IconButton>
-              </Item>
-            </Grid>
-            <Grid border="1px solid" item xs={2}>
-              <Item
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                <IconButton
-                  sx={{
-                    h: "100%",
-                    w: "100%"
-                  }}
-                >
-                  <FirstPageIcon />
-                </IconButton>
-              </Item>
-            </Grid>
-            <Grid border="1px solid" item xs={2}>
-              <Item
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                <IconButton
-                  sx={{
-                    h: "100%",
-                    w: "100%"
-                  }}
-                >
-                  <LastPageIcon />
-                </IconButton>
-              </Item>
-            </Grid>
-            <Grid border="1px solid" item xs={2}>
-              <Item
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                <IconButton
-                  sx={{
-                    h: "100%",
-                    w: "100%"
-                  }}
-                >
-                  <FastForwardIcon />
-                </IconButton>
-              </Item>
-            </Grid>
-            <Grid border="1px solid" item xs={2}>
-              <Item
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                <Tooltip title="Analysis Board">
-                  <IconButton
-                    sx={{
-                      h: "100%",
-                      w: "100%"
-                    }}
-                  >
-                    <TravelExploreIcon />
-                  </IconButton>
-                </Tooltip>
-              </Item>
-            </Grid>
-            <Grid border="1px solid" item xs={2}>
-              <Item
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                1
-              </Item>
+              <CenteredGridItemContainer label="1" />
             </Grid>
             <Grid border="1px solid" item xs={5}>
-              <Item
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                -
-              </Item>
+              <CenteredGridItemContainer label="-" />
             </Grid>
             <Grid border="1px solid" item xs={5}>
-              <Item
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                -
-              </Item>
+              <CenteredGridItemContainer label="-" />
             </Grid>
             <Grid border="1px solid" item xs={2}>
-              <Item
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                2
-              </Item>
+              <CenteredGridItemContainer label="2" />
             </Grid>
             <Grid border="1px solid" item xs={5}>
-              <Item
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                -
-              </Item>
+              <CenteredGridItemContainer label="-" />
             </Grid>
             <Grid border="1px solid" item xs={5}>
-              <Item
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                -
-              </Item>
+              <CenteredGridItemContainer label="-" />
             </Grid>
             <Grid border="1px solid" item xs={2}>
-              <Item
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                3
-              </Item>
+              <CenteredGridItemContainer label="3" />
             </Grid>
             <Grid border="1px solid" item xs={5}>
-              <Item
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                -
-              </Item>
+              <CenteredGridItemContainer label="-" />
             </Grid>
             <Grid border="1px solid" item xs={5}>
-              <Item
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                -
-              </Item>
+              <CenteredGridItemContainer label="-" />
             </Grid>
             <Grid item xs={12}>
               <Item
@@ -388,3 +188,77 @@ function GamePage() {
 }
 
 export default GamePage;
+
+function CenteredGridItemContainer({ component, label }) {
+  return (
+    <Item
+      sx={{
+        justifyContent: "center",
+        display: "flex"
+      }}
+    >
+      {component ?? label}
+    </Item>
+  );
+}
+
+function IconButtonGridItemContainer({ icon }) {
+  const iconButton = (
+    <IconButton
+      sx={{
+        h: "100%",
+        w: "100%"
+      }}
+    >
+      {icon}
+    </IconButton>
+  );
+  return <CenteredGridItemContainer component={iconButton} />;
+}
+
+function VoiceCard() {
+  return (
+    <Card
+      variant="outlined"
+      elevation={4}
+      style={{
+        marginTop: "30%",
+        marginLeft: "15%",
+        marginBottom: "25%",
+        height: "13rem",
+        width: "15rem",
+        borderRadius: "0.5rem",
+        justifyContent: "center"
+      }}
+    >
+      <Typography
+        variant="h6"
+        sx={{
+          marginTop: "2rem",
+          marginBottom: "2rem",
+          fontSize: "14",
+          textAlign: "center"
+        }}
+      >
+        Movement :
+      </Typography>
+      <Typography
+        variant="h6"
+        sx={{
+          marginTop: "0.5rem",
+          textAlign: "center"
+        }}
+      >
+        Your Input :
+      </Typography>
+      <Box marginTop="15%">
+        <IconButton>
+          <MicIcon />
+        </IconButton>
+        <IconButton>
+          <MicOffIcon />
+        </IconButton>
+      </Box>
+    </Card>
+  );
+}
