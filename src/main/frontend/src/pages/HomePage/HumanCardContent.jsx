@@ -31,8 +31,8 @@ function HumanCardContent() {
   ];
 
   const wrapWithGridItem = (components) =>
-    components.map((component) => (
-      <Grid item xs={4}>
+    components.map((component, index) => (
+      <Grid key={component.props.label} item xs={4}>
         {component}
       </Grid>
     ));

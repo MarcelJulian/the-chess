@@ -4,7 +4,7 @@ export const uiSlice = createSlice({
   name: "ui",
   initialState: {
     isToastShown: false,
-    toastType: "",
+    toastType: "success",
     toastMessage: ""
   },
   reducers: {
