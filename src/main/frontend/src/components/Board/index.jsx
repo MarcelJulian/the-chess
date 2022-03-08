@@ -1,11 +1,9 @@
 import { useRef, useState } from "react";
 
-import Chess from "chess.js";
 import { Chessboard } from "react-chessboard";
 
-function Board() {
+function Board({ game, setGameHandler }) {
   const chessboardRef = useRef();
-  const [game, setGame] = useState(new Chess());
 
   const [moveFrom, setMoveFrom] = useState("");
 
@@ -13,7 +11,7 @@ function Board() {
   const [optionSquares, setOptionSquares] = useState({});
 
   const safeGameMutate = (modify) => {
-    setGame((g) => {
+    setGameHandler((g) => {
       const update = { ...g };
       modify(update);
       return update;
@@ -71,7 +69,7 @@ function Board() {
       to: square,
       promotion: "q" // always promote to a queen for example simplicity
     });
-    setGame(gameCopy);
+    setGameHandler(gameCopy);
 
     // if invalid, setMoveFrom and getMoveOptions
     if (move === null) {

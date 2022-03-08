@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
 
-import CachedIcon from "@mui/icons-material/Cached";
 import FastForwardIcon from "@mui/icons-material/FastForward";
 import FastRewind from "@mui/icons-material/FastRewind";
 import FirstPageIcon from "@mui/icons-material/FirstPage";
@@ -10,32 +9,25 @@ import MicIcon from "@mui/icons-material/Mic";
 import MicOffIcon from "@mui/icons-material/MicOff";
 import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore";
 import StarHalfIcon from "@mui/icons-material/StarHalf";
-import TravelExploreIcon from "@mui/icons-material/TravelExplore";
-import { Card } from "@mui/material";
 import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
+import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import Chess from "chess.js";
 
 import Board from "components/Board";
 
-function Item(props) {
-  const { sx, ...other } = props;
-  return (
-    <Box
-      sx={{
-        fontSize: "1rem",
-        fontWeight: "700",
-        ...sx
-      }}
-      {...other}
-    />
-  );
-}
+import GameMovesGrid from "./GameMovesGrid";
+import Item from "./Item";
+import { IconButtonGridItemContainer } from "./ItemContainers";
 
 function GamePage() {
+  const [game, setGame] = useState(new Chess());
+
+  const setGameHandler = (g) => setGame(g);
+
   return (
     <Card>
       <Box
@@ -48,7 +40,7 @@ function GamePage() {
         }}
       >
         {/* <VoiceCard /> */}
-        <Board />
+        <Board game={game} setGameHandler={setGameHandler} />
         <Box
           marginTop="30%"
           marginLeft="10%"
@@ -87,33 +79,10 @@ function GamePage() {
             <Grid border="1px solid" item xs={3}>
               <IconButtonGridItemContainer icon={<FastForwardIcon />} />
             </Grid>
-            <Grid border="1px solid" item xs={2}>
-              <CenteredGridItemContainer label="1" />
-            </Grid>
-            <Grid border="1px solid" item xs={5}>
-              <CenteredGridItemContainer label="-" />
-            </Grid>
-            <Grid border="1px solid" item xs={5}>
-              <CenteredGridItemContainer label="-" />
-            </Grid>
-            <Grid border="1px solid" item xs={2}>
-              <CenteredGridItemContainer label="2" />
-            </Grid>
-            <Grid border="1px solid" item xs={5}>
-              <CenteredGridItemContainer label="-" />
-            </Grid>
-            <Grid border="1px solid" item xs={5}>
-              <CenteredGridItemContainer label="-" />
-            </Grid>
-            <Grid border="1px solid" item xs={2}>
-              <CenteredGridItemContainer label="3" />
-            </Grid>
-            <Grid border="1px solid" item xs={5}>
-              <CenteredGridItemContainer label="-" />
-            </Grid>
-            <Grid border="1px solid" item xs={5}>
-              <CenteredGridItemContainer label="-" />
-            </Grid>
+          </Grid>
+          <GameMovesGrid pgn={game.pgn()} />
+
+          <Grid container spacing={0}>
             <Grid item xs={12}>
               <Item
                 sx={{
@@ -188,33 +157,6 @@ function GamePage() {
 }
 
 export default GamePage;
-
-function CenteredGridItemContainer({ component, label }) {
-  return (
-    <Item
-      sx={{
-        justifyContent: "center",
-        display: "flex"
-      }}
-    >
-      {component ?? label}
-    </Item>
-  );
-}
-
-function IconButtonGridItemContainer({ icon }) {
-  const iconButton = (
-    <IconButton
-      sx={{
-        h: "100%",
-        w: "100%"
-      }}
-    >
-      {icon}
-    </IconButton>
-  );
-  return <CenteredGridItemContainer component={iconButton} />;
-}
 
 function VoiceCard() {
   return (
