@@ -1,12 +1,17 @@
 import React, { useState } from "react";
 
+import Button from "@mui/material/Button";
 import { blueGrey, brown } from "@mui/material/colors";
 import CssBaseline from "@mui/material/CssBaseline";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
 import Paper from "@mui/material/Paper";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Routes, Route } from "react-router-dom";
-
 import GamePage from "pages/GamePage";
+import PropTypes from "prop-types";
+import { useSelector, useDispatch } from "react-redux";
+import { Routes, Route } from "react-router-dom";
+import { hideSettingsDialog } from "store/reducers/uiSlice";
 
 import NavBar from "./components/NavBar";
 import Toast from "./components/Toast";
@@ -34,7 +39,11 @@ export default function App() {
       fontFamily: "Poppins"
     }
   });
+  const isSettingsDialogShown = useSelector(
+    (state) => state.ui.isSettingsDialogShown
+  );
 
+  const dispatch = useDispatch();
   return (
     <ThemeProvider theme={darkMode ? darkTheme : greenTheme}>
       <CssBaseline />
@@ -47,6 +56,13 @@ export default function App() {
         </Routes>
         <GamePage />
         <Toast />
+        <Dialog
+          onClose={() => dispatch(hideSettingsDialog())}
+          open={isSettingsDialogShown}
+        >
+          <DialogTitle>Settings</DialogTitle>
+          <SettingsPageDialog />
+        </Dialog>
       </Paper>
     </ThemeProvider>
   );

@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 import * as React from "react";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -21,8 +22,12 @@ import Select from "@mui/material/Select";
 import Slider from "@mui/material/Slider";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
+import { useSelector, useDispatch } from "react-redux";
+import { setBoardSet, setPieceSet } from "store/reducers/boardSlice";
 
 import ToggleColorMode from "../../components/Theme";
 
@@ -49,7 +54,8 @@ function Item(props) {
 
 function SettingsPageDialog() {
   const [value, setValue] = React.useState(30);
-
+  const pieceSet = useSelector((state) => state.board.pieceSet);
+  const boardSet = useSelector((state) => state.board.boardSet);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -59,22 +65,16 @@ function SettingsPageDialog() {
     setTile(event.target.value);
   };
   const [expanded, setExpanded] = React.useState(false);
-
+  const dispatch = useDispatch();
   const handleChangeAcor = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-
+  const handlePieceSetChange = (_, variable) => dispatch(setPieceSet(variable));
+  const handleBoardSetChange = (_, boardVar) => dispatch(setBoardSet(boardVar));
   return (
     <Container>
       <Box
-        marginLeft="30%"
-        marginRight="30%"
         marginBottom="5%"
-        border="1px solid"
-        borderRadius="1rem"
-        boxShadow="3"
-        // p="0.5rem"
-        //   textAlign="Start"
         justifyContent="center"
         sx={{ display: "grid", gridTemplateColumns: "repeat(1, 1fr)" }}
       >
@@ -88,7 +88,78 @@ function SettingsPageDialog() {
               <Typography>Board Theme</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography>Pilihan - pilihan board.</Typography>
+              {/* 1 */}
+              <ToggleButtonGroup
+                value={boardSet}
+                exclusive
+                onChange={handleBoardSetChange}
+                sx={{ border: 1 }}
+              >
+                <ToggleButton
+                  value="tile1"
+                  disableFocusRipple
+                  disableRipple
+                  sx={{
+                    h: "200rem",
+                    w: "10rem",
+                    backgroundImage: `url(${process.env.PUBLIC_URL}
+                  /chooseTile/tile1.jpg)`,
+                    backgroundSize: "100%"
+                  }}
+                />
+                {/* 2 */}
+                <ToggleButton
+                  value="tile2"
+                  disableFocusRipple
+                  disableRipple
+                  sx={{
+                    // h: "2rem",
+                    // width: "2rem",
+                    backgroundImage: `url(${process.env.PUBLIC_URL}
+                  /chooseTile/tile2.jpg)`,
+                    backgroundSize: "100%"
+                  }}
+                />
+                {/* 3 */}
+                <ToggleButton
+                  value="tile3"
+                  disableFocusRipple
+                  disableRipple
+                  sx={{
+                    // h: "2rem",
+                    // width: "2rem",
+                    backgroundImage: `url(${process.env.PUBLIC_URL}
+                  /chooseTile/tile3.jpg)`,
+                    backgroundSize: "100%"
+                  }}
+                />
+                {/* 4 */}
+                <ToggleButton
+                  value="tile4"
+                  disableFocusRipple
+                  disableRipple
+                  sx={{
+                    // h: "2rem",
+                    // width: "2rem",
+                    backgroundImage: `url(${process.env.PUBLIC_URL}
+                  /chooseTile/tile4.jpg)`,
+                    backgroundSize: "100%"
+                  }}
+                />
+                {/* 5 */}
+                <ToggleButton
+                  value="tile5"
+                  disableFocusRipple
+                  disableRipple
+                  sx={{
+                    // h: "2rem",
+                    // width: "2rem",
+                    backgroundImage: `url(${process.env.PUBLIC_URL}
+                  /chooseTile/tile5.jpg)`,
+                    backgroundSize: "100%"
+                  }}
+                />
+              </ToggleButtonGroup>
             </AccordionDetails>
           </Accordion>
         </Item>
@@ -102,7 +173,78 @@ function SettingsPageDialog() {
               <Typography>Piece Set</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography>Pilihan - pilihan piece.</Typography>
+              <ToggleButtonGroup
+                value={pieceSet}
+                exclusive
+                onChange={handlePieceSetChange}
+                sx={{ border: 1 }}
+              >
+                {/* 1 */}
+                <ToggleButton
+                  value="ver1"
+                  disableFocusRipple
+                  disableRipple
+                  sx={{
+                    // h: "1000rem",
+                    // w: "1000rem",
+                    backgroundImage: `url(${process.env.PUBLIC_URL}
+                  /ver1/bn.png)`,
+                    backgroundSize: "100%"
+                  }}
+                />
+                {/* 2 */}
+                <ToggleButton
+                  value="ver2"
+                  disableFocusRipple
+                  disableRipple
+                  sx={{
+                    // h: "5rem",
+                    // w: "5rem",
+                    backgroundImage: `url(${process.env.PUBLIC_URL}
+                  /ver2/bn.png)`,
+                    backgroundSize: "100%"
+                  }}
+                />
+                {/* 3 */}
+                <ToggleButton
+                  value="ver3"
+                  disableFocusRipple
+                  disableRipple
+                  sx={{
+                    // h: "5rem",
+                    // w: "5rem",
+                    backgroundImage: `url(${process.env.PUBLIC_URL}
+                  /ver3/bn.png)`,
+                    backgroundSize: "100%"
+                  }}
+                />
+                {/* 4 */}
+                <ToggleButton
+                  value="ver4"
+                  disableFocusRipple
+                  disableRipple
+                  sx={{
+                    // h: "5rem",
+                    // w: "5rem",
+                    backgroundImage: `url(${process.env.PUBLIC_URL}
+                  /ver4/bn.png)`,
+                    backgroundSize: "100%"
+                  }}
+                />
+                {/* 5 */}
+                <ToggleButton
+                  value="ver5"
+                  disableFocusRipple
+                  disableRipple
+                  sx={{
+                    // h: "5rem",
+                    // w: "5rem",
+                    backgroundImage: `url(${process.env.PUBLIC_URL}
+                  /ver5/bn.png)`,
+                    backgroundSize: "100%"
+                  }}
+                />
+              </ToggleButtonGroup>
             </AccordionDetails>
           </Accordion>
         </Item>

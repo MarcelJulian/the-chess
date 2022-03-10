@@ -7,10 +7,12 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import { useSelector, useDispatch } from "react-redux";
-
 import signInToLichess from "services/authService";
 import { signOut } from "store/reducers/sessionSlice";
-import { showRequestErrorToast } from "store/reducers/uiSlice";
+import {
+  showRequestErrorToast,
+  showSettingsDialog
+} from "store/reducers/uiSlice";
 
 import NavBarButton from "./NavBarButton";
 import RouteLinkButton from "./RouteLinkButton";
@@ -25,7 +27,10 @@ function AuthButtonGroup() {
   return (
     <>
       {/* TODO: */}
-      <NavBarButton text="Settings" />
+      <NavBarButton
+        text="Settings"
+        onClick={() => dispatch(showSettingsDialog())}
+      />
       <NavBarButton text="Register" />
       <NavBarButton text="Sign In" onClick={signInHandler} />
     </>

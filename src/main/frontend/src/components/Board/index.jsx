@@ -1,10 +1,12 @@
 import { useRef, useState } from "react";
 
 import { Chessboard } from "react-chessboard";
+import { useSelector } from "react-redux";
 
 function Board({ game, setGameHandler }) {
   const chessboardRef = useRef();
-
+  const pieceSet = useSelector((state) => state.board.pieceSet);
+  const boardSet = useSelector((state) => state.board.boardSet);
   const [moveFrom, setMoveFrom] = useState("");
 
   const [moveSquares, setMoveSquares] = useState({});
@@ -104,7 +106,7 @@ function Board({ game, setGameHandler }) {
           style={{
             width: squareWidth,
             height: squareWidth,
-            backgroundImage: `url(${process.env.PUBLIC_URL}/ver3/${p}.png)`,
+            backgroundImage: `url(${process.env.PUBLIC_URL}/${pieceSet}/${p}.png)`,
             backgroundSize: "100%"
           }}
         />
@@ -134,9 +136,14 @@ function Board({ game, setGameHandler }) {
         ...optionSquares
       }}
       // customDarkSquareStyle={{ backgroundColor: "#8d6f71" }}
-      customDarkSquareStyle={{ backgroundColor: "#769656" }}
+      // customDarkSquareStyle={{ backgroundColor: "#769656" }}
+      customDarkSquareStyle={{
+        backgroundImage: `url(${process.env.PUBLIC_URL}/${boardSet}/dark.jpg)`
+      }}
       // customLightSquareStyle={{ backgroundColor: "white" }}
-      customLightSquareStyle={{ backgroundColor: "#edeed1" }}
+      customLightSquareStyle={{
+        backgroundImage: `url(${process.env.PUBLIC_URL}/${boardSet}/light.jpg)`
+      }}
       customPieces={getCustomPieces()}
       ref={chessboardRef}
     />

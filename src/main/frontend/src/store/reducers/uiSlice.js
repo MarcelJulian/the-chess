@@ -5,9 +5,18 @@ export const uiSlice = createSlice({
   initialState: {
     isToastShown: false,
     toastType: "success",
-    toastMessage: ""
+    toastMessage: "",
+    isSettingsDialogShown: false
   },
   reducers: {
+    showSettingsDialog: (state, _) => {
+      state.isSettingsDialogShown = true;
+    },
+
+    hideSettingsDialog: (state, _) => {
+      state.isSettingsDialogShown = false;
+    },
+
     showSuccessToast: (state, action) => {
       state.isToastShown = true;
       state.toastType = "success";
@@ -34,7 +43,9 @@ export const {
   showSuccessToast,
   showErrorToast,
   showRequestErrorToast,
-  hideToast
+  hideToast,
+  hideSettingsDialog,
+  showSettingsDialog
 } = uiSlice.actions;
 
 export default uiSlice.reducer;
