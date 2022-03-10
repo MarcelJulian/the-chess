@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+import { Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import { blueGrey, brown } from "@mui/material/colors";
 import CssBaseline from "@mui/material/CssBaseline";

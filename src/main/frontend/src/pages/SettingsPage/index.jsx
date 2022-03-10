@@ -38,13 +38,8 @@ function Item(props) {
       borderRadius="1rem"
       boxShadow="3"
       sx={{
-        // p: 2,
-        // m: 1,
-        // borderRadius: 2,
-        marginLeft: "2%",
-        marginRight: "2%",
         fontSize: "1rem",
-        fontWeight: "700",
+        fontWeight: "1rem",
         ...sx
       }}
       {...other}
@@ -85,7 +80,7 @@ function SettingsPageDialog() {
               aria-controls="panel1a-content"
               id="panel1a-header"
             >
-              <Typography>Board Theme</Typography>
+              <Typography fontSize="1000">Board Theme</Typography>
             </AccordionSummary>
             <AccordionDetails>
               {/* 1 */}
@@ -93,15 +88,17 @@ function SettingsPageDialog() {
                 value={boardSet}
                 exclusive
                 onChange={handleBoardSetChange}
-                sx={{ border: 1 }}
+                sx={{ border: 0 }}
               >
                 <ToggleButton
                   value="tile1"
                   disableFocusRipple
                   disableRipple
                   sx={{
-                    h: "200rem",
-                    w: "10rem",
+                    height: "4.5rem",
+                    width: "4.5rem",
+                    border: 1,
+                    backgroundRepeat: "no-repeat",
                     backgroundImage: `url(${process.env.PUBLIC_URL}
                   /chooseTile/tile1.jpg)`,
                     backgroundSize: "100%"
@@ -113,8 +110,10 @@ function SettingsPageDialog() {
                   disableFocusRipple
                   disableRipple
                   sx={{
-                    // h: "2rem",
-                    // width: "2rem",
+                    height: "4.5rem",
+                    width: "4.5rem",
+                    border: 1,
+                    backgroundRepeat: "no-repeat",
                     backgroundImage: `url(${process.env.PUBLIC_URL}
                   /chooseTile/tile2.jpg)`,
                     backgroundSize: "100%"
@@ -126,8 +125,10 @@ function SettingsPageDialog() {
                   disableFocusRipple
                   disableRipple
                   sx={{
-                    // h: "2rem",
-                    // width: "2rem",
+                    height: "4.5rem",
+                    width: "4.5rem",
+                    border: 1,
+                    backgroundRepeat: "no-repeat",
                     backgroundImage: `url(${process.env.PUBLIC_URL}
                   /chooseTile/tile3.jpg)`,
                     backgroundSize: "100%"
@@ -139,8 +140,10 @@ function SettingsPageDialog() {
                   disableFocusRipple
                   disableRipple
                   sx={{
-                    // h: "2rem",
-                    // width: "2rem",
+                    height: "4.5rem",
+                    width: "4.5rem",
+                    border: 1,
+                    backgroundRepeat: "no-repeat",
                     backgroundImage: `url(${process.env.PUBLIC_URL}
                   /chooseTile/tile4.jpg)`,
                     backgroundSize: "100%"
@@ -152,8 +155,10 @@ function SettingsPageDialog() {
                   disableFocusRipple
                   disableRipple
                   sx={{
-                    // h: "2rem",
-                    // width: "2rem",
+                    height: "4.5rem",
+                    width: "4.5rem",
+                    border: 1,
+                    backgroundRepeat: "no-repeat",
                     backgroundImage: `url(${process.env.PUBLIC_URL}
                   /chooseTile/tile5.jpg)`,
                     backgroundSize: "100%"
@@ -177,7 +182,7 @@ function SettingsPageDialog() {
                 value={pieceSet}
                 exclusive
                 onChange={handlePieceSetChange}
-                sx={{ border: 1 }}
+                sx={{ border: 0 }}
               >
                 {/* 1 */}
                 <ToggleButton
@@ -185,8 +190,9 @@ function SettingsPageDialog() {
                   disableFocusRipple
                   disableRipple
                   sx={{
-                    // h: "1000rem",
-                    // w: "1000rem",
+                    height: "4.5rem",
+                    width: "4.5rem",
+                    border: 1,
                     backgroundImage: `url(${process.env.PUBLIC_URL}
                   /ver1/bn.png)`,
                     backgroundSize: "100%"
@@ -198,8 +204,9 @@ function SettingsPageDialog() {
                   disableFocusRipple
                   disableRipple
                   sx={{
-                    // h: "5rem",
-                    // w: "5rem",
+                    height: "4.5rem",
+                    width: "4.5rem",
+                    border: 1,
                     backgroundImage: `url(${process.env.PUBLIC_URL}
                   /ver2/bn.png)`,
                     backgroundSize: "100%"
@@ -211,8 +218,9 @@ function SettingsPageDialog() {
                   disableFocusRipple
                   disableRipple
                   sx={{
-                    // h: "5rem",
-                    // w: "5rem",
+                    height: "4.5rem",
+                    width: "4.5rem",
+                    border: 1,
                     backgroundImage: `url(${process.env.PUBLIC_URL}
                   /ver3/bn.png)`,
                     backgroundSize: "100%"
@@ -224,8 +232,9 @@ function SettingsPageDialog() {
                   disableFocusRipple
                   disableRipple
                   sx={{
-                    // h: "5rem",
-                    // w: "5rem",
+                    height: "4.5rem",
+                    width: "4.5rem",
+                    border: 1,
                     backgroundImage: `url(${process.env.PUBLIC_URL}
                   /ver4/bn.png)`,
                     backgroundSize: "100%"
@@ -237,8 +246,9 @@ function SettingsPageDialog() {
                   disableFocusRipple
                   disableRipple
                   sx={{
-                    // h: "5rem",
-                    // w: "5rem",
+                    height: "4.5rem",
+                    width: "4.5rem",
+                    border: 1,
                     backgroundImage: `url(${process.env.PUBLIC_URL}
                   /ver5/bn.png)`,
                     backgroundSize: "100%"
