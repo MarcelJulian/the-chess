@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 
-import Brightness4Icon from "@mui/icons-material/Brightness4";
-import Brightness7Icon from "@mui/icons-material/Brightness7";
 import { blueGrey, brown } from "@mui/material/colors";
 import CssBaseline from "@mui/material/CssBaseline";
-import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Routes, Route } from "react-router-dom";
@@ -14,10 +11,11 @@ import GamePage from "pages/GamePage";
 import NavBar from "./components/NavBar";
 import Toast from "./components/Toast";
 import HomePage from "./pages/HomePage";
-import SettingsPageDialog from "./pages/SettingsPage/idx";
+import SettingsPageDialog from "./pages/SettingsPage";
 
 export default function App() {
   const [darkMode, setDarkMode] = useState(false);
+  const themeHandler = () => setDarkMode(!darkMode);
 
   const darkTheme = createTheme({
     palette: {
@@ -42,22 +40,12 @@ export default function App() {
       <CssBaseline />
 
       <Paper style={{ height: "100%" }}>
-        <NavBar />
+        <NavBar themeHandler={themeHandler} />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/settings" element={<SettingsPageDialog />} />
         </Routes>
         <GamePage />
-        <IconButton
-          onClick={() => {
-            setDarkMode(!darkMode);
-          }}
-          onChange={<Brightness4Icon />}
-          color="inherit"
-        >
-          <Brightness7Icon />
-          <Brightness4Icon />
-        </IconButton>
         <Toast />
       </Paper>
     </ThemeProvider>

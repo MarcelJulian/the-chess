@@ -1,228 +1,200 @@
-import React, { useState } from "react";
+import * as React from "react";
 
-// import {
-//   Box,
-//   Button,
-//   ButtonGroup,
-//   Container,
-//   Grid,
-//   GridItem,
-//   Slider,
-//   Flex,
-//   // Spacer,
-//   Center,
-//   Text,
-//   SliderFilledTrack,
-//   SliderThumb,
-//   SliderTrack,
-//   NumberInput,
-//   Stack,
-//   Select,
-//   Switch,
-//   NumberDecrementStepper,
-//   NumberIncrementStepper,
-//   NumberInputField,
-//   NumberInputStepper
-// } from "@chakra-ui/react";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import VolumeDown from "@mui/icons-material/VolumeDown";
+import VolumeUp from "@mui/icons-material/VolumeUp";
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
+import Card from "@mui/material/Card";
+import Container from "@mui/material/Container";
+import FormControl from "@mui/material/FormControl";
+import Grid from "@mui/material/Grid";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Paper from "@mui/material/Paper";
+import Select from "@mui/material/Select";
+import Slider from "@mui/material/Slider";
+import Stack from "@mui/material/Stack";
+import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import PropTypes from "prop-types";
 
-// function SettingsPage() {
-//   return (
-// <Box>
-//   <Container marginTop="5%">
-//     {/* Container */}
-//     <Grid
-//       border="1px"
-//       borderColor="gray.800"
-//       borderRadius="lg"
-//       templateRows="repeat(5, 1fr)"
-//       templateColumns="repeat(2, 1fr)"
-//       w="100%"
-//       gap={0}
-//     >
-//       {/* Tulisan Board Theme */}
-//       <Text
-//         px="0.5rem"
-//         py="0.5rem"
-//         bgColor="blue.200"
-//         // marginBottom="0%"
-//         marginTop="5%"
-//         marginLeft="5%"
-//         marginRight="5%"
-//         // border="1px"
-//         // borderRadius="lg"
-//         fontSize={15}
-//       >
-//         BoardTheme
-//       </Text>
+import ToggleColorMode from "../../components/Theme";
 
-//       {/* Box pilihan Board Theme */}
-//       <Box
-//         px="0.5rem"
-//         py="0.5rem"
-//         bgColor="blue.200"
-//         // marginBottom="0%"
-//         marginTop="5%"
-//         marginLeft="10%"
-//         marginRight="10%"
-//         // border="1px"
-//         // borderRadius="lg"
-//       >
-//         <Center>
-//           <Select placeholder="Choose Theme set">
-//             <option value="option1">Theme 1</option>
-//             <option value="option2">Theme 2</option>
-//             <option value="option3">Theme 3</option>
-//           </Select>
-//         </Center>
-//       </Box>
+function Item(props) {
+  const { sx, ...other } = props;
+  return (
+    <Box
+      borderRadius="1rem"
+      boxShadow="3"
+      sx={{
+        // p: 2,
+        // m: 1,
+        // borderRadius: 2,
+        marginLeft: "2%",
+        marginRight: "2%",
+        fontSize: "1rem",
+        fontWeight: "700",
+        ...sx
+      }}
+      {...other}
+    />
+  );
+}
 
-//       {/* Tulisan Piece Set */}
-//       <Text
-//         px="0.5rem"
-//         py="0.5rem"
-//         bgColor="blue.200"
-//         // marginBottom="0%"
-//         // marginTop="15%"
-//         marginLeft="5%"
-//         marginRight="5%"
-//         // border="1px"
-//         // borderRadius="lg"
-//         fontSize={15}
-//       >
-//         Piece Set
-//       </Text>
-//       {/* Box pilihan Piece Set */}
-//       <Box
-//         px="0.5rem"
-//         py="0.5rem"
-//         bgColor="blue.200"
-//         // marginBottom="20%"
-//         // marginTop="15%"
-//         marginLeft="10%"
-//         marginRight="10%"
-//         // border="1px"
-//         // borderRadius="lg"
-//       >
-//         <Center>
-//           <Select placeholder="Choose Piece Set">
-//             <option value="option1">Piece 1</option>
-//             <option value="option2">Piece 2</option>
-//             <option value="option3">Piece 3</option>
-//           </Select>
-//         </Center>
-//       </Box>
+function SettingsPageDialog() {
+  const [value, setValue] = React.useState(30);
 
-//       {/* Tulisan Sound */}
-//       <Text
-//         px="0.5rem"
-//         py="0.5rem"
-//         bgColor="blue.200"
-//         // marginBottom="0%"
-//         // marginTop="15%"
-//         marginLeft="5%"
-//         marginRight="5%"
-//         // border="1px"
-//         // borderRadius="lg"
-//         fontSize={15}
-//       >
-//         Sound
-//       </Text>
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+  const [chooseTile, setTile] = React.useState("");
 
-//       {/* Box pilihan Sound */}
-//       <Box
-//         px="0.5rem"
-//         py="0.5rem"
-//         bgColor="blue.200"
-//         // marginBottom="15%"
-//         // marginTop="0%"
-//         marginLeft="10%"
-//         marginRight="10%"
-//         // border="1px"
-//         // borderRadius="lg"
-//       >
-//         <Center>
-//           <NumberInput size="sm" maxW={20} defaultValue={15} min={10}>
-//             <NumberInputField />
-//             <NumberInputStepper>
-//               <NumberIncrementStepper />
-//               <NumberDecrementStepper />
-//             </NumberInputStepper>
-//           </NumberInput>
-//         </Center>
-//       </Box>
-//       {/* Tulisan Voice Control */}
-//       <Text
-//         px="0.5rem"
-//         py="0.5rem"
-//         bgColor="blue.200"
-//         // marginBottom="0%"
-//         // marginTop="15%"
-//         marginLeft="5%"
-//         marginRight="5%"
-//         // border="1px"
-//         // borderRadius="lg"
-//         fontSize={15}
-//       >
-//         Voice Control
-//       </Text>
+  const handleChangeTile = (event) => {
+    setTile(event.target.value);
+  };
+  const [expanded, setExpanded] = React.useState(false);
 
-//       {/* Box pilihan Voice Control */}
-//       <Box
-//         px="0.5rem"
-//         py="0.5rem"
-//         bgColor="blue.200"
-//         // marginBottom="15%"
-//         // marginTop="0%"
-//         marginLeft="10%"
-//         marginRight="10%"
-//         // border="1px"
-//         // borderRadius="lg"
-//       >
-//         <Center>
-//           <Stack direction="row">
-//             <Switch colorScheme="teal" size="md" />
-//           </Stack>
-//         </Center>
-//       </Box>
+  const handleChangeAcor = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
 
-//       {/* Tulisan Blind mode */}
-//       <Text
-//         px="0.5rem"
-//         py="0.5rem"
-//         bgColor="blue.200"
-//         marginBottom="5%"
-//         // marginTop="15%"
-//         marginLeft="5%"
-//         marginRight="5%"
-//         // border="1px"
-//         // borderRadius="lg"
-//         fontSize={15}
-//       >
-//         Blind Mode
-//       </Text>
+  return (
+    <Container>
+      <Box
+        marginLeft="30%"
+        marginRight="30%"
+        marginBottom="5%"
+        border="1px solid"
+        borderRadius="1rem"
+        boxShadow="3"
+        // p="0.5rem"
+        //   textAlign="Start"
+        justifyContent="center"
+        sx={{ display: "grid", gridTemplateColumns: "repeat(1, 1fr)" }}
+      >
+        <Item>
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography>Board Theme</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>Pilihan - pilihan board.</Typography>
+            </AccordionDetails>
+          </Accordion>
+        </Item>
+        <Item>
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography>Piece Set</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>Pilihan - pilihan piece.</Typography>
+            </AccordionDetails>
+          </Accordion>
+        </Item>
+        <Item>
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography>Sound</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Stack
+                //   spacing={0}
+                direction="row"
+                //   sx={{ mb: 5 }}
+                alignItems="center"
+              >
+                <VolumeDown />
+                <Slider
+                  aria-label="Volume"
+                  value={value}
+                  onChange={handleChange}
+                />
+                <VolumeUp />
+              </Stack>
+            </AccordionDetails>
+          </Accordion>
+        </Item>
+        <Item>
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography>Voice Control</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Box
+                elevation={10}
+                border="1px solid"
+                borderRadius="1rem"
+                boxShadow="3"
+                marginLeft="30%"
+                marginRight="30%"
+                justifyContent="center"
+                sx={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(2, 1fr)"
+                }}
+              >
+                <Button sx={{ width: "100%", height: "100%" }}>On</Button>
+                <Button sx={{ width: "100%", height: "100%" }}>Off</Button>
+              </Box>
+            </AccordionDetails>
+          </Accordion>
+        </Item>
+        <Item>
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography>Blind Control</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Box
+                elevation={10}
+                border="1px solid"
+                borderRadius="1rem"
+                boxShadow="3"
+                marginLeft="30%"
+                marginRight="30%"
+                justifyContent="center"
+                sx={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(2, 1fr)"
+                }}
+              >
+                <Button sx={{ width: "100%", height: "100%" }}>On</Button>
+                <Button sx={{ width: "100%", height: "100%" }}>Off</Button>
+              </Box>
+            </AccordionDetails>
+          </Accordion>
+        </Item>
+        {/* <Slider disabled defaultValue={30} aria-label="Disabled slider" /> */}
+      </Box>
+    </Container>
+  );
+}
 
-//       {/* Box pilihan Blind Mode */}
-//       <Box
-//         px="0.5rem"
-//         py="0.5rem"
-//         bgColor="blue.200"
-//         marginBottom="5%"
-//         // marginTop="0%"
-//         marginLeft="10%"
-//         marginRight="10%"
-//         // border="1px"
-//         // borderRadius="lg"
-//       >
-//         <Center>
-//           <Stack direction="row">
-//             <Switch colorScheme="teal" size="md" />
-//           </Stack>
-//         </Center>
-//       </Box>
-//     </Grid>
-//   </Container>
-// </Box>
-//   );
-// }
-
-// export default SettingsPage;
+export default SettingsPageDialog;

@@ -29,130 +29,127 @@ function GamePage() {
   const setGameHandler = (g) => setGame(g);
 
   return (
-    <Card>
+    <Box
+      border="1px solid"
+      borderRadius="1rem"
+      justifyContent="center"
+      sx={{
+        display: "grid",
+        gridTemplateColumns: "repeat(3, 1fr)"
+      }}
+    >
+      <VoiceCard />
+      <Board game={game} setGameHandler={setGameHandler} />
       <Box
-        border="1px solid"
-        borderRadius="1rem"
-        justifyContent="center"
-        sx={{
-          display: "grid",
-          gridTemplateColumns: "repeat(3, 1fr)"
-        }}
+        marginTop="30%"
+        marginLeft="10%"
+        marginRight="10%"
+        sx={{ flexGrow: 1 }}
       >
-        {/* <VoiceCard /> */}
-        <Board game={game} setGameHandler={setGameHandler} />
-        <Box
-          marginTop="30%"
-          marginLeft="10%"
-          marginRight="10%"
-          sx={{ flexGrow: 1 }}
-        >
-          <Grid container spacing={0}>
-            <Grid item xs={12}>
-              <Item
-                sx={{
-                  fontSize: "200%",
-                  justifyContent: "center"
-                }}
-              >
-                05 : 00
-              </Item>
-            </Grid>
-            <Grid item xs={12}>
-              <Item
-                sx={{
-                  justifyContent: "center"
-                }}
-              >
-                username
-              </Item>
-            </Grid>
-            <Grid border="1px solid" item xs={3}>
-              <IconButtonGridItemContainer icon={<FastRewind />} />
-            </Grid>
-            <Grid border="1px solid" item xs={3}>
-              <IconButtonGridItemContainer icon={<FirstPageIcon />} />
-            </Grid>
-            <Grid border="1px solid" item xs={3}>
-              <IconButtonGridItemContainer icon={<LastPageIcon />} />
-            </Grid>
-            <Grid border="1px solid" item xs={3}>
-              <IconButtonGridItemContainer icon={<FastForwardIcon />} />
-            </Grid>
+        <Grid container spacing={0}>
+          <Grid item xs={12}>
+            <Item
+              sx={{
+                fontSize: "200%",
+                justifyContent: "center"
+              }}
+            >
+              05 : 00
+            </Item>
           </Grid>
-          <GameMovesGrid pgn={game.pgn()} />
-
-          <Grid container spacing={0}>
-            <Grid item xs={12}>
-              <Item
-                sx={{
-                  fontSize: "200%",
-                  justifyContent: "center"
-                }}
-              >
-                05 : 00
-              </Item>
-            </Grid>
-            <Grid item xs={12}>
-              <Item
-                sx={{
-                  justifyContent: "center"
-                }}
-              >
-                username
-              </Item>
-            </Grid>
-            <Grid item xs={4}>
-              <Item
-                marginLeft="50%"
-                marginTop="30%"
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                <Tooltip title="Undo">
-                  <IconButton>
-                    <SettingsBackupRestoreIcon />
-                  </IconButton>
-                </Tooltip>
-              </Item>
-            </Grid>
-            <Grid item xs={4}>
-              <Item
-                marginTop="30%"
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                <Tooltip title="Draw">
-                  <IconButton>
-                    <StarHalfIcon />
-                  </IconButton>
-                </Tooltip>
-              </Item>
-            </Grid>
-            <Grid item xs={4}>
-              <Item
-                marginTop="30%"
-                marginRight="50%"
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                <Tooltip title="Resign">
-                  <IconButton>
-                    <FlagIcon />
-                  </IconButton>
-                </Tooltip>
-              </Item>
-            </Grid>
+          <Grid item xs={12}>
+            <Item
+              sx={{
+                justifyContent: "center"
+              }}
+            >
+              username
+            </Item>
           </Grid>
-        </Box>
+          <Grid border="1px solid" item xs={3}>
+            <IconButtonGridItemContainer icon={<FastRewind />} />
+          </Grid>
+          <Grid border="1px solid" item xs={3}>
+            <IconButtonGridItemContainer icon={<FirstPageIcon />} />
+          </Grid>
+          <Grid border="1px solid" item xs={3}>
+            <IconButtonGridItemContainer icon={<LastPageIcon />} />
+          </Grid>
+          <Grid border="1px solid" item xs={3}>
+            <IconButtonGridItemContainer icon={<FastForwardIcon />} />
+          </Grid>
+        </Grid>
+        <GameMovesGrid pgn={game.pgn()} />
+        <Grid container spacing={0}>
+          <Grid item xs={12}>
+            <Item
+              sx={{
+                fontSize: "200%",
+                justifyContent: "center"
+              }}
+            >
+              05 : 00
+            </Item>
+          </Grid>
+          <Grid item xs={12}>
+            <Item
+              sx={{
+                justifyContent: "center"
+              }}
+            >
+              username
+            </Item>
+          </Grid>
+          <Grid item xs={4}>
+            <Item
+              marginLeft="50%"
+              marginTop="30%"
+              sx={{
+                justifyContent: "center",
+                display: "flex"
+              }}
+            >
+              <Tooltip title="Undo">
+                <IconButton>
+                  <SettingsBackupRestoreIcon />
+                </IconButton>
+              </Tooltip>
+            </Item>
+          </Grid>
+          <Grid item xs={4}>
+            <Item
+              marginTop="30%"
+              sx={{
+                justifyContent: "center",
+                display: "flex"
+              }}
+            >
+              <Tooltip title="Draw">
+                <IconButton>
+                  <StarHalfIcon />
+                </IconButton>
+              </Tooltip>
+            </Item>
+          </Grid>
+          <Grid item xs={4}>
+            <Item
+              marginTop="30%"
+              marginRight="50%"
+              sx={{
+                justifyContent: "center",
+                display: "flex"
+              }}
+            >
+              <Tooltip title="Resign">
+                <IconButton>
+                  <FlagIcon />
+                </IconButton>
+              </Tooltip>
+            </Item>
+          </Grid>
+        </Grid>
       </Box>
-    </Card>
+    </Box>
   );
 }
 
