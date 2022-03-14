@@ -8,10 +8,11 @@ import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import Paper from "@mui/material/Paper";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import GamePage from "pages/GamePage";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { Routes, Route } from "react-router-dom";
+
+import GamePage from "pages/GamePage";
 import { hideSettingsDialog } from "store/reducers/uiSlice";
 
 import NavBar from "./components/NavBar";

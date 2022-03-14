@@ -7,29 +7,17 @@ import VolumeUp from "@mui/icons-material/VolumeUp";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
-import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import ButtonGroup from "@mui/material/ButtonGroup";
-import Card from "@mui/material/Card";
 import Container from "@mui/material/Container";
-import FormControl from "@mui/material/FormControl";
-import Grid from "@mui/material/Grid";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import Paper from "@mui/material/Paper";
-import Select from "@mui/material/Select";
 import Slider from "@mui/material/Slider";
 import Stack from "@mui/material/Stack";
-import { styled } from "@mui/material/styles";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Typography from "@mui/material/Typography";
-import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
-import { setBoardSet, setPieceSet } from "store/reducers/boardSlice";
 
-import ToggleColorMode from "../../components/Theme";
+import { setBoardSet, setPieceSet } from "store/reducers/boardSlice";
 
 function Item(props) {
   const { sx, ...other } = props;
