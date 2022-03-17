@@ -168,7 +168,7 @@ public class GameModeService {
 			map.add("rated", "true");
 			map.add("time", input.getTime());
 			map.add("increment", input.getIncrement());
-			map.add("days", input.getDays());	//katanya dia required
+			map.add("days", input.getDays());
 			map.add("variant", "standard");
 			
 			HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map, headers);
