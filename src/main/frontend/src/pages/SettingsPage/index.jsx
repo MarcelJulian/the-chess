@@ -73,276 +73,260 @@ function SettingsPageDialog() {
         justifyContent="center"
         sx={{ display: "grid", gridTemplateColumns: "repeat(1, 1fr)" }}
       >
-        <Item>
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography fontSize="1000">Board Theme</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              {/* 1 */}
-              <ToggleButtonGroup
-                value={boardSet}
-                exclusive
-                onChange={handleBoardSetChange}
-                sx={{ border: 0 }}
-              >
-                <ToggleButton
-                  value="tile1"
-                  disableFocusRipple
-                  disableRipple
-                  sx={{
-                    height: "4.5rem",
-                    width: "4.5rem",
-                    border: 1,
-                    backgroundRepeat: "no-repeat",
-                    backgroundImage: `url(${process.env.PUBLIC_URL}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            marginBottom: "1rem"
+          }}
+        >
+          <Typography fontSize="1000">Board Theme</Typography>
+
+          {/* 1 */}
+          <ToggleButtonGroup
+            value={boardSet}
+            exclusive
+            onChange={handleBoardSetChange}
+          >
+            <ToggleButton
+              value="tile1"
+              disableFocusRipple
+              disableRipple
+              sx={{
+                height: "4.5rem",
+                width: "4.5rem",
+                border: boardSet === "tile1" ? 5 : 1,
+                backgroundRepeat: "no-repeat",
+                backgroundImage: `url(${process.env.PUBLIC_URL}
                   /chooseTile/tile1.jpg)`,
-                    backgroundSize: "100%"
-                  }}
-                />
-                {/* 2 */}
-                <ToggleButton
-                  value="tile2"
-                  disableFocusRipple
-                  disableRipple
-                  sx={{
-                    height: "4.5rem",
-                    width: "4.5rem",
-                    border: 1,
-                    backgroundRepeat: "no-repeat",
-                    backgroundImage: `url(${process.env.PUBLIC_URL}
+                backgroundSize: "100%"
+              }}
+            />
+            {/* 2 */}
+            <ToggleButton
+              value="tile2"
+              disableFocusRipple
+              disableRipple
+              sx={{
+                height: "4.5rem",
+                width: "4.5rem",
+                border: boardSet === "tile2" ? 5 : 1,
+                backgroundRepeat: "no-repeat",
+                backgroundImage: `url(${process.env.PUBLIC_URL}
                   /chooseTile/tile2.jpg)`,
-                    backgroundSize: "100%"
-                  }}
-                />
-                {/* 3 */}
-                <ToggleButton
-                  value="tile3"
-                  disableFocusRipple
-                  disableRipple
-                  sx={{
-                    height: "4.5rem",
-                    width: "4.5rem",
-                    border: 1,
-                    backgroundRepeat: "no-repeat",
-                    backgroundImage: `url(${process.env.PUBLIC_URL}
+                backgroundSize: "100%"
+              }}
+            />
+            {/* 3 */}
+            <ToggleButton
+              value="tile3"
+              disableFocusRipple
+              disableRipple
+              sx={{
+                height: "4.5rem",
+                width: "4.5rem",
+                border: boardSet === "tile3" ? 5 : 1,
+                backgroundRepeat: "no-repeat",
+                backgroundImage: `url(${process.env.PUBLIC_URL}
                   /chooseTile/tile3.jpg)`,
-                    backgroundSize: "100%"
-                  }}
-                />
-                {/* 4 */}
-                <ToggleButton
-                  value="tile4"
-                  disableFocusRipple
-                  disableRipple
-                  sx={{
-                    height: "4.5rem",
-                    width: "4.5rem",
-                    border: 1,
-                    backgroundRepeat: "no-repeat",
-                    backgroundImage: `url(${process.env.PUBLIC_URL}
+                backgroundSize: "100%"
+              }}
+            />
+            {/* 4 */}
+            <ToggleButton
+              value="tile4"
+              disableFocusRipple
+              disableRipple
+              sx={{
+                height: "4.5rem",
+                width: "4.5rem",
+                border: boardSet === "tile4" ? 5 : 1,
+                backgroundRepeat: "no-repeat",
+                backgroundImage: `url(${process.env.PUBLIC_URL}
                   /chooseTile/tile4.jpg)`,
-                    backgroundSize: "100%"
-                  }}
-                />
-                {/* 5 */}
-                <ToggleButton
-                  value="tile5"
-                  disableFocusRipple
-                  disableRipple
-                  sx={{
-                    height: "4.5rem",
-                    width: "4.5rem",
-                    border: 1,
-                    backgroundRepeat: "no-repeat",
-                    backgroundImage: `url(${process.env.PUBLIC_URL}
+                backgroundSize: "100%"
+              }}
+            />
+            {/* 5 */}
+            <ToggleButton
+              value="tile5"
+              disableFocusRipple
+              disableRipple
+              sx={{
+                height: "4.5rem",
+                width: "4.5rem",
+                border: boardSet === "tile5" ? 5 : 1,
+                backgroundRepeat: "no-repeat",
+                backgroundImage: `url(${process.env.PUBLIC_URL}
                   /chooseTile/tile5.jpg)`,
-                    backgroundSize: "100%"
-                  }}
-                />
-              </ToggleButtonGroup>
-            </AccordionDetails>
-          </Accordion>
-        </Item>
-        <Item>
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography>Piece Set</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <ToggleButtonGroup
-                value={pieceSet}
-                exclusive
-                onChange={handlePieceSetChange}
-                sx={{ border: 0 }}
-              >
-                {/* 1 */}
-                <ToggleButton
-                  value="ver1"
-                  disableFocusRipple
-                  disableRipple
-                  sx={{
-                    height: "4.5rem",
-                    width: "4.5rem",
-                    border: 1,
-                    backgroundImage: `url(${process.env.PUBLIC_URL}
+                backgroundSize: "100%"
+              }}
+            />
+          </ToggleButtonGroup>
+        </Box>
+
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            marginBottom: "1rem"
+          }}
+        >
+          <Typography>Piece Set</Typography>
+
+          <ToggleButtonGroup
+            value={pieceSet}
+            exclusive
+            onChange={handlePieceSetChange}
+          >
+            {/* 1 */}
+            <ToggleButton
+              value="ver1"
+              disableFocusRipple
+              disableRipple
+              sx={{
+                height: "4.5rem",
+                width: "4.5rem",
+                border: pieceSet === "ver1" ? 5 : 1,
+                backgroundImage: `url(${process.env.PUBLIC_URL}
                   /ver1/bn.png)`,
-                    backgroundSize: "100%"
-                  }}
-                />
-                {/* 2 */}
-                <ToggleButton
-                  value="ver2"
-                  disableFocusRipple
-                  disableRipple
-                  sx={{
-                    height: "4.5rem",
-                    width: "4.5rem",
-                    border: 1,
-                    backgroundImage: `url(${process.env.PUBLIC_URL}
+                backgroundSize: "100%"
+              }}
+            />
+            {/* 2 */}
+            <ToggleButton
+              value="ver2"
+              disableFocusRipple
+              disableRipple
+              sx={{
+                height: "4.5rem",
+                width: "4.5rem",
+                border: pieceSet === "ver2" ? 5 : 1,
+                backgroundImage: `url(${process.env.PUBLIC_URL}
                   /ver2/bn.png)`,
-                    backgroundSize: "100%"
-                  }}
-                />
-                {/* 3 */}
-                <ToggleButton
-                  value="ver3"
-                  disableFocusRipple
-                  disableRipple
-                  sx={{
-                    height: "4.5rem",
-                    width: "4.5rem",
-                    border: 1,
-                    backgroundImage: `url(${process.env.PUBLIC_URL}
+                backgroundSize: "100%"
+              }}
+            />
+            {/* 3 */}
+            <ToggleButton
+              value="ver3"
+              disableFocusRipple
+              disableRipple
+              sx={{
+                height: "4.5rem",
+                width: "4.5rem",
+                border: pieceSet === "ver3" ? 5 : 1,
+                backgroundImage: `url(${process.env.PUBLIC_URL}
                   /ver3/bn.png)`,
-                    backgroundSize: "100%"
-                  }}
-                />
-                {/* 4 */}
-                <ToggleButton
-                  value="ver4"
-                  disableFocusRipple
-                  disableRipple
-                  sx={{
-                    height: "4.5rem",
-                    width: "4.5rem",
-                    border: 1,
-                    backgroundImage: `url(${process.env.PUBLIC_URL}
+                backgroundSize: "100%"
+              }}
+            />
+            {/* 4 */}
+            <ToggleButton
+              value="ver4"
+              disableFocusRipple
+              disableRipple
+              sx={{
+                height: "4.5rem",
+                width: "4.5rem",
+                border: pieceSet === "ver4" ? 5 : 1,
+                backgroundImage: `url(${process.env.PUBLIC_URL}
                   /ver4/bn.png)`,
-                    backgroundSize: "100%"
-                  }}
-                />
-                {/* 5 */}
-                <ToggleButton
-                  value="ver5"
-                  disableFocusRipple
-                  disableRipple
-                  sx={{
-                    height: "4.5rem",
-                    width: "4.5rem",
-                    border: 1,
-                    backgroundImage: `url(${process.env.PUBLIC_URL}
+                backgroundSize: "100%"
+              }}
+            />
+            {/* 5 */}
+            <ToggleButton
+              value="ver5"
+              disableFocusRipple
+              disableRipple
+              sx={{
+                height: "4.5rem",
+                width: "4.5rem",
+                border: pieceSet === "ver5" ? 5 : 1,
+                backgroundImage: `url(${process.env.PUBLIC_URL}
                   /ver5/bn.png)`,
-                    backgroundSize: "100%"
-                  }}
-                />
-              </ToggleButtonGroup>
-            </AccordionDetails>
-          </Accordion>
-        </Item>
-        <Item>
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography>Sound</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Stack
-                //   spacing={0}
-                direction="row"
-                //   sx={{ mb: 5 }}
-                alignItems="center"
-              >
-                <VolumeDown />
-                <Slider
-                  aria-label="Volume"
-                  value={value}
-                  onChange={handleChange}
-                />
-                <VolumeUp />
-              </Stack>
-            </AccordionDetails>
-          </Accordion>
-        </Item>
-        <Item>
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography>Voice Control</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Box
-                elevation={10}
-                border="1px solid"
-                borderRadius="1rem"
-                boxShadow="3"
-                marginLeft="30%"
-                marginRight="30%"
-                justifyContent="center"
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(2, 1fr)"
-                }}
-              >
-                <Button sx={{ width: "100%", height: "100%" }}>On</Button>
-                <Button sx={{ width: "100%", height: "100%" }}>Off</Button>
-              </Box>
-            </AccordionDetails>
-          </Accordion>
-        </Item>
-        <Item>
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography>Blind Control</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Box
-                elevation={10}
-                border="1px solid"
-                borderRadius="1rem"
-                boxShadow="3"
-                marginLeft="30%"
-                marginRight="30%"
-                justifyContent="center"
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(2, 1fr)"
-                }}
-              >
-                <Button sx={{ width: "100%", height: "100%" }}>On</Button>
-                <Button sx={{ width: "100%", height: "100%" }}>Off</Button>
-              </Box>
-            </AccordionDetails>
-          </Accordion>
-        </Item>
+                backgroundSize: "100%"
+              }}
+            />
+          </ToggleButtonGroup>
+        </Box>
+
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            marginBottom: "1rem"
+          }}
+        >
+          <Typography>Sound</Typography>
+
+          <Stack
+            //   spacing={0}
+            direction="row"
+            //   sx={{ mb: 5 }}
+            alignItems="center"
+          >
+            <VolumeDown />
+            <Slider aria-label="Volume" value={value} onChange={handleChange} />
+            <VolumeUp />
+          </Stack>
+        </Box>
+
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            marginBottom: "1rem"
+          }}
+        >
+          <Typography>Voice Control</Typography>
+
+          <Box
+            elevation={10}
+            border="1px solid"
+            borderRadius="1rem"
+            boxShadow="3"
+            marginLeft="30%"
+            marginRight="30%"
+            justifyContent="center"
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, 1fr)"
+            }}
+          >
+            <Button sx={{ width: "100%", height: "100%" }}>On</Button>
+            <Button sx={{ width: "100%", height: "100%" }}>Off</Button>
+          </Box>
+        </Box>
+
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            marginBottom: "1rem"
+          }}
+        >
+          <Typography>Blind Control</Typography>
+
+          <Box
+            elevation={10}
+            border="1px solid"
+            borderRadius="1rem"
+            boxShadow="3"
+            marginLeft="30%"
+            marginRight="30%"
+            justifyContent="center"
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, 1fr)"
+            }}
+          >
+            <Button sx={{ width: "100%", height: "100%" }}>On</Button>
+            <Button sx={{ width: "100%", height: "100%" }}>Off</Button>
+          </Box>
+        </Box>
+
         {/* <Slider disabled defaultValue={30} aria-label="Disabled slider" /> */}
       </Box>
     </Container>
