@@ -1,6 +1,12 @@
 import React from "react";
 
 import Grid from "@mui/material/Grid";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
 
 import { CenteredGridItemContainer } from "./ItemContainers";
 
@@ -38,10 +44,48 @@ function GameMovesGrid({ pgn }) {
     return gridItems;
   };
 
+  const generateTableRows = () => {
+    const cleanedPgn = cleanGamePgn(pgn);
+
+    const tempTableRows = [];
+    let tempTableRow = [];
+
+    cleanedPgn.forEach((v, i) => {
+      switch (i % 3) {
+        case 0:
+          tempTableRows.push(<TableRow key={v}>{tempTableRow}</TableRow>);
+          tempTableRow = [];
+          tempTableRow.push(
+            <TableCell key={v} component="th" scope="row">
+              {v}
+            </TableCell>
+          );
+          break;
+        default:
+          tempTableRow.push(<TableCell key={v}>{v}</TableCell>);
+          break;
+      }
+    });
+    tempTableRows.push(<TableRow key={0}>{tempTableRow}</TableRow>);
+    return tempTableRows;
+  };
+
   return (
-    <Grid container spacing={0}>
+    <Grid
+      container
+      spacing={0}
+      sx={{
+        height: "calc(1.5rem * 4 + 0.5rem)",
+        overflow: "auto"
+      }}
+    >
       {generateGridItems()}
     </Grid>
+    // <TableContainer>
+    //   <Table>
+    //     <TableBody>{generateTableRows()}</TableBody>
+    //   </Table>
+    // </TableContainer>
   );
 }
 
