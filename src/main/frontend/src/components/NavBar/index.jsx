@@ -63,6 +63,7 @@ function NavBar({ themeHandler }) {
       <AppBar position="fixed">
         <Toolbar disableGutters>
           <Box display="flex">
+            {/* TODO:show logo */}
             <RouteLinkButton to="/" text="TheChess" />
             <RouteLinkButton to="/" text="Home" />
             {/* TODO:tutorial page */}

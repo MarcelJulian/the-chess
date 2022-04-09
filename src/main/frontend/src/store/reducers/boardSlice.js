@@ -3,8 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 export const boardSlice = createSlice({
   name: "board",
   initialState: {
-    boardSet: "tile3",
-    pieceSet: "ver3",
+    boardSet: "tile5",
+    pieceSet: "ver1",
     sound: ""
   },
   reducers: {

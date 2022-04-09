@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 
 import { Chessboard } from "react-chessboard";
 import { useSelector } from "react-redux";
@@ -11,6 +11,23 @@ function Board({ game, setGameHandler }) {
 
   const [moveSquares, setMoveSquares] = useState({});
   const [optionSquares, setOptionSquares] = useState({});
+
+  const calculateBoardWidth = () => {
+    //  not * 0.4. 0.36 cos of padding
+    const width = window.innerWidth * 0.36;
+    // if (width < 448) width = 448;
+    return width;
+  };
+  const [boardWidth, setBoardWidth] = useState(calculateBoardWidth());
+
+  useEffect(() => {
+    function handleResize() {
+      setBoardWidth(calculateBoardWidth());
+    }
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const safeGameMutate = (modify) => {
     setGameHandler((g) => {
@@ -121,11 +138,11 @@ function Board({ game, setGameHandler }) {
       id="StyledBoard"
       animationDuration={200}
       //   boardOrientation="black"
-      //   boardWidth={boardWidth}
+      boardWidth={boardWidth}
       position={game.fen()}
       onPieceDrop={(_, square) => onSquareClick(square)}
       customBoardStyle={{
-        borderRadius: "10px",
+        borderRadius: "0.5rem",
         boxShadow: "0 5px 15px rgba(0, 0, 0, 0.5)"
       }}
       //   arePiecesDraggable={false}
@@ -135,12 +152,9 @@ function Board({ game, setGameHandler }) {
         ...moveSquares,
         ...optionSquares
       }}
-      // customDarkSquareStyle={{ backgroundColor: "#8d6f71" }}
-      // customDarkSquareStyle={{ backgroundColor: "#769656" }}
       customDarkSquareStyle={{
         backgroundImage: `url(${process.env.PUBLIC_URL}/${boardSet}/dark.jpg)`
       }}
-      // customLightSquareStyle={{ backgroundColor: "white" }}
       customLightSquareStyle={{
         backgroundImage: `url(${process.env.PUBLIC_URL}/${boardSet}/light.jpg)`
       }}
