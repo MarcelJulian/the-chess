@@ -74,11 +74,6 @@ public class GameModeController {
 		}
 	}
 	
-//	TODO: controller stream buat Stream Board game state
-	
-	
-//	TODO: controller stream buat Stream incoming events
-	
 	@PostMapping(path = "api/abort-game/{game_id}")
 	public ResponseEntity<Boolean> abortGameController(@RequestHeader("oauth") String user_oauth, @PathVariable String game_id) throws Exception{
 		System.out.println("GameModeController - abortGameController - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id);
