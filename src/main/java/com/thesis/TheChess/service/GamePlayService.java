@@ -1,5 +1,7 @@
 package com.thesis.TheChess.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -8,6 +10,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.google.cloud.speech.v1.RecognitionAudio;
+import com.google.cloud.speech.v1.RecognitionConfig;
+import com.google.cloud.speech.v1.RecognitionConfig.AudioEncoding;
+import com.google.cloud.speech.v1.RecognizeResponse;
+import com.google.cloud.speech.v1.SpeechClient;
+import com.google.cloud.speech.v1.SpeechRecognitionAlternative;
+import com.google.cloud.speech.v1.SpeechRecognitionResult;
 import com.thesis.TheChess.dto.MakeBoardMoveResult;
 
 @Service
@@ -66,6 +75,46 @@ public class GamePlayService {
 			return result;
 		} catch (Exception e) {
 			System.out.println("hitMakeABoardMove - ERROR - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - move >> " + move + " - exception >> " + e.getMessage());
+			throw new Exception(e.getMessage());
+		}
+	}
+
+	public String speechToTextService() throws Exception{
+		System.out.println("GamePlayService - speechToTextService - START");
+		
+		String output = "";
+		
+		try {
+			try (SpeechClient speechClient = SpeechClient.create()) {
+
+			      // The path to the audio file to transcribe
+			      String gcsUri = "gs://cloud-samples-data/speech/brooklyn_bridge.raw";
+
+			      // Builds the sync recognize request
+			      RecognitionConfig config =
+			          RecognitionConfig.newBuilder()
+			              .setEncoding(AudioEncoding.LINEAR16)
+			              .setSampleRateHertz(16000)
+			              .setLanguageCode("en-US")
+			              .build();
+			      RecognitionAudio audio = RecognitionAudio.newBuilder().setUri(gcsUri).build();
+
+			      // Performs speech recognition on the audio file
+			      RecognizeResponse response = speechClient.recognize(config, audio);
+			      List<SpeechRecognitionResult> results = response.getResultsList();
+
+			      for (SpeechRecognitionResult result : results) {
+			        // There can be several alternative transcripts for a given chunk of speech.
+			    	// Just use the first (most likely) one here.
+			        SpeechRecognitionAlternative alternative = result.getAlternativesList().get(0);
+			        output = alternative.getTranscript();
+			      }
+			    }
+			
+			System.out.println("GamePlayService - speechToTextService - END - output >> " + output);
+			return output;
+		} catch (Exception e) {
+			System.out.println("GamePlayService - speechToTextService - ERROR - exception >> " + e.getMessage());
 			throw new Exception(e.getMessage());
 		}
 	}
