@@ -1,5 +1,7 @@
 package com.thesis.TheChess.service;
 
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -10,13 +12,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.google.cloud.speech.v1.RecognitionAudio;
-import com.google.cloud.speech.v1.RecognitionConfig;
-import com.google.cloud.speech.v1.RecognitionConfig.AudioEncoding;
-import com.google.cloud.speech.v1.RecognizeResponse;
-import com.google.cloud.speech.v1.SpeechClient;
-import com.google.cloud.speech.v1.SpeechRecognitionAlternative;
-import com.google.cloud.speech.v1.SpeechRecognitionResult;
+import com.google.cloud.speech.v1p1beta1.RecognitionAudio;
+import com.google.cloud.speech.v1p1beta1.RecognitionConfig;
+import com.google.cloud.speech.v1p1beta1.RecognizeRequest;
+import com.google.cloud.speech.v1p1beta1.RecognizeResponse;
+import com.google.cloud.speech.v1p1beta1.SpeechClient;
+import com.google.cloud.speech.v1p1beta1.SpeechContext;
+import com.google.cloud.speech.v1p1beta1.SpeechRecognitionAlternative;
+import com.google.cloud.speech.v1p1beta1.SpeechRecognitionResult;
 import com.thesis.TheChess.dto.MakeBoardMoveResult;
 
 @Service
@@ -87,34 +90,86 @@ public class GamePlayService {
 		try {
 			try (SpeechClient speechClient = SpeechClient.create()) {
 
-			      // The path to the audio file to transcribe
-			      String gcsUri = "gs://cloud-samples-data/speech/brooklyn_bridge.raw";
-
-			      // Builds the sync recognize request
-			      RecognitionConfig config =
-			          RecognitionConfig.newBuilder()
-			              .setEncoding(AudioEncoding.LINEAR16)
-			              .setSampleRateHertz(16000)
-			              .setLanguageCode("en-US")
-			              .build();
-			      RecognitionAudio audio = RecognitionAudio.newBuilder().setUri(gcsUri).build();
-
-			      // Performs speech recognition on the audio file
-			      RecognizeResponse response = speechClient.recognize(config, audio);
-			      List<SpeechRecognitionResult> results = response.getResultsList();
-
-			      for (SpeechRecognitionResult result : results) {
-			        // There can be several alternative transcripts for a given chunk of speech.
-			    	// Just use the first (most likely) one here.
-			        SpeechRecognitionAlternative alternative = result.getAlternativesList().get(0);
-			        output = alternative.getTranscript();
-			      }
-			    }
+//			      // The path to the audio file to transcribe
+////			      String gcsUri = "gs://cloud-samples-data/speech/brooklyn_bridge.raw";
+//			      String gcsUri = "gs://the-chess-bucket/gtakesf4-2.flac";
+//
+//			      // Builds the sync recognize request
+//			      RecognitionConfig config =
+//			          RecognitionConfig.newBuilder()
+////			              .setEncoding(AudioEncoding.LINEAR16)
+//			              .setEncoding(AudioEncoding.FLAC)
+//			              .setSampleRateHertz(16000)
+//			              .setLanguageCode("en-US")
+//			              .build();
+//			      RecognitionAudio audio = RecognitionAudio.newBuilder().setUri(gcsUri).build();
+//
+//			      // Performs speech recognition on the audio file
+//			      RecognizeResponse response = speechClient.recognize(config, audio);
+//			      List<SpeechRecognitionResult> results = response.getResultsList();
+//
+//			      for (SpeechRecognitionResult result : results) {
+//			        // There can be several alternative transcripts for a given chunk of speech.
+//			    	// Just use the first (most likely) one here.
+//			        SpeechRecognitionAlternative alternative = result.getAlternativesList().get(0);
+//			        output = alternative.getTranscript();
+//			      }
+//			    }
 			
 			System.out.println("GamePlayService - speechToTextService - END - output >> " + output);
 			return output;
 		} catch (Exception e) {
 			System.out.println("GamePlayService - speechToTextService - ERROR - exception >> " + e.getMessage());
+			throw new Exception(e.getMessage());
+		}
+	}
+	
+	public String speechAdaptationService() throws Exception{
+		System.out.println("masuk 1");
+		String uriPath = "gs://the-chess-bucket/a5-2.flac";
+		return speechAdaptation(uriPath);
+	}
+	
+	public String speechAdaptation(String uriPath) throws Exception {
+		String output = "";
+		
+		try (SpeechClient speechClient = SpeechClient.create()) {
+			System.out.println("masuk 2");
+//			List<String> phrases = Arrays.asList("$OOV_CLASS_ALPHANUMERIC_SEQUENCE", "Knight $OOV_CLASS_ALPHANUMERIC_SEQUENCE", "King $OOV_CLASS_ALPHANUMERIC_SEQUENCE", "Bishop $OOV_CLASS_ALPHANUMERIC_SEQUENCE", "Queen $OOV_CLASS_ALPHANUMERIC_SEQUENCE", "$OOV_CLASS_ALPHANUMERIC_SEQUENCE takes $OOV_CLASS_ALPHANUMERIC_SEQUENCE", "Rook $OOV_CLASS_ALPHANUMERIC_SEQUENCE");
+//			List<String> phrases = Arrays.asList("$");
+//			SpeechContext speechContext = SpeechContext.newBuilder().addAllPhrases(phrases).build();
+			SpeechContext speechContext = SpeechContext.newBuilder().addPhrases("$the-chess-alphabet $the-chess-numeric").build();
+//			SpeechContext speechContext = SpeechContext.newBuilder().addPhrases("$OOV_CLASS_ALPHANUMERIC_SEQUENCE").build();
+			System.out.println("masuk 3");
+			
+			RecognitionConfig config =
+					RecognitionConfig.newBuilder()
+					.setEncoding(RecognitionConfig.AudioEncoding.FLAC)
+					.setSampleRateHertz(16000)
+					.setLanguageCode("en-US")
+					.addSpeechContexts(speechContext)
+					.setAdaptation(value)
+					.build();
+			System.out.println("masuk 4");
+			
+			RecognitionAudio audio = RecognitionAudio.newBuilder().setUri(uriPath).build();
+			System.out.println("masuk 5");
+			
+			RecognizeRequest request = RecognizeRequest.newBuilder().setConfig(config).setAudio(audio).build();
+			System.out.println("masuk 6");
+
+			RecognizeResponse response = speechClient.recognize(request);
+			System.out.println("masuk 7");
+			for (SpeechRecognitionResult result : response.getResultsList()) {
+				System.out.println("masuk 8");
+				SpeechRecognitionAlternative alternative = result.getAlternativesList().get(0);
+				System.out.printf("Transcript: %s\n", alternative.getTranscript());
+				output = alternative.getTranscript();
+			}
+			
+			return output;
+		} catch (Exception e) {
+			System.out.println("error - " + e.getMessage());
 			throw new Exception(e.getMessage());
 		}
 	}

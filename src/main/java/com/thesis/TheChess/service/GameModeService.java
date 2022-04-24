@@ -153,7 +153,7 @@ public class GameModeService {
 		} catch (Exception e) {
 			System.out.println("GameModeService - playWithHumanService - ERROR - user_oauth >> " + user_oauth + " - input >> " + input + " - exception >> " + e.getMessage());
 			throw new Exception(e.getMessage());
-		}	
+		}
 	}
 	
 	private void hitCreateASeek(String user_oauth, PlayWithHumanInput input) throws Exception{
