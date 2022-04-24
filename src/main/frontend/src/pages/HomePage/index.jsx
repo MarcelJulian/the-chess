@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import Container from "@mui/material/Container";
+import useTheme from "@mui/material/styles/useTheme";
 import { useSelector, useDispatch } from "react-redux";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
@@ -73,6 +74,9 @@ export default HomePage;
 
 function BotCard() {
   // will be used for login service
+  const theme = useTheme();
+  // Warna box play with human & bot
+  const backgroundColor = theme.palette.neutral.main;
   const botForm = useSelector((state) => state.botForm);
   const { timeControlMinute, timeControlIncrement } = botForm;
   const isBotButtonDisabled =
@@ -85,7 +89,7 @@ function BotCard() {
         borderRadius: "16px",
         width: "48%",
         paddingTop: "1rem",
-        backgroundColor: "secondary"
+        backgroundColor
       }}
     >
       <CardTitle label="Play with Bot" />
@@ -100,13 +104,16 @@ function BotCard() {
 }
 
 function HumanCard() {
+  const theme = useTheme();
+  // Warna box play with human & bot
+  const backgroundColor = theme.palette.neutral.main;
   return (
     <Card
       sx={{
         marginBottom: "1rem",
         borderRadius: "16px",
         width: "48%",
-        backgroundColor: "secondary"
+        backgroundColor
       }}
     >
       <Box

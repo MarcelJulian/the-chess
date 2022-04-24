@@ -26,8 +26,11 @@ function TimeUsernameBox({ time, username }) {
 
 function GameControlCard({ game }) {
   const theme = useTheme();
+  // Warna box keseluruhan
   const backgroundColor = theme.palette.neutral.main;
+  // Warna header table movement
   const darkerBackgroundColor = theme.palette.neutral.darker;
+
   return (
     <Card
       sx={{
