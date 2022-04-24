@@ -58,22 +58,6 @@ public class GameModeController {
 		}
 	}
 	
-	@PostMapping(path = "api/play-with-human")
-	public ResponseEntity<PlayWithHumanOutput> playWithHumanController(@RequestHeader("oauth")  String user_oauth, @RequestBody PlayWithHumanInput input) throws Exception{
-		System.out.println("GameModeController - playWithHumanController - START - user_oauth >> " + user_oauth + " - input >> " + input);
-		
-		PlayWithHumanOutput output = null;
-		try {
-			output = service.playWithHumanService(user_oauth, input);
-			
-			System.out.println("GameModeController - playWithHumanController - END - user_oauth >> " + user_oauth + " - input >> " + input);
-			return ResponseEntity.status(HttpStatus.OK).body(output);			
-		} catch (Exception e) {
-			System.out.println("GameModeController - playWithHumanController - ERROR - user_oauth >> " + user_oauth + " - input >> " + input + " - exception >> " + e.getMessage());
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(output);
-		}
-	}
-	
 	@PostMapping(path = "api/abort-game/{game_id}")
 	public ResponseEntity<Boolean> abortGameController(@RequestHeader("oauth") String user_oauth, @PathVariable String game_id) throws Exception{
 		System.out.println("GameModeController - abortGameController - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id);

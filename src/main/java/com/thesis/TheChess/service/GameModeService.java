@@ -139,57 +139,6 @@ public class GameModeService {
 			throw new Exception("ERROR hitChallengeAI >> " + e.getMessage());
 		}		
 	}
-	
-	public PlayWithHumanOutput playWithHumanService(String user_oauth, PlayWithHumanInput input) throws Exception{
-		System.out.println("GameModeService - playWithHumanService - START - user_oauth >> " + user_oauth + " - input >> " + input);
-		
-		PlayWithHumanOutput output = new PlayWithHumanOutput();
-		
-		try {
-			hitCreateASeek(user_oauth, input);
-			
-			System.out.println("GameModeService - playWithHumanService - END - user_oauth >> " + user_oauth + " - input >> " + input);
-			return output;
-		} catch (Exception e) {
-			System.out.println("GameModeService - playWithHumanService - ERROR - user_oauth >> " + user_oauth + " - input >> " + input + " - exception >> " + e.getMessage());
-			throw new Exception(e.getMessage());
-		}
-	}
-	
-	private void hitCreateASeek(String user_oauth, PlayWithHumanInput input) throws Exception{
-		System.out.println("hitCreateASeek - START - user_oauth >> " + user_oauth + " - input >> " + input);
-		
-		try {
-			HttpHeaders headers = new HttpHeaders();
-			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-			headers.add("Authorization", "Bearer " + user_oauth);
-
-			MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-			map.add("rated", "true");
-			map.add("time", input.getTime());
-			map.add("increment", input.getIncrement());
-			map.add("days", input.getDays());
-			map.add("variant", "standard");
-			
-			HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map, headers);
-			System.out.println("hitCreateASeek - entity >> " + entity);
-			
-			String uri = lichess_api_url + "board/seek";
-			System.out.println("hitCreateASeek - uri >> " + uri);
-			
-			ResponseEntity<Void> responseHit = restTemplate.exchange(uri, HttpMethod.POST, entity, Void.class);
-			System.out.println("hitCreateASeek - responseHit >> " + responseHit);
-			
-			if (responseHit.getStatusCodeValue() == 200) {
-				System.out.println("hitCreateASeek - END - user_oauth >> " + user_oauth + " - input >> " + input + " - statusCodeValue >> " + responseHit.getStatusCodeValue());
-			} else {
-				throw new Exception("Failed Matchmaking; error code value >> " + responseHit.getStatusCodeValue());
-			}
-		} catch (Exception e) {
-			System.out.println("hitCreateASeek - ERROR - user_oauth >> " + user_oauth + " - input >> " + input + " - exception >> " + e.getMessage());
-			throw new Exception("ERROR hitCreateASeek >> " + e.getMessage());
-		}
-	}
 
 	public Boolean abortGameService(String user_oauth, String game_id) throws Exception{
 		System.out.println("GameModeService - abortGameService - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id);
