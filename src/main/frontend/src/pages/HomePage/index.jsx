@@ -4,6 +4,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import Container from "@mui/material/Container";
+import useTheme from "@mui/material/styles/useTheme";
 import { useSelector, useDispatch } from "react-redux";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
@@ -89,6 +90,10 @@ function BotCard() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
+  const theme = useTheme();
+  // Warna box play with human & bot
+  const backgroundColor = theme.palette.neutral.main;
+
   const isBotButtonDisabled =
     timeControlMinute === 0 && timeControlIncrement === 0;
 
@@ -116,7 +121,8 @@ function BotCard() {
         marginBottom: "1rem",
         borderRadius: "16px",
         width: "48%",
-        paddingTop: "1rem"
+        paddingTop: "1rem",
+        backgroundColor
       }}
     >
       <CardTitle label="Play with Bot" />
@@ -137,12 +143,16 @@ function BotCard() {
 }
 
 function HumanCard() {
+  const theme = useTheme();
+  // Warna box play with human & bot
+  const backgroundColor = theme.palette.neutral.main;
   return (
     <Card
       sx={{
         marginBottom: "1rem",
         borderRadius: "16px",
-        width: "48%"
+        width: "48%",
+        backgroundColor
       }}
     >
       <Box

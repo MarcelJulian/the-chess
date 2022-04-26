@@ -10,6 +10,7 @@ import Typography from "@mui/material/Typography";
 
 function VoiceControlCard() {
   const theme = useTheme();
+  // Warna box voice
   const backgroundColor = theme.palette.neutral.main;
 
   return (

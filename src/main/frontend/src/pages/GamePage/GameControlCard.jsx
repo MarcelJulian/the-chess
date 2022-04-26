@@ -49,7 +49,9 @@ function TimeUsernameBox({ user }) {
 
 function GameControlCard({ game }) {
   const theme = useTheme();
+  // Warna box keseluruhan
   const backgroundColor = theme.palette.neutral.main;
+  // Warna header table movement
   const darkerBackgroundColor = theme.palette.neutral.darker;
 
   const [isDrawOffered, setIsDrawOffered] = useState(false);

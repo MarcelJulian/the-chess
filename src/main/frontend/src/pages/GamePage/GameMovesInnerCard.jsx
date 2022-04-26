@@ -12,7 +12,9 @@ function ChessMoveBox({
 }) {
   const theme = useTheme();
   //   const hoverColor = theme.palette.primary.main;
+  // Warna table current
   const currentColor = theme.palette.primary.light;
+  // Warna table nomor movement
   const numberColor = theme.palette.neutral.darker;
 
   const getColor = () => {

@@ -1,12 +1,8 @@
 /* eslint-disable import/no-unresolved */
-import * as React from "react";
+import React from "react";
 
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import VolumeDown from "@mui/icons-material/VolumeDown";
 import VolumeUp from "@mui/icons-material/VolumeUp";
-import Accordion from "@mui/material/Accordion";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import AccordionSummary from "@mui/material/AccordionSummary";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";

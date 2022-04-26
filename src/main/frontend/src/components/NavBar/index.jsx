@@ -5,6 +5,7 @@ import Brightness7Icon from "@mui/icons-material/Brightness7";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
+import useTheme from "@mui/material/styles/useTheme";
 import Toolbar from "@mui/material/Toolbar";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -52,6 +53,9 @@ function UserButtonGroup() {
 
 function NavBar({ themeHandler }) {
   const { isSignedIn } = useSelector((state) => state.session);
+  const theme = useTheme();
+  const backgroundColor = theme.palette.primary.main;
+  const darkerBackgroundColor = theme.palette.neutral.darker;
 
   const handleShowAuthButton = () => {
     if (isSignedIn) return UserButtonGroup();
@@ -60,7 +64,7 @@ function NavBar({ themeHandler }) {
 
   return (
     <>
-      <AppBar position="fixed">
+      <AppBar position="fixed" sx={{ backgroundColor }}>
         <Toolbar disableGutters>
           <Box display="flex">
             {/* TODO:show logo */}
