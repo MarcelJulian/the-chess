@@ -1,228 +1,320 @@
-import React, { useState } from "react";
+/* eslint-disable import/no-unresolved */
+import React from "react";
 
-// import {
-//   Box,
-//   Button,
-//   ButtonGroup,
-//   Container,
-//   Grid,
-//   GridItem,
-//   Slider,
-//   Flex,
-//   // Spacer,
-//   Center,
-//   Text,
-//   SliderFilledTrack,
-//   SliderThumb,
-//   SliderTrack,
-//   NumberInput,
-//   Stack,
-//   Select,
-//   Switch,
-//   NumberDecrementStepper,
-//   NumberIncrementStepper,
-//   NumberInputField,
-//   NumberInputStepper
-// } from "@chakra-ui/react";
+import VolumeDown from "@mui/icons-material/VolumeDown";
+import VolumeUp from "@mui/icons-material/VolumeUp";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Slider from "@mui/material/Slider";
+import Stack from "@mui/material/Stack";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import Typography from "@mui/material/Typography";
+import { useSelector, useDispatch } from "react-redux";
 
-// function SettingsPage() {
-//   return (
-// <Box>
-//   <Container marginTop="5%">
-//     {/* Container */}
-//     <Grid
-//       border="1px"
-//       borderColor="gray.800"
-//       borderRadius="lg"
-//       templateRows="repeat(5, 1fr)"
-//       templateColumns="repeat(2, 1fr)"
-//       w="100%"
-//       gap={0}
-//     >
-//       {/* Tulisan Board Theme */}
-//       <Text
-//         px="0.5rem"
-//         py="0.5rem"
-//         bgColor="blue.200"
-//         // marginBottom="0%"
-//         marginTop="5%"
-//         marginLeft="5%"
-//         marginRight="5%"
-//         // border="1px"
-//         // borderRadius="lg"
-//         fontSize={15}
-//       >
-//         BoardTheme
-//       </Text>
+import { setBoardSet, setPieceSet } from "store/reducers/boardSlice";
 
-//       {/* Box pilihan Board Theme */}
-//       <Box
-//         px="0.5rem"
-//         py="0.5rem"
-//         bgColor="blue.200"
-//         // marginBottom="0%"
-//         marginTop="5%"
-//         marginLeft="10%"
-//         marginRight="10%"
-//         // border="1px"
-//         // borderRadius="lg"
-//       >
-//         <Center>
-//           <Select placeholder="Choose Theme set">
-//             <option value="option1">Theme 1</option>
-//             <option value="option2">Theme 2</option>
-//             <option value="option3">Theme 3</option>
-//           </Select>
-//         </Center>
-//       </Box>
+function Item(props) {
+  const { sx, ...other } = props;
+  return (
+    <Box
+      borderRadius="1rem"
+      boxShadow="3"
+      sx={{
+        fontSize: "1rem",
+        fontWeight: "1rem",
+        ...sx
+      }}
+      {...other}
+    />
+  );
+}
 
-//       {/* Tulisan Piece Set */}
-//       <Text
-//         px="0.5rem"
-//         py="0.5rem"
-//         bgColor="blue.200"
-//         // marginBottom="0%"
-//         // marginTop="15%"
-//         marginLeft="5%"
-//         marginRight="5%"
-//         // border="1px"
-//         // borderRadius="lg"
-//         fontSize={15}
-//       >
-//         Piece Set
-//       </Text>
-//       {/* Box pilihan Piece Set */}
-//       <Box
-//         px="0.5rem"
-//         py="0.5rem"
-//         bgColor="blue.200"
-//         // marginBottom="20%"
-//         // marginTop="15%"
-//         marginLeft="10%"
-//         marginRight="10%"
-//         // border="1px"
-//         // borderRadius="lg"
-//       >
-//         <Center>
-//           <Select placeholder="Choose Piece Set">
-//             <option value="option1">Piece 1</option>
-//             <option value="option2">Piece 2</option>
-//             <option value="option3">Piece 3</option>
-//           </Select>
-//         </Center>
-//       </Box>
+function SettingsPageDialog() {
+  const [value, setValue] = React.useState(30);
+  const pieceSet = useSelector((state) => state.board.pieceSet);
+  const boardSet = useSelector((state) => state.board.boardSet);
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+  const [chooseTile, setTile] = React.useState("");
 
-//       {/* Tulisan Sound */}
-//       <Text
-//         px="0.5rem"
-//         py="0.5rem"
-//         bgColor="blue.200"
-//         // marginBottom="0%"
-//         // marginTop="15%"
-//         marginLeft="5%"
-//         marginRight="5%"
-//         // border="1px"
-//         // borderRadius="lg"
-//         fontSize={15}
-//       >
-//         Sound
-//       </Text>
+  const handleChangeTile = (event) => {
+    setTile(event.target.value);
+  };
+  const [expanded, setExpanded] = React.useState(false);
+  const dispatch = useDispatch();
+  const handleChangeAcor = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
+  const handlePieceSetChange = (_, variable) => dispatch(setPieceSet(variable));
+  const handleBoardSetChange = (_, boardVar) => dispatch(setBoardSet(boardVar));
+  return (
+    <Container>
+      <Box
+        marginBottom="5%"
+        justifyContent="center"
+        sx={{ display: "grid", gridTemplateColumns: "repeat(1, 1fr)" }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            marginBottom: "1rem"
+          }}
+        >
+          <Typography fontSize="1000">Board Theme</Typography>
 
-//       {/* Box pilihan Sound */}
-//       <Box
-//         px="0.5rem"
-//         py="0.5rem"
-//         bgColor="blue.200"
-//         // marginBottom="15%"
-//         // marginTop="0%"
-//         marginLeft="10%"
-//         marginRight="10%"
-//         // border="1px"
-//         // borderRadius="lg"
-//       >
-//         <Center>
-//           <NumberInput size="sm" maxW={20} defaultValue={15} min={10}>
-//             <NumberInputField />
-//             <NumberInputStepper>
-//               <NumberIncrementStepper />
-//               <NumberDecrementStepper />
-//             </NumberInputStepper>
-//           </NumberInput>
-//         </Center>
-//       </Box>
-//       {/* Tulisan Voice Control */}
-//       <Text
-//         px="0.5rem"
-//         py="0.5rem"
-//         bgColor="blue.200"
-//         // marginBottom="0%"
-//         // marginTop="15%"
-//         marginLeft="5%"
-//         marginRight="5%"
-//         // border="1px"
-//         // borderRadius="lg"
-//         fontSize={15}
-//       >
-//         Voice Control
-//       </Text>
+          {/* 1 */}
+          <ToggleButtonGroup
+            value={boardSet}
+            exclusive
+            onChange={handleBoardSetChange}
+          >
+            <ToggleButton
+              value="tile1"
+              disableFocusRipple
+              disableRipple
+              sx={{
+                height: "4.5rem",
+                width: "4.5rem",
+                border: boardSet === "tile1" ? 5 : 1,
+                backgroundRepeat: "no-repeat",
+                backgroundImage: `url(${process.env.PUBLIC_URL}
+                  /chooseTile/tile1.jpg)`,
+                backgroundSize: "100%"
+              }}
+            />
+            {/* 2 */}
+            <ToggleButton
+              value="tile2"
+              disableFocusRipple
+              disableRipple
+              sx={{
+                height: "4.5rem",
+                width: "4.5rem",
+                border: boardSet === "tile2" ? 5 : 1,
+                backgroundRepeat: "no-repeat",
+                backgroundImage: `url(${process.env.PUBLIC_URL}
+                  /chooseTile/tile2.jpg)`,
+                backgroundSize: "100%"
+              }}
+            />
+            {/* 3 */}
+            <ToggleButton
+              value="tile3"
+              disableFocusRipple
+              disableRipple
+              sx={{
+                height: "4.5rem",
+                width: "4.5rem",
+                border: boardSet === "tile3" ? 5 : 1,
+                backgroundRepeat: "no-repeat",
+                backgroundImage: `url(${process.env.PUBLIC_URL}
+                  /chooseTile/tile3.jpg)`,
+                backgroundSize: "100%"
+              }}
+            />
+            {/* 4 */}
+            <ToggleButton
+              value="tile4"
+              disableFocusRipple
+              disableRipple
+              sx={{
+                height: "4.5rem",
+                width: "4.5rem",
+                border: boardSet === "tile4" ? 5 : 1,
+                backgroundRepeat: "no-repeat",
+                backgroundImage: `url(${process.env.PUBLIC_URL}
+                  /chooseTile/tile4.jpg)`,
+                backgroundSize: "100%"
+              }}
+            />
+            {/* 5 */}
+            <ToggleButton
+              value="tile5"
+              disableFocusRipple
+              disableRipple
+              sx={{
+                height: "4.5rem",
+                width: "4.5rem",
+                border: boardSet === "tile5" ? 5 : 1,
+                backgroundRepeat: "no-repeat",
+                backgroundImage: `url(${process.env.PUBLIC_URL}
+                  /chooseTile/tile5.jpg)`,
+                backgroundSize: "100%"
+              }}
+            />
+          </ToggleButtonGroup>
+        </Box>
 
-//       {/* Box pilihan Voice Control */}
-//       <Box
-//         px="0.5rem"
-//         py="0.5rem"
-//         bgColor="blue.200"
-//         // marginBottom="15%"
-//         // marginTop="0%"
-//         marginLeft="10%"
-//         marginRight="10%"
-//         // border="1px"
-//         // borderRadius="lg"
-//       >
-//         <Center>
-//           <Stack direction="row">
-//             <Switch colorScheme="teal" size="md" />
-//           </Stack>
-//         </Center>
-//       </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            marginBottom: "1rem"
+          }}
+        >
+          <Typography>Piece Set</Typography>
 
-//       {/* Tulisan Blind mode */}
-//       <Text
-//         px="0.5rem"
-//         py="0.5rem"
-//         bgColor="blue.200"
-//         marginBottom="5%"
-//         // marginTop="15%"
-//         marginLeft="5%"
-//         marginRight="5%"
-//         // border="1px"
-//         // borderRadius="lg"
-//         fontSize={15}
-//       >
-//         Blind Mode
-//       </Text>
+          <ToggleButtonGroup
+            value={pieceSet}
+            exclusive
+            onChange={handlePieceSetChange}
+          >
+            {/* 1 */}
+            <ToggleButton
+              value="ver1"
+              disableFocusRipple
+              disableRipple
+              sx={{
+                height: "4.5rem",
+                width: "4.5rem",
+                border: pieceSet === "ver1" ? 5 : 1,
+                backgroundImage: `url(${process.env.PUBLIC_URL}
+                  /ver1/bn.png)`,
+                backgroundSize: "100%"
+              }}
+            />
+            {/* 2 */}
+            <ToggleButton
+              value="ver2"
+              disableFocusRipple
+              disableRipple
+              sx={{
+                height: "4.5rem",
+                width: "4.5rem",
+                border: pieceSet === "ver2" ? 5 : 1,
+                backgroundImage: `url(${process.env.PUBLIC_URL}
+                  /ver2/bn.png)`,
+                backgroundSize: "100%"
+              }}
+            />
+            {/* 3 */}
+            <ToggleButton
+              value="ver3"
+              disableFocusRipple
+              disableRipple
+              sx={{
+                height: "4.5rem",
+                width: "4.5rem",
+                border: pieceSet === "ver3" ? 5 : 1,
+                backgroundImage: `url(${process.env.PUBLIC_URL}
+                  /ver3/bn.png)`,
+                backgroundSize: "100%"
+              }}
+            />
+            {/* 4 */}
+            <ToggleButton
+              value="ver4"
+              disableFocusRipple
+              disableRipple
+              sx={{
+                height: "4.5rem",
+                width: "4.5rem",
+                border: pieceSet === "ver4" ? 5 : 1,
+                backgroundImage: `url(${process.env.PUBLIC_URL}
+                  /ver4/bn.png)`,
+                backgroundSize: "100%"
+              }}
+            />
+            {/* 5 */}
+            <ToggleButton
+              value="ver5"
+              disableFocusRipple
+              disableRipple
+              sx={{
+                height: "4.5rem",
+                width: "4.5rem",
+                border: pieceSet === "ver5" ? 5 : 1,
+                backgroundImage: `url(${process.env.PUBLIC_URL}
+                  /ver5/bn.png)`,
+                backgroundSize: "100%"
+              }}
+            />
+          </ToggleButtonGroup>
+        </Box>
 
-//       {/* Box pilihan Blind Mode */}
-//       <Box
-//         px="0.5rem"
-//         py="0.5rem"
-//         bgColor="blue.200"
-//         marginBottom="5%"
-//         // marginTop="0%"
-//         marginLeft="10%"
-//         marginRight="10%"
-//         // border="1px"
-//         // borderRadius="lg"
-//       >
-//         <Center>
-//           <Stack direction="row">
-//             <Switch colorScheme="teal" size="md" />
-//           </Stack>
-//         </Center>
-//       </Box>
-//     </Grid>
-//   </Container>
-// </Box>
-//   );
-// }
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            marginBottom: "1rem"
+          }}
+        >
+          <Typography>Sound</Typography>
 
-// export default SettingsPage;
+          <Stack
+            //   spacing={0}
+            direction="row"
+            //   sx={{ mb: 5 }}
+            alignItems="center"
+          >
+            <VolumeDown />
+            <Slider aria-label="Volume" value={value} onChange={handleChange} />
+            <VolumeUp />
+          </Stack>
+        </Box>
+
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            marginBottom: "1rem"
+          }}
+        >
+          <Typography>Voice Control</Typography>
+
+          <Box
+            elevation={10}
+            border="1px solid"
+            borderRadius="1rem"
+            boxShadow="3"
+            marginLeft="30%"
+            marginRight="30%"
+            justifyContent="center"
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, 1fr)"
+            }}
+          >
+            <Button sx={{ width: "100%", height: "100%" }}>On</Button>
+            <Button sx={{ width: "100%", height: "100%" }}>Off</Button>
+          </Box>
+        </Box>
+
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            marginBottom: "1rem"
+          }}
+        >
+          <Typography>Blind Control</Typography>
+
+          <Box
+            elevation={10}
+            border="1px solid"
+            borderRadius="1rem"
+            boxShadow="3"
+            marginLeft="30%"
+            marginRight="30%"
+            justifyContent="center"
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, 1fr)"
+            }}
+          >
+            <Button sx={{ width: "100%", height: "100%" }}>On</Button>
+            <Button sx={{ width: "100%", height: "100%" }}>Off</Button>
+          </Box>
+        </Box>
+
+        {/* <Slider disabled defaultValue={30} aria-label="Disabled slider" /> */}
+      </Box>
+    </Container>
+  );
+}
+
+export default SettingsPageDialog;

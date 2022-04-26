@@ -1,15 +1,19 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
+import LoadingButton from "@mui/lab/LoadingButton";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import Container from "@mui/material/Container";
+import useTheme from "@mui/material/styles/useTheme";
 import { useSelector, useDispatch } from "react-redux";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
-import getOnGoingGames from "services/gameService";
+import { getOnGoingGames, matchWithBot } from "services/gameService";
 import { signIn } from "store/reducers/sessionSlice";
-import { showSuccessToast } from "store/reducers/uiSlice";
+import {
+  showRequestErrorToast,
+  showSuccessToast
+} from "store/reducers/uiSlice";
 
 import BotCardContent from "./BotCardContent";
 import CardTitle from "./CardTitle";
@@ -44,11 +48,10 @@ function HomePage() {
         const response = await getOnGoingGames(accessToken);
         if (response.status === 200) {
           const gameId = response.data.game_id;
-          // todo
-          console.log(
-            "🚀 ~ file: index.jsx ~ line 44 ~ apiHandler ~ gameId",
-            gameId
+          dispatch(
+            showSuccessToast("You are currently in a game. Redirecting...")
           );
+          setTimeout(() => navigate(`/${gameId}`), 3000);
         }
       }
     };
@@ -73,10 +76,44 @@ export default HomePage;
 
 function BotCard() {
   // will be used for login service
-  const botForm = useSelector((state) => state.botForm);
-  const { timeControlMinute, timeControlIncrement } = botForm;
+  const {
+    strength,
+    color,
+    timeControlMode,
+    timeControlMinute,
+    timeControlIncrement
+  } = useSelector((state) => state.botForm);
+  const accessToken = useSelector((state) => state.session.accessToken);
+
+  const dispatch = useDispatch();
+
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const theme = useTheme();
+  // Warna box play with human & bot
+  const backgroundColor = theme.palette.neutral.main;
+
   const isBotButtonDisabled =
     timeControlMinute === 0 && timeControlIncrement === 0;
+
+  const isUnlimited = timeControlMode === "unlimited";
+
+  const matchWithBotHandler = async () => {
+    setIsLoading(true);
+    const bodyParams = {
+      level: strength,
+      clock_limit: isUnlimited ? 0 : timeControlMinute * 60,
+      clock_increment: isUnlimited ? 0 : timeControlIncrement,
+      color
+    };
+    const response = await matchWithBot(accessToken, bodyParams);
+    if (response.status !== 200) dispatch(showRequestErrorToast(response));
+    else {
+      const gameId = response.data.game_id;
+      navigate(`/${gameId}`);
+    }
+  };
 
   return (
     <Card
@@ -85,28 +122,37 @@ function BotCard() {
         borderRadius: "16px",
         width: "48%",
         paddingTop: "1rem",
-        backgroundColor: "secondary"
+        backgroundColor
       }}
     >
       <CardTitle label="Play with Bot" />
       <BotCardContent />
       <Box display="flex">
-        <Button variant="contained" fullWidth disabled={isBotButtonDisabled}>
+        <LoadingButton
+          variant="contained"
+          fullWidth
+          disabled={isBotButtonDisabled}
+          loading={isLoading}
+          onClick={() => matchWithBotHandler()}
+        >
           Start
-        </Button>
+        </LoadingButton>
       </Box>
     </Card>
   );
 }
 
 function HumanCard() {
+  const theme = useTheme();
+  // Warna box play with human & bot
+  const backgroundColor = theme.palette.neutral.main;
   return (
     <Card
       sx={{
         marginBottom: "1rem",
         borderRadius: "16px",
         width: "48%",
-        backgroundColor: "secondary"
+        backgroundColor
       }}
     >
       <Box

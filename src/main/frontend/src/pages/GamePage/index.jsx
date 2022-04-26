@@ -1,389 +1,199 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-import CachedIcon from "@mui/icons-material/Cached";
-import FastForwardIcon from "@mui/icons-material/FastForward";
-import FastRewind from "@mui/icons-material/FastRewind";
-import FirstPageIcon from "@mui/icons-material/FirstPage";
-import FlagIcon from "@mui/icons-material/Flag";
-import LastPageIcon from "@mui/icons-material/LastPage";
-import MicIcon from "@mui/icons-material/Mic";
-import MicOffIcon from "@mui/icons-material/MicOff";
-import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore";
-import StarHalfIcon from "@mui/icons-material/StarHalf";
-import TravelExploreIcon from "@mui/icons-material/TravelExplore";
-import { Card } from "@mui/material";
 import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import Typography from "@mui/material/Typography";
+import Chess from "chess.js";
+import { useSelector, useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
 
 import Board from "components/Board";
+import { movePiece } from "services/gameService";
+import { streamBoardGameState } from "services/gameStreamService";
+import { initializeGame, setGameState } from "store/reducers/gameSlice";
+import {
+  showErrorToast,
+  showSuccessToast,
+  showRequestErrorToast
+} from "store/reducers/uiSlice";
 
-function Item(props) {
-  const { sx, ...other } = props;
+import GameControlCard from "./GameControlCard";
+import VoiceControlCard from "./VoiceControlCard";
+
+function CenteredFlexBox(props) {
+  const { ...other } = props;
   return (
     <Box
-      sx={{
-        fontSize: "1rem",
-        fontWeight: "700",
-        ...sx
-      }}
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
       {...other}
     />
   );
 }
 
 function GamePage() {
+  const { gameId } = useParams();
+
+  const { isWhite } = useSelector((state) => state.game);
+  const { accessToken, username } = useSelector((state) => state.session);
+  const dispatch = useDispatch();
+
+  const [game, setGame] = useState(new Chess());
+  const setGameHandler = (g) => setGame(g);
+
+  const getTurnAndLastMove = (moves, isWhiteParam) => {
+    if (moves === null || moves === undefined) return {};
+
+    const splitMoves = moves.split(" ");
+    const isWhiteTurn = splitMoves.length % 2 === 0;
+
+    let hasMoved = true;
+    if (splitMoves.length < 2)
+      if (splitMoves.length === 1 && isWhiteParam) hasMoved = true;
+      else hasMoved = false;
+
+    const lastMove = splitMoves.pop();
+    return { isWhiteTurn, lastMove, hasMoved };
+  };
+
+  const initializeGameHandler = (fullGameStateResponse) => {
+    const { black } = fullGameStateResponse;
+    fullGameStateResponse.isWhite = black.name !== username;
+
+    const movesCopy = fullGameStateResponse?.state?.moves;
+    if (movesCopy !== null || movesCopy !== undefined) {
+      const splitMoves = movesCopy.split(" ");
+      const gameCopy = { ...game };
+
+      splitMoves.forEach((move) => {
+        gameCopy.move(move, { sloppy: true });
+      });
+      setGameHandler(gameCopy);
+    }
+
+    dispatch(
+      initializeGame({
+        ...fullGameStateResponse,
+        ...getTurnAndLastMove(movesCopy, fullGameStateResponse.isWhite)
+      })
+    );
+  };
+
+  const gameEndHandler = (status) => {
+    switch (status) {
+      case "aborted":
+        dispatch(showSuccessToast("Game was aborted."));
+        break;
+      case "mate":
+        dispatch(showSuccessToast("Game ended with a checkmate."));
+        break;
+      case "resign":
+        dispatch(showSuccessToast("Game was resigned."));
+        break;
+      case "stalemate":
+        dispatch(showSuccessToast("Game ended with a stalemate."));
+        break;
+      case "draw":
+        dispatch(showSuccessToast("Game ended with a draw."));
+        break;
+      case "outoftime":
+        dispatch(showSuccessToast("The time has ran out."));
+        break;
+      case "noStart":
+        dispatch(
+          showErrorToast(
+            "Game was aborted. No move was made withing 30 seconds."
+          )
+        );
+        break;
+      default:
+        break;
+    }
+  };
+
+  const setGameStateHandler = (gameStateResponse) => {
+    const { isWhiteTurn, lastMove, hasMoved } = getTurnAndLastMove(
+      gameStateResponse?.moves,
+      isWhite
+    );
+    const gameCopy = { ...game };
+
+    const tryMove = gameCopy.move(lastMove, { sloppy: true });
+    if (tryMove !== null) setGameHandler(gameCopy);
+
+    gameEndHandler(gameStateResponse?.status);
+
+    dispatch(
+      setGameState({
+        ...gameStateResponse,
+        isWhiteTurn,
+        lastMove,
+        hasMoved
+      })
+    );
+  };
+
+  useEffect(() => {
+    streamBoardGameState(
+      null,
+      gameId,
+      initializeGameHandler,
+      setGameStateHandler
+    );
+  }, [gameId]);
+
+  // Handle sending the move made by the player
+  useEffect(() => {
+    const sendMoveRequest = async (move) => {
+      const response = await movePiece(accessToken, gameId, move);
+      if (response.status !== 200) dispatch(showRequestErrorToast(response));
+    };
+
+    // Every opponent's turn, means the last move was made by the player
+    if ((isWhite && game.turn() === "b") || (!isWhite && game.turn() === "w")) {
+      const gameCopy = { ...game };
+
+      const playerMove = gameCopy.undo();
+      if (playerMove !== null)
+        sendMoveRequest(`${playerMove.from}${playerMove.to}`);
+    }
+  }, [game]);
+
+  const GAME_ID = "9G8PLB4A";
+
+  /** 
+   Outer box (1 rem)
+    
+   Voice Control Card - Board - Game Control Card
+   (3 rem) - (1 rem) - (3 rem)
+
+   |                                           |
+   |  1 (3)  c  (3) (1)  c  (1) (3)  c  (3) 1  |
+   |                                           |
+
+   These makes evenly spaced components (4 rem)
+   * */
+
   return (
-    <Card>
-      <Box
-        border="1px solid"
-        borderRadius="1rem"
-        justifyContent="center"
-        sx={{
-          display: "grid",
-          gridTemplateColumns: "repeat(3, 1fr)"
-        }}
-      >
-        <Card
-          variant="outlined"
-          elevation={4}
-          style={{
-            marginTop: "30%",
-            marginLeft: "15%",
-            marginBottom: "25%",
-            height: "13rem",
-            width: "15rem",
-            borderRadius: "0.5rem",
-            justifyContent: "center"
-          }}
-        >
-          <Typography
-            variant="h6"
-            sx={{
-              marginTop: "2rem",
-              marginBottom: "2rem",
-              fontFamily: "Poppins",
-              fontSize: "14",
-              textAlign: "center"
-            }}
-          >
-            Movement :
-          </Typography>
-          <Typography
-            variant="h6"
-            sx={{
-              marginTop: "0.5rem",
-              fontFamily: "Poppins",
-              textAlign: "center"
-            }}
-          >
-            Your Input :
-          </Typography>
-          <Box marginTop="15%">
-            <IconButton>
-              <MicIcon />
-            </IconButton>
-            <IconButton>
-              <MicOffIcon />
-            </IconButton>
-          </Box>
-        </Card>
-        <Board />
-        <Box
-          marginTop="30%"
-          marginLeft="10%"
-          marginRight="10%"
-          sx={{ flexGrow: 1 }}
-        >
-          <Grid container spacing={0}>
-            <Grid item xs={12}>
-              <Item
-                sx={{
-                  fontSize: "200%",
-                  justifyContent: "center"
-                }}
-              >
-                05 : 00
-              </Item>
-            </Grid>
-            <Grid item xs={12}>
-              <Item
-                sx={{
-                  justifyContent: "center"
-                }}
-              >
-                username
-              </Item>
-            </Grid>
-            <Grid border="1px solid" item xs={2}>
-              <Item
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                <Tooltip title="Flip Board">
-                  <IconButton
-                    sx={{
-                      h: "100%",
-                      w: "100%"
-                    }}
-                  >
-                    <CachedIcon />
-                  </IconButton>
-                </Tooltip>
-              </Item>
-            </Grid>
-            <Grid border="1px solid" item xs={2}>
-              <Item
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                <IconButton
-                  sx={{
-                    h: "100%",
-                    w: "100%"
-                  }}
-                >
-                  <FastRewind />
-                </IconButton>
-              </Item>
-            </Grid>
-            <Grid border="1px solid" item xs={2}>
-              <Item
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                <IconButton
-                  sx={{
-                    h: "100%",
-                    w: "100%"
-                  }}
-                >
-                  <FirstPageIcon />
-                </IconButton>
-              </Item>
-            </Grid>
-            <Grid border="1px solid" item xs={2}>
-              <Item
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                <IconButton
-                  sx={{
-                    h: "100%",
-                    w: "100%"
-                  }}
-                >
-                  <LastPageIcon />
-                </IconButton>
-              </Item>
-            </Grid>
-            <Grid border="1px solid" item xs={2}>
-              <Item
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                <IconButton
-                  sx={{
-                    h: "100%",
-                    w: "100%"
-                  }}
-                >
-                  <FastForwardIcon />
-                </IconButton>
-              </Item>
-            </Grid>
-            <Grid border="1px solid" item xs={2}>
-              <Item
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                <Tooltip title="Analysis Board">
-                  <IconButton
-                    sx={{
-                      h: "100%",
-                      w: "100%"
-                    }}
-                  >
-                    <TravelExploreIcon />
-                  </IconButton>
-                </Tooltip>
-              </Item>
-            </Grid>
-            <Grid border="1px solid" item xs={2}>
-              <Item
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                1
-              </Item>
-            </Grid>
-            <Grid border="1px solid" item xs={5}>
-              <Item
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                -
-              </Item>
-            </Grid>
-            <Grid border="1px solid" item xs={5}>
-              <Item
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                -
-              </Item>
-            </Grid>
-            <Grid border="1px solid" item xs={2}>
-              <Item
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                2
-              </Item>
-            </Grid>
-            <Grid border="1px solid" item xs={5}>
-              <Item
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                -
-              </Item>
-            </Grid>
-            <Grid border="1px solid" item xs={5}>
-              <Item
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                -
-              </Item>
-            </Grid>
-            <Grid border="1px solid" item xs={2}>
-              <Item
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                3
-              </Item>
-            </Grid>
-            <Grid border="1px solid" item xs={5}>
-              <Item
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                -
-              </Item>
-            </Grid>
-            <Grid border="1px solid" item xs={5}>
-              <Item
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                -
-              </Item>
-            </Grid>
-            <Grid item xs={12}>
-              <Item
-                sx={{
-                  fontSize: "200%",
-                  justifyContent: "center"
-                }}
-              >
-                05 : 00
-              </Item>
-            </Grid>
-            <Grid item xs={12}>
-              <Item
-                sx={{
-                  justifyContent: "center"
-                }}
-              >
-                username
-              </Item>
-            </Grid>
-            <Grid item xs={4}>
-              <Item
-                marginLeft="50%"
-                marginTop="30%"
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                <Tooltip title="Undo">
-                  <IconButton>
-                    <SettingsBackupRestoreIcon />
-                  </IconButton>
-                </Tooltip>
-              </Item>
-            </Grid>
-            <Grid item xs={4}>
-              <Item
-                marginTop="30%"
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                <Tooltip title="Draw">
-                  <IconButton>
-                    <StarHalfIcon />
-                  </IconButton>
-                </Tooltip>
-              </Item>
-            </Grid>
-            <Grid item xs={4}>
-              <Item
-                marginTop="30%"
-                marginRight="50%"
-                sx={{
-                  justifyContent: "center",
-                  display: "flex"
-                }}
-              >
-                <Tooltip title="Resign">
-                  <IconButton>
-                    <FlagIcon />
-                  </IconButton>
-                </Tooltip>
-              </Item>
-            </Grid>
-          </Grid>
-        </Box>
-      </Box>
-    </Card>
+    <CenteredFlexBox
+      justifyContent="center"
+      // 64px is the navbar height
+      height="calc(100vh - 64px)"
+      paddingX="1rem"
+    >
+      <CenteredFlexBox width="30%" padding="3rem">
+        <VoiceControlCard />
+      </CenteredFlexBox>
+      <CenteredFlexBox width="40%" padding="1rem">
+        <Board
+          game={game}
+          setGameHandler={setGameHandler}
+          boardOrientation={isWhite ? "white" : "black"}
+        />
+      </CenteredFlexBox>
+      <CenteredFlexBox width="30%" padding="3rem">
+        <GameControlCard game={game} />
+      </CenteredFlexBox>
+    </CenteredFlexBox>
   );
 }
 

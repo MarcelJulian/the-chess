@@ -15,9 +15,8 @@ import BotTimeControlButtonGroup from "./BotTimeControlButtonGroup";
 import CardContentBox from "./CardContentBox";
 
 function BotCardContent() {
-  const { timeControlMinute, timeControlIncrement } = useSelector(
-    (state) => state.botForm
-  );
+  const { timeControlMode, timeControlMinute, timeControlIncrement } =
+    useSelector((state) => state.botForm);
 
   const dispatch = useDispatch();
   const handleBotTimeControlMinuteChange = (_, value) =>
@@ -45,6 +44,7 @@ function BotCardContent() {
           value={timeControlMinute}
           onChange={handleBotTimeControlMinuteChange}
           max={180}
+          disabled={timeControlMode === "unlimited"}
         />
       </CardContentBox>
       {/* Box Minute Per Side */}
@@ -52,7 +52,8 @@ function BotCardContent() {
         <Slider
           value={timeControlIncrement}
           onChange={handleBotTimeControlIncrementChange}
-          max={180}
+          max={60}
+          disabled={timeControlMode === "unlimited"}
         />
       </CardContentBox>
     </Box>

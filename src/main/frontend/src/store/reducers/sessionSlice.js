@@ -3,8 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 export const botFormSlice = createSlice({
   name: "session",
   initialState: {
-    accessToken: "",
-    username: "",
+    accessToken: null,
+    username: "Eisiel",
     isSignedIn: false
   },
   reducers: {
@@ -14,7 +14,7 @@ export const botFormSlice = createSlice({
       state.isSignedIn = true;
     },
     signOut: (state, _) => {
-      state.accessToken = "";
+      state.accessToken = null;
       state.username = "";
       state.isSignedIn = false;
     }

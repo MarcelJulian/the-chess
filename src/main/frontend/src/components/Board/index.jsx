@@ -1,19 +1,36 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 
-import Chess from "chess.js";
 import { Chessboard } from "react-chessboard";
+import { useSelector } from "react-redux";
 
-function Board() {
+function Board({ game, setGameHandler, boardOrientation = "white" }) {
   const chessboardRef = useRef();
-  const [game, setGame] = useState(new Chess());
-
+  const pieceSet = useSelector((state) => state.board.pieceSet);
+  const boardSet = useSelector((state) => state.board.boardSet);
   const [moveFrom, setMoveFrom] = useState("");
 
   const [moveSquares, setMoveSquares] = useState({});
   const [optionSquares, setOptionSquares] = useState({});
 
+  const calculateBoardWidth = () => {
+    //  not * 0.4. 0.36 cos of padding
+    const width = window.innerWidth * 0.36;
+    // if (width < 448) width = 448;
+    return width;
+  };
+  const [boardWidth, setBoardWidth] = useState(calculateBoardWidth());
+
+  useEffect(() => {
+    function handleResize() {
+      setBoardWidth(calculateBoardWidth());
+    }
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const safeGameMutate = (modify) => {
-    setGame((g) => {
+    setGameHandler((g) => {
       const update = { ...g };
       modify(update);
       return update;
@@ -71,7 +88,7 @@ function Board() {
       to: square,
       promotion: "q" // always promote to a queen for example simplicity
     });
-    setGame(gameCopy);
+    setGameHandler(gameCopy);
 
     // if invalid, setMoveFrom and getMoveOptions
     if (move === null) {
@@ -106,7 +123,7 @@ function Board() {
           style={{
             width: squareWidth,
             height: squareWidth,
-            backgroundImage: `url(${process.env.PUBLIC_URL}/ver3/${p}.png)`,
+            backgroundImage: `url(${process.env.PUBLIC_URL}/${pieceSet}/${p}.png)`,
             backgroundSize: "100%"
           }}
         />
@@ -120,12 +137,12 @@ function Board() {
     <Chessboard
       id="StyledBoard"
       animationDuration={200}
-      //   boardOrientation="black"
-      //   boardWidth={boardWidth}
+      boardOrientation={boardOrientation}
+      boardWidth={boardWidth}
       position={game.fen()}
       onPieceDrop={(_, square) => onSquareClick(square)}
       customBoardStyle={{
-        borderRadius: "10px",
+        borderRadius: "0.5rem",
         boxShadow: "0 5px 15px rgba(0, 0, 0, 0.5)"
       }}
       //   arePiecesDraggable={false}
@@ -135,10 +152,12 @@ function Board() {
         ...moveSquares,
         ...optionSquares
       }}
-      // customDarkSquareStyle={{ backgroundColor: "#8d6f71" }}
-      customDarkSquareStyle={{ backgroundColor: "#769656" }}
-      // customLightSquareStyle={{ backgroundColor: "white" }}
-      customLightSquareStyle={{ backgroundColor: "#edeed1" }}
+      customDarkSquareStyle={{
+        backgroundImage: `url(${process.env.PUBLIC_URL}/${boardSet}/dark.jpg)`
+      }}
+      customLightSquareStyle={{
+        backgroundImage: `url(${process.env.PUBLIC_URL}/${boardSet}/light.jpg)`
+      }}
       customPieces={getCustomPieces()}
       ref={chessboardRef}
     />

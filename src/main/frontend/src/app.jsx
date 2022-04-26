@@ -1,64 +1,102 @@
 import React, { useState } from "react";
 
-import Brightness4Icon from "@mui/icons-material/Brightness4";
-import Brightness7Icon from "@mui/icons-material/Brightness7";
-import { blueGrey, brown } from "@mui/material/colors";
+import { brown } from "@mui/material/colors";
 import CssBaseline from "@mui/material/CssBaseline";
-import IconButton from "@mui/material/IconButton";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
 import Paper from "@mui/material/Paper";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Routes, Route } from "react-router-dom";
+import useTheme from "@mui/material/styles/useTheme";
+import { useSelector, useDispatch } from "react-redux";
+import { Route, Routes } from "react-router-dom";
 
+import NavBar from "components/NavBar";
+import Toast from "components/Toast";
 import GamePage from "pages/GamePage";
-
-import NavBar from "./components/NavBar";
-import Toast from "./components/Toast";
-import HomePage from "./pages/HomePage";
-import SettingsPageDialog from "./pages/SettingsPage/idx";
+import HomePage from "pages/HomePage";
+import SettingsPageDialog from "pages/SettingsPage";
+import { hideSettingsDialog } from "store/reducers/uiSlice";
 
 export default function App() {
   const [darkMode, setDarkMode] = useState(false);
+  const themeHandler = () => setDarkMode(!darkMode);
+
+  const typography = { fontFamily: "Poppins" };
+  const MuiCard = {
+    defaultProps: {
+      elevation: 4,
+      style: { borderRadius: "0.5rem" }
+    }
+  };
 
   const darkTheme = createTheme({
     palette: {
-      mode: "dark"
+      mode: "dark",
+      primary: {
+        main: "#2e3f5a",
+        light: "#3d5270"
+      },
+      secondary: { main: "#5b7398" },
+      neutral: {
+        light: "#212121",
+        main: "#333333",
+        darker: "#515151",
+        darkest: "#646464"
+      }
     },
-    typography: {
-      fontFamily: "Poppins"
-    }
+    typography,
+    components: { MuiCard }
   });
+
   const greenTheme = createTheme({
     palette: {
-      primary: { main: blueGrey[800] },
-      secondary: brown
+      primary: {
+        main: "#1B2B42",
+        light: "#899cbd"
+      },
+      secondary: { main: "#1B2B42" },
+      neutral: {
+        light: "#FAFAFA",
+        main: "#F5F5F5",
+        darker: "#E0E0E0",
+        darkest: "#9E9E9E"
+      }
     },
-    typography: {
-      fontFamily: "Poppins"
-    }
+    typography,
+    components: { MuiCard }
   });
+  const theme = darkMode ? darkTheme : greenTheme;
+
+  const isSettingsDialogShown = useSelector(
+    (state) => state.ui.isSettingsDialogShown
+  );
+
+  const dispatch = useDispatch();
 
   return (
-    <ThemeProvider theme={darkMode ? darkTheme : greenTheme}>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
 
-      <Paper style={{ height: "100%" }}>
-        <NavBar />
+      <Paper
+        sx={{
+          height: "100%",
+          backgroundColor: theme.palette.neutral.light
+        }}
+      >
+        <NavBar themeHandler={themeHandler} />
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/settings" element={<SettingsPageDialog />} />
+          <Route path=":gameId" element={<GamePage />} />
         </Routes>
-        <GamePage />
-        <IconButton
-          onClick={() => {
-            setDarkMode(!darkMode);
-          }}
-          onChange={<Brightness4Icon />}
-          color="inherit"
-        >
-          <Brightness7Icon />
-          <Brightness4Icon />
-        </IconButton>
+
         <Toast />
+        <Dialog
+          onClose={() => dispatch(hideSettingsDialog())}
+          open={isSettingsDialogShown}
+        >
+          <DialogTitle>Settings</DialogTitle>
+          <SettingsPageDialog />
+        </Dialog>
       </Paper>
     </ThemeProvider>
   );

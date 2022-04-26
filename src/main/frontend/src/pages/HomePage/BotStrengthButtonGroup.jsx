@@ -22,7 +22,12 @@ function BotStrengthGroupButton() {
       sx={{ border: 1 }}
     >
       {buttonValues.map((value) => (
-        <ToggleButton value={value} disableFocusRipple disableRipple>
+        <ToggleButton
+          key={value}
+          value={value}
+          disableFocusRipple
+          disableRipple
+        >
           <Typography variant="button" sx={{ paddingX: "0.5rem" }}>
             {value}
           </Typography>
