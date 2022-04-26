@@ -73,8 +73,12 @@ function GameMovesInnerCard({ pgn }) {
     const gridContainers = [];
     let gridItems = [];
 
-    const wrapWithFlex = (items) =>
-      gridContainers.push(<Box sx={{ display: "flex" }}>{items}</Box>);
+    const wrapWithFlex = (items, i) =>
+      gridContainers.push(
+        <Box key={i} sx={{ display: "flex" }}>
+          {items}
+        </Box>
+      );
 
     const len = cleanedPgn.length;
 
@@ -87,19 +91,21 @@ function GameMovesInnerCard({ pgn }) {
       };
       // wrap and reset every row
       if (i % 3 === 0 && gridItems.length !== 0) {
-        wrapWithFlex(gridItems);
+        wrapWithFlex(gridItems, i);
         gridItems = [];
-        gridItems.push(<ChessMoveBox {...chessMoveBoxProps} />);
+        gridItems.push(<ChessMoveBox key={v} {...chessMoveBoxProps} />);
         // last move
       } else if (i === len - 1) {
-        gridItems.push(<ChessMoveBox {...chessMoveBoxProps} isCurrent />);
+        gridItems.push(
+          <ChessMoveBox key={v} {...chessMoveBoxProps} isCurrent />
+        );
         // if last move is white
         if (len % 3 === 2)
-          gridItems.push(<ChessMoveBox v={" "} isNumber={false} />);
-      } else gridItems.push(<ChessMoveBox {...chessMoveBoxProps} />);
+          gridItems.push(<ChessMoveBox key={" "} v={" "} isNumber={false} />);
+      } else gridItems.push(<ChessMoveBox key={v} {...chessMoveBoxProps} />);
     });
 
-    wrapWithFlex(gridItems);
+    wrapWithFlex(gridItems, "last");
 
     return gridContainers;
   };

@@ -7,8 +7,10 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Paper from "@mui/material/Paper";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useSelector, useDispatch } from "react-redux";
+import { Route, Routes } from "react-router-dom";
 
 import GamePage from "pages/GamePage";
+import HomePage from "pages/HomePage";
 import { hideSettingsDialog } from "store/reducers/uiSlice";
 
 import NavBar from "./components/NavBar";
@@ -21,7 +23,15 @@ export default function App() {
 
   const darkTheme = createTheme({
     palette: {
-      mode: "dark"
+      mode: "dark",
+      primary: { main: "#5aa5ce", light: "#bae3f0", dark: "#4986ad" },
+      secondary: brown,
+      neutral: {
+        light: grey[50],
+        main: grey[100],
+        darker: grey[300],
+        darkest: grey[500]
+      }
     },
     typography: {
       fontFamily: "Poppins"
@@ -64,10 +74,11 @@ export default function App() {
 
       <Paper sx={{ height: "100%", backgroundColor: grey[50] }}>
         <NavBar themeHandler={themeHandler} />
-        {/* <Routes>
+        <Routes>
           <Route path="/" element={<HomePage />} />
-        </Routes> */}
-        <GamePage />
+          <Route path=":gameId" element={<GamePage />} />
+        </Routes>
+        {/* <GamePage /> */}
 
         <Toast />
         <Dialog

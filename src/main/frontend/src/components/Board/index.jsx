@@ -3,7 +3,7 @@ import { useRef, useState, useEffect } from "react";
 import { Chessboard } from "react-chessboard";
 import { useSelector } from "react-redux";
 
-function Board({ game, setGameHandler }) {
+function Board({ game, setGameHandler, boardOrientation = "white" }) {
   const chessboardRef = useRef();
   const pieceSet = useSelector((state) => state.board.pieceSet);
   const boardSet = useSelector((state) => state.board.boardSet);
@@ -137,7 +137,7 @@ function Board({ game, setGameHandler }) {
     <Chessboard
       id="StyledBoard"
       animationDuration={200}
-      //   boardOrientation="black"
+      boardOrientation={boardOrientation}
       boardWidth={boardWidth}
       position={game.fen()}
       onPieceDrop={(_, square) => onSquareClick(square)}

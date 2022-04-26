@@ -70,11 +70,7 @@ function NavBar({ themeHandler }) {
             <RouteLinkButton to="/" text="Tutorial" />
           </Box>
           <Box display="flex" ml="auto">
-            <IconButton
-              onClick={() => themeHandler()}
-              onChange={<Brightness4Icon />}
-              color="inherit"
-            >
+            <IconButton onClick={() => themeHandler()} color="inherit">
               <Brightness7Icon />
               <Brightness4Icon />
             </IconButton>
