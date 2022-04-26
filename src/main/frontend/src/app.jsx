@@ -20,94 +20,67 @@ import { hideSettingsDialog } from "store/reducers/uiSlice";
 export default function App() {
   const [darkMode, setDarkMode] = useState(false);
   const themeHandler = () => setDarkMode(!darkMode);
-  const theme = useTheme();
 
-  const main = "#1B2B42";
-  const light = "#5b7398";
+  const typography = { fontFamily: "Poppins" };
+  const MuiCard = {
+    defaultProps: {
+      elevation: 4,
+      style: { borderRadius: "0.5rem" }
+    }
+  };
 
   const darkTheme = createTheme({
     palette: {
       mode: "dark",
       primary: {
-        main: "#3d5270",
-        light,
-        dark: "#4986ad",
-        test: "#12376E"
+        main: "#2e3f5a",
+        light: "#3d5270"
       },
-      secondary: brown,
+      secondary: { main: "#5b7398" },
       neutral: {
-        darker: "#9E9E9E",
-        main: "#212121",
-        light: "#424242",
-        darkest: "#212121"
+        light: "#212121",
+        main: "#333333",
+        darker: "#515151",
+        darkest: "#646464"
       }
     },
-    typography: {
-      fontFamily: "Poppins"
-    },
-    components: {
-      MuiCard: {
-        defaultProps: {
-          elevation: 4,
-          style: {
-            borderRadius: "0.5rem"
-            // backgroundColor: "#212124"
-          }
-        }
-      }
-    }
+    typography,
+    components: { MuiCard }
   });
 
   const greenTheme = createTheme({
     palette: {
-      // complement of #ce835a
       primary: {
-        main,
-        light,
-        dark: "#4986ad",
-        test: "#12376E"
+        main: "#1B2B42",
+        light: "#899cbd"
       },
-      secondary: brown,
+      secondary: { main: "#1B2B42" },
       neutral: {
         light: "#FAFAFA",
         main: "#F5F5F5",
-        darkest: "#E0E0E0",
-        darker: "#9e9e9e"
+        darker: "#E0E0E0",
+        darkest: "#9E9E9E"
       }
     },
-    typography: {
-      fontFamily: "Poppins"
-    },
-    components: {
-      MuiCard: {
-        defaultProps: {
-          elevation: 4,
-          style: {
-            borderRadius: "0.5rem"
-            // backgroundColor: "#f0fff0"
-          }
-        }
-      }
-      // Paper: {
-      //   style: {
-      //     backgroundColor: "#6897bb"
-      //   }
-      // }
-    }
+    typography,
+    components: { MuiCard }
   });
+  const theme = darkMode ? darkTheme : greenTheme;
+
   const isSettingsDialogShown = useSelector(
     (state) => state.ui.isSettingsDialogShown
   );
-  // const backgroundColor = theme.palette.neutral.darker;
+
   const dispatch = useDispatch();
+
   return (
-    <ThemeProvider theme={darkMode ? darkTheme : greenTheme}>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
 
       <Paper
         sx={{
           height: "100%",
-          backgroundColor: darkMode ? "grey[950]" : "#E0E0E0"
+          backgroundColor: theme.palette.neutral.light
         }}
       >
         <NavBar themeHandler={themeHandler} />
@@ -115,7 +88,6 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path=":gameId" element={<GamePage />} />
         </Routes>
-        {/* <GamePage /> */}
 
         <Toast />
         <Dialog

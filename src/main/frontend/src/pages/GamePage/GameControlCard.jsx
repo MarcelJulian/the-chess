@@ -165,6 +165,7 @@ function GameControlCard({ game }) {
       <Box margin="auto" display="flex" justifyContent="space-evenly">
         <Button
           variant="outlined"
+          color="secondary"
           disabled={isDrawOffered ? true : hasMoved}
           onClick={() => abortGameHandler(accessToken, id)}
         >
@@ -172,6 +173,7 @@ function GameControlCard({ game }) {
         </Button>
         <Button
           variant="outlined"
+          color="secondary"
           disabled={isDrawOffered ? true : !hasMoved}
           onClick={() => offerDrawHandler(accessToken, id, "yes")}
         >
@@ -179,6 +181,7 @@ function GameControlCard({ game }) {
         </Button>
         <Button
           variant="outlined"
+          color="secondary"
           disabled={isDrawOffered ? true : !hasMoved}
           onClick={() => resignGameHandler(accessToken, id)}
         >

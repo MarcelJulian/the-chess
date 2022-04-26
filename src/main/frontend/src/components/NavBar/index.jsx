@@ -64,7 +64,10 @@ function NavBar({ themeHandler }) {
 
   return (
     <>
-      <AppBar position="fixed" sx={{ backgroundColor }}>
+      <AppBar
+        position="fixed"
+        sx={{ backgroundColor, backgroundImage: "none" }}
+      >
         <Toolbar disableGutters>
           <Box display="flex">
             {/* TODO:show logo */}
