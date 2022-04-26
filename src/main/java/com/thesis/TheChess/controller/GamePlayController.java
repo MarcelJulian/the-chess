@@ -42,8 +42,8 @@ public class GamePlayController {
 		String output = null;
 		
 		try {
-//			output = service.speechToTextService();
-			output = service.speechAdaptationService();
+			output = service.speechToTextService();
+//			output = service.transcribeWithModelAdaptation();
 			
 			System.out.println("GamePlayController - speechToTextController END");
 			return ResponseEntity.status(HttpStatus.OK).body(output);
