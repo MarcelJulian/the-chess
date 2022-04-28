@@ -48,10 +48,12 @@ function HomePage() {
         const response = await getOnGoingGames(accessToken);
         if (response.status === 200) {
           const gameId = response.data.game_id;
-          dispatch(
-            showSuccessToast("You are currently in a game. Redirecting...")
-          );
-          setTimeout(() => navigate(`/${gameId}`), 3000);
+          if (gameId) {
+            dispatch(
+              showSuccessToast("You are currently in a game. Redirecting...")
+            );
+            setTimeout(() => navigate(`/${gameId}`), 3000);
+          }
         }
       }
     };

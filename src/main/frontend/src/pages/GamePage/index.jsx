@@ -37,11 +37,18 @@ function GamePage() {
   const { accessToken, username } = useSelector((state) => state.session);
   const dispatch = useDispatch();
 
+  const [isGameEnd, setIsGameEnd] = useState(false);
+
   const [game, setGame] = useState(new Chess());
   const setGameHandler = (g) => setGame(g);
 
   const getTurnAndLastMove = (moves, isWhiteParam) => {
-    if (moves === null || moves === undefined) return {};
+    if (moves === "" || moves === null || moves === undefined)
+      return {
+        isWhiteTurn: true,
+        lastMove: null,
+        hasMoved: false
+      };
 
     const splitMoves = moves.split(" ");
     const isWhiteTurn = splitMoves.length % 2 === 0;
@@ -56,11 +63,14 @@ function GamePage() {
   };
 
   const initializeGameHandler = (fullGameStateResponse) => {
-    const { black } = fullGameStateResponse;
+    const { black, white } = fullGameStateResponse;
     fullGameStateResponse.isWhite = black.name !== username;
 
+    const isVsAi = black.aiLevel !== undefined || white.aiLevel !== undefined;
+
     const movesCopy = fullGameStateResponse?.state?.moves;
-    if (movesCopy !== null || movesCopy !== undefined) {
+
+    if (movesCopy !== "" || movesCopy !== null || movesCopy !== undefined) {
       const splitMoves = movesCopy.split(" ");
       const gameCopy = { ...game };
 
@@ -73,7 +83,8 @@ function GamePage() {
     dispatch(
       initializeGame({
         ...fullGameStateResponse,
-        ...getTurnAndLastMove(movesCopy, fullGameStateResponse.isWhite)
+        ...getTurnAndLastMove(movesCopy, fullGameStateResponse.isWhite),
+        isVsAi
       })
     );
   };
@@ -106,8 +117,9 @@ function GamePage() {
         );
         break;
       default:
-        break;
+        return false;
     }
+    return true;
   };
 
   const setGameStateHandler = (gameStateResponse) => {
@@ -116,30 +128,37 @@ function GamePage() {
       isWhite
     );
     const gameCopy = { ...game };
+    const isGameEndTemp = gameEndHandler(gameStateResponse?.status);
+    if (isGameEndTemp) setIsGameEnd(true);
 
-    const tryMove = gameCopy.move(lastMove, { sloppy: true });
-    if (tryMove !== null) setGameHandler(gameCopy);
+    if (gameCopy !== null && lastMove !== null) {
+      const tryMove = gameCopy.move(lastMove, { sloppy: true });
 
-    gameEndHandler(gameStateResponse?.status);
+      if (tryMove !== null) {
+        setGameHandler(gameCopy);
 
-    dispatch(
-      setGameState({
-        ...gameStateResponse,
-        isWhiteTurn,
-        lastMove,
-        hasMoved
-      })
-    );
+        dispatch(
+          setGameState({
+            ...gameStateResponse,
+            isWhiteTurn,
+            lastMove,
+            hasMoved
+          })
+        );
+      }
+    }
   };
 
   useEffect(() => {
     streamBoardGameState(
-      null,
+      accessToken,
       gameId,
       initializeGameHandler,
       setGameStateHandler
     );
   }, [gameId]);
+
+  const gameTurn = game.turn();
 
   // Handle sending the move made by the player
   useEffect(() => {
@@ -148,17 +167,16 @@ function GamePage() {
       if (response.status !== 200) dispatch(showRequestErrorToast(response));
     };
 
-    // Every opponent's turn, means the last move was made by the player
-    if ((isWhite && game.turn() === "b") || (!isWhite && game.turn() === "w")) {
-      const gameCopy = { ...game };
+    if (accessToken !== null && isWhite !== null && isGameEnd === false)
+      if ((isWhite && gameTurn === "b") || (!isWhite && gameTurn === "w")) {
+        // Every opponent's turn, means the last move was made by the player
+        const gameCopy = { ...game };
 
-      const playerMove = gameCopy.undo();
-      if (playerMove !== null)
-        sendMoveRequest(`${playerMove.from}${playerMove.to}`);
-    }
-  }, [game]);
-
-  const GAME_ID = "9G8PLB4A";
+        const playerMove = gameCopy.undo();
+        if (playerMove !== null)
+          sendMoveRequest(`${playerMove.from}${playerMove.to}`);
+      }
+  }, [gameTurn, isGameEnd]);
 
   /** 
    Outer box (1 rem)
@@ -191,7 +209,7 @@ function GamePage() {
         />
       </CenteredFlexBox>
       <CenteredFlexBox width="30%" padding="3rem">
-        <GameControlCard game={game} />
+        <GameControlCard pgn={game.pgn()} isGameEnd={isGameEnd} />
       </CenteredFlexBox>
     </CenteredFlexBox>
   );

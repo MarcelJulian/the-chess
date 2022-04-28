@@ -11,7 +11,8 @@ export const gameSlice = createSlice({
     isWhite: null,
     isWhiteTurn: null,
     lastMove: null,
-    hasMoved: null
+    hasMoved: null,
+    isVsAi: null
   },
   reducers: {
     initializeGame: (state, action) => {
@@ -24,9 +25,13 @@ export const gameSlice = createSlice({
       state.isWhiteTurn = action.payload.isWhiteTurn;
       state.lastMove = action.payload.lastMove;
       state.hasMoved = action.payload.hasMoved;
+      state.isVsAi = action.payload.isVsAi;
     },
     setGameState: (state, action) => {
       state.gameState = action.payload;
+      state.isWhiteTurn = action.payload.isWhiteTurn;
+      state.lastMove = action.payload.lastMove;
+      state.hasMoved = action.payload.hasMoved;
     }
   }
 });

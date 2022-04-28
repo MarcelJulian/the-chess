@@ -33,7 +33,7 @@ const abortGame = async (accessToken, gameId) => {
 
   try {
     const url = `${BASE_URL}/abort-game/${gameId}`;
-    const response = await axios.post(url, {}, headerConfig);
+    const response = await axios.post(url, null, headerConfig);
 
     return { status: response.status, data: response.data };
   } catch (err) {
@@ -46,7 +46,7 @@ const resignGame = async (accessToken, gameId) => {
 
   try {
     const url = `${BASE_URL}/resign-game/${gameId}`;
-    const response = await axios.post(url, {}, headerConfig);
+    const response = await axios.post(url, null, headerConfig);
 
     return { status: response.status, data: response.data };
   } catch (err) {
@@ -71,7 +71,7 @@ const movePiece = async (accessToken, gameId, move) => {
   const headerConfig = { headers: { oauth: accessToken } };
 
   try {
-    const url = `${BASE_URL}/handle-draw-offer/${gameId}/${move}`;
+    const url = `${BASE_URL}/move-piece/${gameId}/${move}`;
     const response = await axios.post(url, {}, headerConfig);
 
     return { status: response.status, data: response.data };

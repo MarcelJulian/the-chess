@@ -79,11 +79,17 @@ const streamBoardGameState = async (
   let result;
   while (!result || !result.done) {
     result = await exampleReader.read();
+    console.log(
+      "🚀 ~ file: gameStreamService.js ~ line 82 ~ result",
+      result.value
+    );
 
-    if (result.value.type === "gameFull") initializeGameHandler(result.value);
-    if (result.value.type === "gameState") setGameStateHandler(result.value);
+    if (result.value !== undefined)
+      if (result.value.type === "gameFull") initializeGameHandler(result.value);
+      else if (result.value.type === "gameState")
+        setGameStateHandler(result.value);
   }
-  return { status: response.status, data: result.value.gameId };
+  return { status: response.status, data: result.value };
 };
 
 export { streamBoardGameState, findMatchHandler };
