@@ -228,6 +228,13 @@ public class GamePlayService {
 					"gs://the-chess-bucket/Bc4.flac",
 					"gs://the-chess-bucket/Bb6.flac",
 //					"gs://the-chess-bucket/axB4.flac",
+					"gs://the-chess-bucket/Rh1_1.flac",
+					"gs://the-chess-bucket/Qh5_1.flac",
+					"gs://the-chess-bucket/Re7.flac	",
+					"gs://the-chess-bucket/Qh2.flac",
+					"gs://the-chess-bucket/Rb3.flac",
+					"gs://the-chess-bucket/Ba3.flac",
+					"gs://the-chess-bucket/Bd6.flac",
 					"gs://the-chess-bucket/Ba2.flac");
 			
 			for (String strUrl : listUrl) {
@@ -242,59 +249,10 @@ public class GamePlayService {
 					System.out.println("strUrl >> " + strUrl);
 					System.out.println("sttResult >> " + sttResult);
 					
-					/* LOGIC BOOST AKURASI STT */
-					String[] splited = sttResult.split("\\s+");
-					int totalWord = splited.length;
 					
-					switch (totalWord) {
-					case 1:
-						if (splited[0].length() == 2) {
-							System.out.println("final Str >> " + splited[0].toUpperCase());
-//							return splited[0].toUpperCase();
-						} else {
-							if (containNumeric(splited[0])) {
-								String temp = removeDuplicateChar(splited[0]);
-								if (splited[0].length() > 2) {
-									temp = cleanString(temp.toUpperCase()).toUpperCase();
-								}
-								
-								System.out.println("final Str >> " + temp);
-							}
-						}
-						break;
-					case 2:
-						String newStr = "";
-						
-						if (sttResult.equalsIgnoreCase("Queenside Castle") || sttResult.equalsIgnoreCase("Kingside Castle")) {
-							System.out.println("final Str >> " + sttResult);
-//							return sttResult;
-						} else {
-							if (containNumeric(splited[1])) {
-								String temp = removeDuplicateChar(splited[1]);
-								if (temp.length() > 2) {
-									temp = cleanString(temp.toUpperCase()).toUpperCase();
-								}
-								
-								newStr = splited[0] + " " + temp;									
-								
-								System.out.println("final Str >> " + newStr);
-							}
-						}
-						break;
-					case 3:
-						if (sttResult.equalsIgnoreCase("Queen side Castle") || sttResult.equalsIgnoreCase("King side Castle")) {
-							if (sttResult.equalsIgnoreCase("Queen side Castle")) {
-								System.out.println("final str >> Queenside Castle");
-//								return "Queenside Castle";
-							} else {
-								System.out.println("final str >> Kingside Castle");
-//								return "Kingside Castle";
-							}
-						}
-						break;
-					default:
-						break;
-					}
+					String fin = improveAccuracy(sttResult);
+					System.out.println("after improve >> " + fin);
+//					return improveAccuracy(sttResult);
 				}
 			}
 			
@@ -302,6 +260,93 @@ public class GamePlayService {
 		} catch (Exception e) {
 			System.out.println("error - " + e.getMessage());
 			throw new Exception(e.getMessage());
+		}
+	}
+	
+	private String improveAccuracy(String sttResult) throws Exception{
+		String[] splited = sttResult.split("\\s+");
+		int totalWord = splited.length;
+		
+		switch (totalWord) {
+		case 1:
+			try {
+				String temp = splited[0];
+				if (temp.length() == 2) {
+					return temp.toLowerCase();
+				} else {
+					if (containNumeric(temp)) {
+						temp = removeDuplicateChar(temp);
+						temp = cleanString(temp.toUpperCase()).toLowerCase();
+						
+						if (temp.length() != 2) {
+							return "ERROR - " + temp;
+						} else {
+							if (isAccurate(temp.charAt(0), temp.charAt(1))) {
+								return temp;							
+							} else {
+								return "ERROR - " + temp;
+							}
+						}
+					} else {
+						return "ERROR - " + temp;
+					}
+				}
+			} catch (Exception e) {
+				throw new Exception("ERROR improveAccuracy -- exception >> " + e.getMessage());
+			}
+		case 2:
+			try {
+				if (sttResult.equalsIgnoreCase("Queenside Castle")) {
+					return "0-0-0";
+				} else if (sttResult.equalsIgnoreCase("Kingside Castle")) {
+					return "0-0";
+				} else {
+					String temp1 = splited[0];
+					String temp2 = splited[1];
+					
+					if (temp1.toLowerCase().equalsIgnoreCase("bishop")) {
+						temp1 = "B";
+					} else if (temp1.toLowerCase().equalsIgnoreCase("knight")) {
+						temp1 = "N";
+					} else if (temp1.toLowerCase().equalsIgnoreCase("rook")) {
+						temp1 = "R";
+					} else if (temp1.toLowerCase().equalsIgnoreCase("queen")) {
+						temp1 = "Q";
+					} else if (temp1.toLowerCase().equalsIgnoreCase("king")) {
+						temp1 = "K";
+					} else {
+						return "ERROR - " + temp1 + temp2;
+					}
+					
+					if (containNumeric(temp2)) {
+						temp2 = removeDuplicateChar(temp2);
+						temp2 = cleanString(temp2.toUpperCase()).toLowerCase();
+						if (temp2.length() != 2) {
+							return "ERROR - " + temp1 + temp2;
+						} else {
+							return temp1 + temp2;
+						}
+					} else {
+						return "ERROR - " + temp1 + temp2;
+					}
+				}
+			} catch (Exception e) {
+				throw new Exception("ERROR improveAccuracy -- exception >> " + e.getMessage());
+			}
+		case 3:
+			try {
+				if (sttResult.equalsIgnoreCase("Queen side Castle")) {
+					return "0-0-0";
+				} else if (sttResult.equalsIgnoreCase("King side Castle")) {
+					return "0-0";
+				} else {
+					return "ERROR - " + sttResult;
+				}
+			} catch (Exception e) {
+				throw new Exception("ERROR improveAccuracy -- exception >> " + e.getMessage());
+			}
+		default:
+			return "ERROR - " + sttResult;
 		}
 	}
 	
@@ -322,6 +367,7 @@ public class GamePlayService {
 		}
 		return str;
 	}
+	
 	
 	private String cleanString(String str) {
 		char[] strArray = str.toCharArray();
@@ -349,6 +395,14 @@ public class GamePlayService {
 			}
 		}
 		return '0';
-	}	
+	}
+	
+	private boolean isAccurate(char first, char second) {
+		if (Character.isDigit(second) && !(Character.isDigit(first))) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 }
