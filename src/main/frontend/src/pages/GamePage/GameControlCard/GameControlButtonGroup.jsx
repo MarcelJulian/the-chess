@@ -6,7 +6,7 @@ import FirstPageIcon from "@mui/icons-material/FirstPage";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import Grid from "@mui/material/Grid";
 
-import { IconButtonGridItemContainer } from "./ItemContainers";
+import { IconButtonGridItemContainer } from "../ItemContainers";
 
 // currently unused. Optional feature
 function GameControlButtonGroup(backgroundColor) {

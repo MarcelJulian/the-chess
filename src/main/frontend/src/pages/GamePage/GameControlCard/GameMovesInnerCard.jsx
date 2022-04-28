@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
+/* eslint-disable react/no-array-index-key */
+import React, { useEffect, useRef } from "react";
 
 import Box from "@mui/material/Box";
 import useTheme from "@mui/material/styles/useTheme";
@@ -95,16 +96,17 @@ function GameMovesInnerCard({ pgn }) {
       if (i % 3 === 0 && gridItems.length !== 0) {
         wrapWithFlex(gridItems, i);
         gridItems = [];
-        gridItems.push(<ChessMoveBox key={v} {...chessMoveBoxProps} />);
+        gridItems.push(<ChessMoveBox key={v + i} {...chessMoveBoxProps} />);
         // last move
       } else if (i === len - 1) {
         gridItems.push(
-          <ChessMoveBox key={v} {...chessMoveBoxProps} isCurrent />
+          <ChessMoveBox key={v + i} {...chessMoveBoxProps} isCurrent />
         );
         // if last move is white
         if (len % 3 === 2)
           gridItems.push(<ChessMoveBox key={" "} v={" "} isNumber={false} />);
-      } else gridItems.push(<ChessMoveBox key={v} {...chessMoveBoxProps} />);
+      } else
+        gridItems.push(<ChessMoveBox key={v + i} {...chessMoveBoxProps} />);
     });
 
     wrapWithFlex(gridItems, "last");

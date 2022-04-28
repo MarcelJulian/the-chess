@@ -1,53 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import useTheme from "@mui/material/styles/useTheme";
 import Typography from "@mui/material/Typography";
-import Countdown, { zeroPad } from "react-countdown";
 import { useSelector, useDispatch } from "react-redux";
 
 import { abortGame, resignGame, handleDrawOffer } from "services/gameService";
 import { showRequestErrorToast } from "store/reducers/uiSlice";
 
 import GameMovesInnerCard from "./GameMovesInnerCard";
+import TimeUsernameBox from "./TimeUsernameBox";
 
-function TimeUsernameBox({ user }) {
-  const { time, name, rating, isTurn, aiLevel } = user;
-
-  const nameStr = aiLevel === undefined ? name : `Stockfish ${aiLevel}`;
-
-  const timeRenderer = ({ minutes, seconds }) => (
-    <Typography variant="h5">
-      {zeroPad(minutes)}:{zeroPad(seconds)}
-    </Typography>
-  );
-
-  const timeHandler = () => {
-    if (time !== null)
-      return (
-        <Countdown
-          date={Date.now() + time}
-          renderer={timeRenderer}
-          autoStart={isTurn}
-        />
-      );
-    return <div />;
-  };
-
-  return (
-    <Box display="flex" flexDirection="column" marginBottom="1rem">
-      {timeHandler()}
-      <Box display="flex" justifyContent="space-between">
-        <Typography variant="subtitle1">{nameStr}</Typography>
-        <Typography variant="subtitle1">{rating ?? " "}</Typography>
-      </Box>
-    </Box>
-  );
-}
-
-function GameControlCard({ game }) {
+function GameControlCard({ pgn, isGameEnd }) {
   const theme = useTheme();
   // Warna box keseluruhan
   const backgroundColor = theme.palette.neutral.main;
@@ -57,32 +23,42 @@ function GameControlCard({ game }) {
   const [isDrawOffered, setIsDrawOffered] = useState(false);
 
   const dispatch = useDispatch();
-  const { id, clock, black, white, isWhite, isWhiteTurn, gameState, hasMoved } =
-    useSelector((state) => state.game);
+  const {
+    id,
+    clock,
+    black,
+    white,
+    isWhite,
+    isWhiteTurn,
+    gameState,
+    hasMoved,
+    isVsAi
+  } = useSelector((state) => state.game);
 
   const accessToken = useSelector((state) => state.session.accessToken);
 
-  const isGameEnd =
-    gameState?.status !== "created" && gameState?.status !== "started";
+  const checkIsTurn = (isTurnParam) => hasMoved && !isGameEnd && isTurnParam;
 
-  const blackTemp = {
-    ...black,
-    time: clock === null ? null : gameState.btime,
-    isTurn: isGameEnd ? false : !isWhiteTurn
-  };
-  const whiteTemp = {
-    ...white,
-    time: clock === null ? null : gameState.wtime,
-    isTurn: isGameEnd ? false : isWhiteTurn
-  };
-
-  //   const blackTemp = { ...black, time: 298999, isTurn: !isWhiteTurn };
-  //   const whiteTemp = { ...white, time: 60999, isTurn: isWhiteTurn };
+  const blackTemp = useMemo(
+    () => ({
+      ...black,
+      time: clock === null ? null : gameState.btime,
+      isTurn: checkIsTurn(!isWhiteTurn)
+    }),
+    [gameState?.btime, isWhiteTurn]
+  );
+  const whiteTemp = useMemo(
+    () => ({
+      ...white,
+      time: clock === null ? null : gameState.wtime,
+      isTurn: checkIsTurn(isWhiteTurn)
+    }),
+    [gameState?.wtime, isWhiteTurn]
+  );
 
   const opponent = isWhite ? blackTemp : whiteTemp;
   const player = isWhite ? whiteTemp : blackTemp;
 
-  // TODO: test
   const abortGameHandler = async (accessTokenParam, gameIdParam) => {
     const response = await abortGame(accessTokenParam, gameIdParam);
     if (response.status !== 200) dispatch(showRequestErrorToast(response));
@@ -155,41 +131,43 @@ function GameControlCard({ game }) {
         <Box
           sx={{ height: "1.5rem", backgroundColor: darkerBackgroundColor }}
         />
-        <GameMovesInnerCard pgn={game.pgn()} />
+        <GameMovesInnerCard pgn={pgn} />
       </Card>
 
       <TimeUsernameBox user={player} />
 
       {drawOfferUiHandler()}
 
-      <Box margin="auto" display="flex" justifyContent="space-evenly">
-        <Button
-          variant="outlined"
-          color="secondary"
-          disabled={isDrawOffered ? true : hasMoved}
-          onClick={() => abortGameHandler(accessToken, id)}
-        >
-          Abort
-        </Button>
-        <Button
-          variant="outlined"
-          color="secondary"
-          disabled={isDrawOffered ? true : !hasMoved}
-          onClick={() => offerDrawHandler(accessToken, id, "yes")}
-        >
-          Draw
-        </Button>
-        <Button
-          variant="outlined"
-          color="secondary"
-          disabled={isDrawOffered ? true : !hasMoved}
-          onClick={() => resignGameHandler(accessToken, id)}
-        >
-          Resign
-        </Button>
-      </Box>
+      {!isGameEnd && (
+        <Box margin="auto" display="flex" justifyContent="space-evenly">
+          <Button
+            variant="outlined"
+            color="secondary"
+            disabled={isDrawOffered ? true : hasMoved}
+            onClick={() => abortGameHandler(accessToken, id)}
+          >
+            Abort
+          </Button>
+          <Button
+            variant="outlined"
+            color="secondary"
+            disabled={isVsAi || isDrawOffered ? true : !hasMoved}
+            onClick={() => offerDrawHandler(accessToken, id, "yes")}
+          >
+            Draw
+          </Button>
+          <Button
+            variant="outlined"
+            color="secondary"
+            disabled={isDrawOffered ? true : !hasMoved}
+            onClick={() => resignGameHandler(accessToken, id)}
+          >
+            Resign
+          </Button>
+        </Box>
+      )}
     </Card>
   );
 }
 
-export default GameControlCard;
+export default React.memo(GameControlCard);
