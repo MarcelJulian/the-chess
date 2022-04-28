@@ -38,8 +38,8 @@ import com.thesis.TheChess.dto.MakeBoardMoveResult;
 
 @Service
 public class GamePlayService {
-	
-	@Value("${lichess_api_url}")	//	https://lichess.org/api/
+
+    @Value("${lichess_api_url}") // https://lichess.org/api/
     public String lichess_api_url;
 	
 	@Value("${gcloud_project_id}")
@@ -76,7 +76,7 @@ public class GamePlayService {
 			System.out.println("hitMakeABoardMove - request >> " + request);
 			
 			String uri = lichess_api_url + "board/game/" + game_id + "/move" + move;
-			System.out.println("hitAbortGame - uri >> " + uri);
+			System.out.println("hitMakeABoardMove - uri >> " + uri);
 			
 			ResponseEntity<MakeBoardMoveResult> responseHit = restTemplate.exchange(uri, HttpMethod.POST, request, MakeBoardMoveResult.class);
 			System.out.println("hitChallengeAI - responseHit >> " + responseHit);
