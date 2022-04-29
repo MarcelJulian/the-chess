@@ -103,12 +103,18 @@ function BotCard() {
 
   const matchWithBotHandler = async () => {
     setIsLoading(true);
-    const bodyParams = {
+
+    let bodyParams = {
       level: strength,
-      clock_limit: isUnlimited ? 0 : timeControlMinute * 60,
-      clock_increment: isUnlimited ? 0 : timeControlIncrement,
       color
     };
+    if (!isUnlimited)
+      bodyParams = {
+        ...bodyParams,
+        clock_limit: isUnlimited ? 0 : timeControlMinute * 60,
+        clock_increment: isUnlimited ? 0 : timeControlIncrement
+      };
+
     const response = await matchWithBot(accessToken, bodyParams);
     if (response.status !== 200) dispatch(showRequestErrorToast(response));
     else {
