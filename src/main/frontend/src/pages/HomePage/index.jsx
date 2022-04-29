@@ -62,15 +62,29 @@ function HomePage() {
   }, [isSignedIn]);
 
   return (
-    <Box sx={{ marginTop: "1rem" }}>
-      <Container>
+    <Container
+      sx={{
+        height: "calc(100vh - 64px)"
+        // display: "flex",
+        // flexDirection: "column",
+        // justifyContent: "space-around"
+      }}
+    >
+      <Box
+        paddingTop="4rem"
+        // paddingBottom="auto"
+        display="flex"
+        justifyContent="space-between"
+      >
         {/* TODO: isSignedIn === false, show what? */}
-        <Box display="flex" justifyContent="space-between">
-          <BotCard />
-          <HumanCard />
-        </Box>
-      </Container>
-    </Box>
+        {/* {isSignedIn === false && <DefaultCard />} */}
+
+        {/* <Box display="flex" justifyContent="space-between"> */}
+        <BotCard />
+        <HumanCard />
+        {/* </Box> */}
+      </Box>
+    </Container>
   );
 }
 
@@ -126,7 +140,7 @@ function BotCard() {
   return (
     <Card
       sx={{
-        marginBottom: "1rem",
+        // marginBottom: "1rem",
         borderRadius: "16px",
         width: "48%",
         paddingTop: "1rem",
@@ -157,9 +171,39 @@ function HumanCard() {
   return (
     <Card
       sx={{
-        marginBottom: "1rem",
+        // marginBottom: "1rem",
         borderRadius: "16px",
         width: "48%",
+        paddingTop: "1rem",
+        backgroundColor
+      }}
+    >
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        sx={{ height: "100%" }}
+      >
+        <CardTitle label="Play with Human" />
+        <Box display="flex" alignItems="center" sx={{ height: "100%" }}>
+          <HumanCardContent />
+        </Box>
+      </Box>
+    </Card>
+  );
+}
+
+function DefaultCard() {
+  const theme = useTheme();
+  // Warna box play with human & bot
+  const backgroundColor = theme.palette.neutral.main;
+
+  return (
+    <Card
+      sx={{
+        marginBottom: "1rem",
+        borderRadius: "16px",
+        width: "50%",
         backgroundColor
       }}
     >
@@ -169,10 +213,7 @@ function HumanCard() {
         alignItems="center"
         sx={{ height: "100%", paddingTop: "1rem" }}
       >
-        <CardTitle label="Play with Human" />
-        <Box display="flex" alignItems="center" sx={{ height: "100%" }}>
-          <HumanCardContent />
-        </Box>
+        Please sign in with your lichess account to continue.
       </Box>
     </Card>
   );

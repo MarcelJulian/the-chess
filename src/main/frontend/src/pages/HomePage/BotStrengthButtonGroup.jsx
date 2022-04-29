@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { setStrength } from "store/reducers/botFormSlice";
 
-function BotStrengthGroupButton() {
+function BotStrengthGroupButton({ size }) {
   const buttonValues = [1, 2, 3, 4, 5, 6, 7, 8];
 
   const botStrength = useSelector((state) => state.botForm.strength);
@@ -27,6 +27,7 @@ function BotStrengthGroupButton() {
           value={value}
           disableFocusRipple
           disableRipple
+          size={size}
         >
           <Typography variant="button" sx={{ paddingX: "0.5rem" }}>
             {value}
