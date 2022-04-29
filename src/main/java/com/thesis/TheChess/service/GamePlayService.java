@@ -79,7 +79,7 @@ public class GamePlayService {
             HttpEntity request = new HttpEntity("", headers);
             System.out.println("hitMakeABoardMove - request >> " + request);
 
-            String uri = lichess_api_url + "board/game/" + game_id + "/move" + move;
+            String uri = lichess_api_url + "board/game/" + game_id + "/move/" + move;
             System.out.println("hitMakeABoardMove - uri >> " + uri);
 
             ResponseEntity<MakeBoardMoveResult> responseHit = restTemplate.exchange(uri, HttpMethod.POST, request,
