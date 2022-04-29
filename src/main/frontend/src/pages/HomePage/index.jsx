@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 
 import LoadingButton from "@mui/lab/LoadingButton";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import Container from "@mui/material/Container";
 import useTheme from "@mui/material/styles/useTheme";
 import { useSelector, useDispatch } from "react-redux";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
+import signInToLichess from "services/authService";
 import { getOnGoingGames, matchWithBot } from "services/gameService";
 import { signIn } from "store/reducers/sessionSlice";
 import {
@@ -74,15 +76,16 @@ function HomePage() {
         paddingTop="4rem"
         // paddingBottom="auto"
         display="flex"
-        justifyContent="space-between"
+        justifyContent={isSignedIn ? "space-between" : "center"}
       >
-        {/* TODO: isSignedIn === false, show what? */}
-        {/* {isSignedIn === false && <DefaultCard />} */}
-
-        {/* <Box display="flex" justifyContent="space-between"> */}
-        <BotCard />
-        <HumanCard />
-        {/* </Box> */}
+        {isSignedIn === false ? (
+          <DefaultCard />
+        ) : (
+          <>
+            <BotCard />
+            <HumanCard />
+          </>
+        )}
       </Box>
     </Container>
   );
@@ -195,8 +198,14 @@ function HumanCard() {
 
 function DefaultCard() {
   const theme = useTheme();
-  // Warna box play with human & bot
   const backgroundColor = theme.palette.neutral.main;
+
+  const dispatch = useDispatch();
+
+  const signInHandler = async () => {
+    const response = await signInToLichess();
+    if (response.status !== 200) dispatch(showRequestErrorToast(response));
+  };
 
   return (
     <Card
@@ -211,9 +220,16 @@ function DefaultCard() {
         display="flex"
         flexDirection="column"
         alignItems="center"
-        sx={{ height: "100%", paddingTop: "1rem" }}
+        sx={{ height: "100%", paddingY: "1rem" }}
       >
         Please sign in with your lichess account to continue.
+        <Button
+          variant="contained"
+          onClick={signInHandler}
+          sx={{ display: "block", color: "white", marginTop: "1rem" }}
+        >
+          Sign In
+        </Button>
       </Box>
     </Card>
   );
