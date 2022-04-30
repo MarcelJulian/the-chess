@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 
 import Box from "@mui/material/Box";
 import Chess from "chess.js";
@@ -41,6 +41,9 @@ function GamePage() {
 
   const [game, setGame] = useState(new Chess());
   const setGameHandler = (g) => setGame(g);
+
+  const audio = useMemo(() => new Audio(`/sfx/move.mp3`));
+  const playAudio = () => audio.play();
 
   const getTurnAndLastMove = (moves, isWhiteParam) => {
     if (moves === "" || moves === null || moves === undefined)
@@ -135,6 +138,7 @@ function GamePage() {
       const tryMove = gameCopy.move(lastMove, { sloppy: true });
 
       if (tryMove !== null) {
+        playAudio();
         setGameHandler(gameCopy);
 
         dispatch(
