@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import LoadingButton from "@mui/lab/LoadingButton";
+import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
@@ -211,6 +212,7 @@ function DefaultCard() {
     <Card
       sx={{
         marginBottom: "1rem",
+        paddingX: "1rem",
         borderRadius: "16px",
         width: "50%",
         backgroundColor
@@ -230,6 +232,9 @@ function DefaultCard() {
         >
           Sign In
         </Button>
+        <Alert severity="info" sx={{ marginTop: "1rem", width: "100%" }}>
+          As a third party application, a slight lag is to be tolerated
+        </Alert>
       </Box>
     </Card>
   );
