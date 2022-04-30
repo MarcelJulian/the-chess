@@ -3,7 +3,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import Box from "@mui/material/Box";
 import Chess from "chess.js";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 import Board from "components/Board";
 import { movePiece } from "services/gameService";
@@ -34,8 +34,11 @@ function GamePage() {
   const { gameId } = useParams();
 
   const { isWhite } = useSelector((state) => state.game);
-  const { accessToken, username } = useSelector((state) => state.session);
+  const { accessToken, username, isSignedIn } = useSelector(
+    (state) => state.session
+  );
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [isGameEnd, setIsGameEnd] = useState(false);
 
@@ -154,12 +157,16 @@ function GamePage() {
   };
 
   useEffect(() => {
-    streamBoardGameState(
-      accessToken,
-      gameId,
-      initializeGameHandler,
-      setGameStateHandler
-    );
+    if (!isSignedIn) {
+      dispatch(showErrorToast("Please sign in first. Redirecting..."));
+      setTimeout(() => navigate(`/`), 3000);
+    } else
+      streamBoardGameState(
+        accessToken,
+        gameId,
+        initializeGameHandler,
+        setGameStateHandler
+      );
   }, [gameId]);
 
   const gameTurn = game.turn();
