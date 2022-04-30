@@ -36,31 +36,14 @@ public class GamePlayController {
 		}
 	}
 	
-	@PostMapping(path = "api/speech-to-text-test")
-	public ResponseEntity<String> speechToTextTestController(){
-		System.out.println("GamePlayController - speechToTextController START");
-		
-		String output = null;
-		
-		try {
-			output = service.speechToTextServiceTest();
-			
-			System.out.println("GamePlayController - speechToTextController END");
-			return ResponseEntity.status(HttpStatus.OK).body(output);
-		} catch (Exception e) {
-			System.out.println("GamePlayController - speechToTextController ERROR");
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(output);
-		}
-	}
-	
 	@PostMapping(path = "api/speech-to-text")
-	public ResponseEntity<SpeechToTextOutput> speechToTextController(@RequestHeader("url") String url){
-		System.out.println("GamePlayController - speechToTextController START - url >> " + url);
+	public ResponseEntity<SpeechToTextOutput> speechToTextController(@RequestHeader("path") String path){
+		System.out.println("GamePlayController - speechToTextController START - path >> " + path);
 		
 		SpeechToTextOutput output = null;
 		
 		try {
-			output = service.speechToTextService(url);
+			output = service.speechToTextService(path);
 			
 			System.out.println("GamePlayController - speechToTextController END");
 			return ResponseEntity.status(HttpStatus.OK).body(output);
