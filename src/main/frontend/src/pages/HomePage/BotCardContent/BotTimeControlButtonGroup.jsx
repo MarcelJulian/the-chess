@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { setTimeControlMode } from "store/reducers/botFormSlice";
 
-import { BotTimeControlEnum } from "./LocalEnums";
+import { BotTimeControlEnum } from "../LocalEnums";
 
 function BotTimeControlButtonGroup({ size }) {
   const botTimeControlMode = useSelector(

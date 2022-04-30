@@ -1,11 +1,10 @@
 import React from "react";
 
+import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 
-import Item from "./Item";
-
 function CenteredGridItemContainer({ component, label }) {
-  return <Item sx={{ textAlign: "center" }}>{component ?? label}</Item>;
+  return <Box sx={{ textAlign: "center" }}>{component ?? label}</Box>;
 }
 
 function IconButtonGridItemContainer({ icon }) {
