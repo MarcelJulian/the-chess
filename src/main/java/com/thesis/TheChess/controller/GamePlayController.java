@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.thesis.TheChess.dto.SpeechToTextOutput;
 import com.thesis.TheChess.service.GamePlayService;
 
 @RestController
@@ -35,15 +36,31 @@ public class GamePlayController {
 		}
 	}
 	
-	@PostMapping(path = "api/speech-to-text")
-	public ResponseEntity<String> speechToTextController(){
+	@PostMapping(path = "api/speech-to-text-test")
+	public ResponseEntity<String> speechToTextTestController(){
 		System.out.println("GamePlayController - speechToTextController START");
 		
 		String output = null;
 		
 		try {
-			output = service.speechToTextService();
-//			output = service.transcribeWithModelAdaptation();
+			output = service.speechToTextServiceTest();
+			
+			System.out.println("GamePlayController - speechToTextController END");
+			return ResponseEntity.status(HttpStatus.OK).body(output);
+		} catch (Exception e) {
+			System.out.println("GamePlayController - speechToTextController ERROR");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(output);
+		}
+	}
+	
+	@PostMapping(path = "api/speech-to-text")
+	public ResponseEntity<SpeechToTextOutput> speechToTextController(@RequestHeader("url") String url){
+		System.out.println("GamePlayController - speechToTextController START - url >> " + url);
+		
+		SpeechToTextOutput output = null;
+		
+		try {
+			output = service.speechToTextService(url);
 			
 			System.out.println("GamePlayController - speechToTextController END");
 			return ResponseEntity.status(HttpStatus.OK).body(output);

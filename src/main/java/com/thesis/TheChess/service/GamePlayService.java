@@ -35,6 +35,7 @@ import com.google.cloud.speech.v1p1beta1.SpeechContext;
 import com.google.cloud.speech.v1p1beta1.SpeechRecognitionAlternative;
 import com.google.cloud.speech.v1p1beta1.SpeechRecognitionResult;
 import com.thesis.TheChess.dto.MakeBoardMoveResult;
+import com.thesis.TheChess.dto.SpeechToTextOutput;
 
 @Service
 public class GamePlayService {
@@ -99,7 +100,199 @@ public class GamePlayService {
 		}
 	}
 	
-	public String speechToTextService() throws Exception {
+	public SpeechToTextOutput speechToTextService(String strUrl) throws Exception {
+		System.out.println("GamePlayService - speechToTextService - START - url >> " + strUrl);
+		SpeechToTextOutput output = null;
+		
+		try (SpeechClient speechClient = SpeechClient.create()) {
+			List<String> phrases = Arrays.asList(
+					"$OOV_CLASS_ALPHANUMERIC_SEQUENCE",
+					"Bishop $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
+					"Knight $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
+					"Rook $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
+					"Queen $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
+					"King $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
+					"Kingside Castle",
+					"Queenside Castle"
+					);
+
+			SpeechContext speechContext = SpeechContext.newBuilder().addAllPhrases(phrases).build();
+
+			RecognitionConfig config =
+					RecognitionConfig.newBuilder()
+					.setEncoding(RecognitionConfig.AudioEncoding.FLAC)
+					.setSampleRateHertz(16000)
+					.setLanguageCode("en-US")
+					.addSpeechContexts(speechContext)
+					.build();
+			
+			RecognitionAudio audio = RecognitionAudio.newBuilder().setUri(strUrl).build();
+			
+			RecognizeRequest request = RecognizeRequest.newBuilder().setConfig(config).setAudio(audio).build();
+			
+			RecognizeResponse response = speechClient.recognize(request);
+			
+			for (SpeechRecognitionResult result : response.getResultsList()) {
+				SpeechRecognitionAlternative alternative = result.getAlternativesList().get(0);
+				String sttResult = alternative.getTranscript();
+				output = improveAccuracy(sttResult);
+			}
+			System.out.println("GamePlayService - speechToTextService - END - url >> " + strUrl);
+			return output;
+		} catch (Exception e) {
+			System.out.println("ERROR - GamePlayService - speechToTextService - url >> " + strUrl + " - exception >> " + e.getMessage());
+			throw new Exception(e.getMessage());
+		}
+	}
+	
+	private SpeechToTextOutput improveAccuracy(String sttResult) throws Exception{
+		System.out.println("improveAccuracy START - string >> " + sttResult);
+		SpeechToTextOutput output = new SpeechToTextOutput();
+		
+		if (sttResult.contains("sign")) {
+			output.setType("command");
+			output.setValue("Resign");
+		} else if (sttResult.contains("cept")) {
+			output.setType("command");
+			output.setValue("Accept Draw");
+		} else if (sttResult.contains("line")) {
+			output.setType("command");
+			output.setValue("Decline Draw");
+		} else if (sttResult.contains("bor")) {
+			output.setType("command");
+			output.setValue("Abort");
+		} else if (sttResult.contains("raw")) {
+			output.setType("command");
+			output.setValue("Draw");
+		} else {
+			String[] splited = sttResult.split("\\s+");
+			int totalWord = splited.length;
+			
+			switch (totalWord) {
+			case 1:
+				try {
+					String temp = splited[0];
+					String temp0 = "";
+					if (temp.length() == 2) {
+						if (isAccurate(temp.charAt(0), temp.charAt(1))) {
+							output.setType("move");
+							output.setValue(temp.toLowerCase());
+						} else {
+							output.setType("error");
+							output.setValue(temp);
+						}
+					} else {
+						if (containNumeric(temp)) {
+							if (temp.charAt(0) == '9') {
+								temp0 = "N";
+							} else if (temp.charAt(0) == 'r' || temp.charAt(0) == 'R') {
+								temp0 = "R";
+							}
+							temp = removeDuplicateChar(temp);
+							temp = cleanString(temp.toUpperCase()).toLowerCase();
+							
+							if (temp.length() != 2) {
+								output.setType("error");
+								output.setValue(temp);
+							} else {
+								if (isAccurate(temp.charAt(0), temp.charAt(1))) {
+									if (temp0 != "") {
+										temp = temp0 + temp;
+									}
+									output.setType("move");
+									output.setValue(temp);
+								} else {
+									output.setType("error");
+									output.setValue(temp);
+								}
+							}
+						} else {
+							output.setType("error");
+							output.setValue(temp);
+						}
+					}
+				} catch (Exception e) {
+					throw new Exception("ERROR improveAccuracy -- exception >> " + e.getMessage());
+				}
+				break;
+			case 2:
+				try {
+					if (sttResult.equalsIgnoreCase("Queenside Castle") || ((sttResult.contains("queen") || sttResult.contains("Queen")) && (sttResult.contains("castle") || sttResult.contains("Castle")))) {
+						output.setType("move");
+						output.setValue("0-0-0");
+					} else if (sttResult.equalsIgnoreCase("Kingside Castle") || ((sttResult.contains("king") || sttResult.contains("King")) && (sttResult.contains("castle") || sttResult.contains("Castle")))) {
+						output.setType("move");
+						output.setValue("0-0");
+					} else {
+						String temp1 = splited[0];
+						String temp2 = splited[1];
+						
+						if (temp1.toLowerCase().equalsIgnoreCase("bishop")) {
+							temp1 = "B";
+						} else if (temp1.toLowerCase().equalsIgnoreCase("knight")) {
+							temp1 = "N";
+						} else if (temp1.toLowerCase().equalsIgnoreCase("rook")) {
+							temp1 = "R";
+						} else if (temp1.toLowerCase().equalsIgnoreCase("queen")) {
+							temp1 = "Q";
+						} else if (temp1.toLowerCase().equalsIgnoreCase("king")) {
+							temp1 = "K";
+						} else {
+							output.setType("error");
+							output.setValue(temp1 + temp2);
+						}
+						
+						if (containNumeric(temp2)) {
+							temp2 = removeDuplicateChar(temp2);
+							temp2 = cleanString(temp2.toUpperCase()).toLowerCase();
+							if (temp2.length() != 2) {
+								output.setType("error");
+								output.setValue(temp1 + temp2);
+							} else {
+								if (isAccurate(temp2.charAt(0), temp2.charAt(1))) {
+									output.setType("move");
+									output.setValue(temp1 + temp2);
+								} else {
+									output.setType("error");
+									output.setValue(temp1 + temp2);
+								}
+							}
+						} else {
+							output.setType("error");
+							output.setValue(temp1 + temp2);
+						}
+					}
+				} catch (Exception e) {
+					throw new Exception("ERROR improveAccuracy -- exception >> " + e.getMessage());
+				}
+				break;
+			case 3:
+				try {
+					if (sttResult.equalsIgnoreCase("Queen side Castle") || ((sttResult.contains("queen") || sttResult.contains("Queen")) && (sttResult.contains("castle") || sttResult.contains("Castle")))) {
+						output.setType("move");
+						output.setValue("0-0-0");
+					} else if (sttResult.equalsIgnoreCase("King side Castle") || ((sttResult.contains("king") || sttResult.contains("King")) && (sttResult.contains("castle") || sttResult.contains("Castle")))) {
+						output.setType("move");
+						output.setValue("0-0");
+					} else {
+						output.setType("error");
+						output.setValue(sttResult);
+					}
+				} catch (Exception e) {
+					throw new Exception("ERROR improveAccuracy -- exception >> " + e.getMessage());
+				}
+				break;
+			default:
+				output.setType("error");
+				output.setValue(sttResult);
+				break;
+			}
+		}
+		System.out.println("improveAccuracy END - string >> " + sttResult);
+		return output;
+	}
+	
+	public String speechToTextServiceTest() throws Exception {
 		String output = "";
 		
 		try (SpeechClient speechClient = SpeechClient.create()) {
@@ -227,10 +420,8 @@ public class GamePlayService {
 					System.out.println("strUrl >> " + strUrl);
 					System.out.println("sttResult >> " + sttResult);
 					
-					
-					String fin = improveAccuracy(sttResult);
+					String fin = improveAccuracyTest(sttResult);
 					System.out.println("after improve >> " + fin);
-//					return improveAccuracy(sttResult);
 				}
 			}
 			
@@ -241,7 +432,9 @@ public class GamePlayService {
 		}
 	}
 	
-	private String improveAccuracy(String sttResult) throws Exception{
+	private String improveAccuracyTest(String sttResult) throws Exception{
+		String output = "";
+		
 		if (sttResult.contains("sign")) {
 			return "Resign";
 		} else if (sttResult.contains("cept")) {
@@ -263,7 +456,7 @@ public class GamePlayService {
 					String temp0 = "";
 					if (temp.length() == 2) {
 						if (isAccurate(temp.charAt(0), temp.charAt(1))) {
-							return temp.toLowerCase();						
+							return temp.toLowerCase();			
 						} else {
 							return "ERROR - " + temp;
 						}
@@ -327,7 +520,7 @@ public class GamePlayService {
 								return "ERROR - " + temp1 + temp2;
 							} else {
 								if (isAccurate(temp2.charAt(0), temp2.charAt(1))) {
-									return temp1 + temp2;								
+									return temp1 + temp2;
 								} else {
 									return "ERROR - " + temp1 + temp2;
 								}
