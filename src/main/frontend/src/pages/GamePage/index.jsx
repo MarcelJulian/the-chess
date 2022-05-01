@@ -157,16 +157,16 @@ function GamePage() {
   };
 
   useEffect(() => {
-    if (!isSignedIn) {
-      dispatch(showErrorToast("Please sign in first. Redirecting..."));
-      setTimeout(() => navigate(`/`), 3000);
-    } else
-      streamBoardGameState(
-        accessToken,
-        gameId,
-        initializeGameHandler,
-        setGameStateHandler
-      );
+    // if (!isSignedIn) {
+    //   dispatch(showErrorToast("Please sign in first. Redirecting..."));
+    //   setTimeout(() => navigate(`/`), 3000);
+    // } else
+    streamBoardGameState(
+      accessToken,
+      gameId,
+      initializeGameHandler,
+      setGameStateHandler
+    );
   }, [gameId]);
 
   const gameTurn = game.turn();

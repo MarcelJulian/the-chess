@@ -131,7 +131,12 @@ function GameControlCard({ pgn, isGameEnd }) {
         <Box
           sx={{ height: "1.5rem", backgroundColor: darkerBackgroundColor }}
         />
-        <GameMovesInnerCard pgn={pgn} />
+        <GameMovesInnerCard
+          pgn={pgn}
+          status={gameState?.status}
+          isWhiteTurn={isWhiteTurn}
+          backgroundColor={darkerBackgroundColor}
+        />
       </Card>
 
       <TimeUsernameBox user={player} />

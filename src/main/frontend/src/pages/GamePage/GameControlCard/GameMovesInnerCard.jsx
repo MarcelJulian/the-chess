@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from "react";
 
 import Box from "@mui/material/Box";
 import useTheme from "@mui/material/styles/useTheme";
+import Typography from "@mui/material/Typography";
 
 function ChessMoveBox({
   v,
@@ -44,7 +45,30 @@ function ChessMoveBox({
   );
 }
 
-function GameMovesInnerCard({ pgn }) {
+const statusParser = (status, isWhiteTurn) => {
+  switch (status) {
+    case "noStart":
+    case "aborted":
+      return "Game was aborted.";
+    case "mate":
+      return `${isWhiteTurn ? "Black" : "White"} wins.`;
+    case "resign":
+      return isWhiteTurn
+        ? "White resigns, Black wins."
+        : "Black resigns, White wins.";
+    case "draw":
+    case "stalemate":
+      return "draw";
+    case "outoftime":
+      return isWhiteTurn
+        ? "White ran out of time, Black wins."
+        : "Black ran out of time, White wins.";
+    default:
+      return "";
+  }
+};
+
+function GameMovesInnerCard({ pgn, status, isWhiteTurn, backgroundColor }) {
   // Game control is complicated. Will develop if needed
   //   const [hoverValue, setHoverValue] = useState();
   //   const onHoverHandler = (v) => setHoverValue(v);
@@ -114,6 +138,8 @@ function GameMovesInnerCard({ pgn }) {
     return gridContainers;
   };
 
+  const statusText = statusParser(status, isWhiteTurn);
+
   return (
     <Box
       sx={{
@@ -122,6 +148,11 @@ function GameMovesInnerCard({ pgn }) {
       }}
     >
       {generateGridItems()}
+      {statusText.length > 0 && (
+        <Typography variant="body2" sx={{ backgroundColor, padding: "0.5rem" }}>
+          {statusText}
+        </Typography>
+      )}
       <div ref={gridEndRef} />
     </Box>
   );
