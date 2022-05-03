@@ -10,6 +10,8 @@ import { movePiece } from "services/gameService";
 import { streamBoardGameState } from "services/gameStreamService";
 import { initializeGame, setGameState } from "store/reducers/gameSlice";
 import {
+  sendMoveRequested,
+  sendMoveResponded,
   showErrorToast,
   showSuccessToast,
   showRequestErrorToast
@@ -174,8 +176,10 @@ function GamePage() {
   // Handle sending the move made by the player
   useEffect(() => {
     const sendMoveRequest = async (move) => {
+      dispatch(sendMoveRequested());
       const response = await movePiece(accessToken, gameId, move);
       if (response.status !== 200) dispatch(showRequestErrorToast(response));
+      dispatch(sendMoveResponded());
     };
 
     if (accessToken !== null && isWhite !== null && isGameEnd === false)

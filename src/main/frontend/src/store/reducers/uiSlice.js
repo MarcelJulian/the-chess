@@ -6,15 +6,24 @@ export const uiSlice = createSlice({
     isToastShown: false,
     toastType: "success",
     toastMessage: "",
-    isSettingsDialogShown: false
+    isSettingsDialogShown: false,
+    // to show loading when move sent
+    isSendingMove: false
   },
   reducers: {
     showSettingsDialog: (state, _) => {
       state.isSettingsDialogShown = true;
     },
-
     hideSettingsDialog: (state, _) => {
       state.isSettingsDialogShown = false;
+    },
+
+    // to show loading
+    sendMoveRequested: (state, _) => {
+      state.isSendingMove = true;
+    },
+    sendMoveResponded: (state, _) => {
+      state.isSendingMove = false;
     },
 
     showSuccessToast: (state, action) => {
@@ -42,6 +51,8 @@ export const uiSlice = createSlice({
 export const {
   showSuccessToast,
   showErrorToast,
+  sendMoveRequested,
+  sendMoveResponded,
   showRequestErrorToast,
   hideToast,
   hideSettingsDialog,
