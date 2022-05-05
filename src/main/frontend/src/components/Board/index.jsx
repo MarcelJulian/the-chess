@@ -128,7 +128,7 @@ function Board({ game, setGameHandler, boardOrientation = "white" }) {
           style={{
             width: squareWidth,
             height: squareWidth,
-            backgroundImage: `url(${process.env.PUBLIC_URL}/${pieceSet}/${p}.png)`,
+            backgroundImage: `url(${process.env.PUBLIC_URL}/piece_set/${pieceSet}/${p}.png)`,
             backgroundSize: "100%"
           }}
         />
@@ -157,10 +157,10 @@ function Board({ game, setGameHandler, boardOrientation = "white" }) {
         ...optionSquares
       }}
       customDarkSquareStyle={{
-        backgroundImage: `url(${process.env.PUBLIC_URL}/${boardSet}/dark.jpg)`
+        backgroundImage: `url(${process.env.PUBLIC_URL}/tile_set/${boardSet}/dark.jpg)`
       }}
       customLightSquareStyle={{
-        backgroundImage: `url(${process.env.PUBLIC_URL}/${boardSet}/light.jpg)`
+        backgroundImage: `url(${process.env.PUBLIC_URL}/tile_set/${boardSet}/light.jpg)`
       }}
       customPieces={getCustomPieces()}
       ref={chessboardRef}
