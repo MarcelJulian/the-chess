@@ -5,10 +5,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.thesis.TheChess.dto.SpeechToTextInput;
 import com.thesis.TheChess.dto.SpeechToTextOutput;
 import com.thesis.TheChess.service.GamePlayService;
 
@@ -44,6 +46,23 @@ public class GamePlayController {
 		
 		try {
 			output = service.speechToTextService(path);
+			
+			System.out.println("GamePlayController - speechToTextController END");
+			return ResponseEntity.status(HttpStatus.OK).body(output);
+		} catch (Exception e) {
+			System.out.println("GamePlayController - speechToTextController ERROR");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(output);
+		}
+	}
+	
+	@PostMapping(path = "api/speech-to-text")
+	public ResponseEntity<SpeechToTextOutput> speechToTextController(@RequestBody SpeechToTextInput data){
+		System.out.println("GamePlayController - speechToTextController START - data >> " + data);
+		
+		SpeechToTextOutput output = null;
+		
+		try {
+			output = service.speechToTextService(data);
 			
 			System.out.println("GamePlayController - speechToTextController END");
 			return ResponseEntity.status(HttpStatus.OK).body(output);

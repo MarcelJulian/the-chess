@@ -39,6 +39,7 @@ import com.google.cloud.speech.v1p1beta1.SpeechRecognitionAlternative;
 import com.google.cloud.speech.v1p1beta1.SpeechRecognitionResult;
 import com.google.protobuf.ByteString;
 import com.thesis.TheChess.dto.MakeBoardMoveResult;
+import com.thesis.TheChess.dto.SpeechToTextInput;
 import com.thesis.TheChess.dto.SpeechToTextOutput;
 
 @Service
@@ -354,4 +355,53 @@ public class GamePlayService {
 		}
 	}
 
+	public SpeechToTextOutput speechToTextService(SpeechToTextInput data) throws Exception {
+		System.out.println("GamePlayService - speechToTextService - START - data >> " + data);
+		SpeechToTextOutput output = null;
+		
+		try (SpeechClient speechClient = SpeechClient.create()) {
+			List<String> phrases = Arrays.asList(
+					"$OOV_CLASS_ALPHANUMERIC_SEQUENCE",
+					"Bishop $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
+					"Knight $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
+					"Rook $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
+					"Queen $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
+					"King $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
+					"Kingside Castle",
+					"Queenside Castle"
+					);
+
+			SpeechContext speechContext = SpeechContext.newBuilder().addAllPhrases(phrases).build();
+
+//			Path path = Paths.get(strPath);
+//			byte[] data = Files.readAllBytes(path);
+			byte[] byteArray = data.getData().getBytes("UTF-8");
+			ByteString audioBytes = ByteString.copyFrom(byteArray);
+			
+			RecognitionConfig config =
+					RecognitionConfig.newBuilder()
+					.setEncoding(RecognitionConfig.AudioEncoding.FLAC)
+					.setSampleRateHertz(16000)
+					.setLanguageCode("en-US")
+					.addSpeechContexts(speechContext)
+					.build();
+			
+			RecognitionAudio audio = RecognitionAudio.newBuilder().setContent(audioBytes).build();
+			
+			RecognizeRequest request = RecognizeRequest.newBuilder().setConfig(config).setAudio(audio).build();
+			
+			RecognizeResponse response = speechClient.recognize(request);
+			
+			for (SpeechRecognitionResult result : response.getResultsList()) {
+				SpeechRecognitionAlternative alternative = result.getAlternativesList().get(0);
+				String sttResult = alternative.getTranscript();
+				output = improveAccuracy(sttResult);
+			}
+			System.out.println("GamePlayService - speechToTextService - END - data >> " + data);
+			return output;
+		} catch (Exception e) {
+			System.out.println("ERROR - GamePlayService - speechToTextService - data >> " + data + " - exception >> " + e.getMessage());
+			throw new Exception(e.getMessage());
+		}
+	}
 }
