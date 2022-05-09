@@ -358,7 +358,7 @@ public class GamePlayService {
 	}
 
 	public SpeechToTextOutput speechToTextProcess(SpeechToTextInput data) throws Exception {
-		System.out.println("GamePlayService - speechToTextProcess - START - data >> " + data);
+		System.out.println("GamePlayService - speechToTextProcess - START");
 		SpeechToTextOutput output = null;
 		
 		try (SpeechClient speechClient = SpeechClient.create()) {
@@ -399,10 +399,10 @@ public class GamePlayService {
 				String sttResult = alternative.getTranscript();
 				output = improveAccuracy(sttResult);
 			}
-			System.out.println("GamePlayService - speechToTextProcess - END - data >> " + data);
+			System.out.println("GamePlayService - speechToTextProcess - END");
 			return output;
 		} catch (Exception e) {
-			System.out.println("ERROR - GamePlayService - speechToTextProcess - data >> " + data + " - exception >> " + e.getMessage());
+			System.out.println("ERROR - GamePlayService - speechToTextProcess - exception >> " + e.getMessage());
 			throw new Exception(e.getMessage());
 		}
 	}
