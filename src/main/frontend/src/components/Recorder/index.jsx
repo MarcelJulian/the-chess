@@ -3,6 +3,10 @@ import React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { useReactMediaRecorder } from "react-media-recorder";
+import { useDispatch } from "react-redux";
+
+import transcibeAudio from "services/transcibeService";
+import { showRequestErrorToast } from "store/reducers/uiSlice";
 
 const audioEncoder = require("audio-encoder");
 
@@ -20,19 +24,25 @@ const saveBlob = (() => {
 })();
 
 function Recorder() {
+  const dispatch = useDispatch();
+
   const handleOnStop = async (_, blob) => {
     console.log(blob);
     const buffer = await blob.arrayBuffer();
     const audioContext = new AudioContext();
     const audioBuffer = await audioContext.decodeAudioData(buffer);
-    console.log(audioBuffer);
-    console.log(audioBuffer.getChannelData(0));
 
     audioEncoder(audioBuffer, "WAV", null, async (blobParam) => {
       //   saveBlob(blobParam, "test.wav");
       console.log(blobParam);
       const newBuffer = await blobParam.arrayBuffer();
+      const byteArray = newBuffer.int8Array();
       console.log(newBuffer);
+
+      const response = await transcibeAudio(byteArray);
+
+      if (response.status !== 200) dispatch(showRequestErrorToast(response));
+      else console.log(response);
     });
   };
 
