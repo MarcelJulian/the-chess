@@ -32,7 +32,7 @@ public class GameModeController {
 		OngoingGamesOutput output = null;
 		
 		try {
-			output = service.ongoingGamesService(user_oauth);
+			output = service.ongoingGamesProcess(user_oauth);
 			
 			System.out.println("GameModeController - getOngoingGamesController - END - user_oauth >> " + user_oauth);
 			return ResponseEntity.status(HttpStatus.OK).body(output);
@@ -48,7 +48,7 @@ public class GameModeController {
 		
 		PlayWithBotOutput output = null;
 		try {
-			output = service.playWithBotService(user_oauth, input);
+			output = service.playWithBotProcess(user_oauth, input);
 			
 			System.out.println("GameModeController - playWithBotController - END - user_oauth >> " + user_oauth + " - input >> " + input);
 			return ResponseEntity.status(HttpStatus.OK).body(output);			
@@ -65,7 +65,7 @@ public class GameModeController {
 		Boolean output = false;
 		
 		try {
-			output = service.abortGameService(user_oauth, game_id);
+			output = service.abortGameProcess(user_oauth, game_id);
 			
 			System.out.println("GameModeController - abortGameController - END - user_oauth >> " + user_oauth + " - game_id >> " + game_id);
 			return ResponseEntity.status(HttpStatus.OK).body(output);			
@@ -82,7 +82,7 @@ public class GameModeController {
 		Boolean output = false;
 		
 		try {
-			output = service.resignGameService(user_oauth, game_id);
+			output = service.resignGameProcess(user_oauth, game_id);
 			
 			System.out.println("GameModeController - resignGameController - END - user_oauth >> " + user_oauth + " - game_id >> " + game_id);
 			return ResponseEntity.status(HttpStatus.OK).body(output);			
@@ -99,7 +99,7 @@ public class GameModeController {
 		Boolean output = false;
 		
 		try {
-			output = service.handleDrawOfferService(user_oauth, game_id, accept);
+			output = service.handleDrawOfferProcess(user_oauth, game_id, accept);
 			
 			System.out.println("GameModeController - handleDrawOfferController - END - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - accept >> " + accept);
 			return ResponseEntity.status(HttpStatus.OK).body(output);			

@@ -30,8 +30,8 @@ public class GameModeService {
 	
 	RestTemplate restTemplate = new RestTemplate();
 	
-	public OngoingGamesOutput ongoingGamesService(String user_oauth) throws Exception{
-		System.out.println("GameModeService - ongoingGamesService - START - user_oauth >> " + user_oauth);
+	public OngoingGamesOutput ongoingGamesProcess(String user_oauth) throws Exception{
+		System.out.println("GameModeService - ongoingGamesProcess - START - user_oauth >> " + user_oauth);
 		
 		OngoingGamesOutput output = new OngoingGamesOutput();
 		OngoingGamesResult result = null;
@@ -45,10 +45,10 @@ public class GameModeService {
 				output.setGame_id(result.getNowPlaying().get(result.getNowPlaying().size()-1).getGameId());				
 			}
 			
-			System.out.println("GameModeService - ongoingGamesService - END - user_oauth >> " + user_oauth);
+			System.out.println("GameModeService - ongoingGamesProcess - END - user_oauth >> " + user_oauth);
 			return output;
 		} catch (Exception e) {
-			System.out.println("GameModeService - ongoingGamesService - ERROR - user_oauth >> " + user_oauth + " - exception >> " + e.getMessage());
+			System.out.println("GameModeService - ongoingGamesProcess - ERROR - user_oauth >> " + user_oauth + " - exception >> " + e.getMessage());
 			throw new Exception("");
 		}
 	}
@@ -83,8 +83,8 @@ public class GameModeService {
 		}
 	}
 	
-	public PlayWithBotOutput playWithBotService(String user_oauth, PlayWithBotInput input) throws Exception{
-		System.out.println("GameModeService - playWithBotService - START - user_oauth >> " + user_oauth + " - input >> " + input);
+	public PlayWithBotOutput playWithBotProcess(String user_oauth, PlayWithBotInput input) throws Exception{
+		System.out.println("GameModeService - playWithBotProcess - START - user_oauth >> " + user_oauth + " - input >> " + input);
 		
 		PlayWithBotOutput output = new PlayWithBotOutput();
 		ChallengeAIResult result = null;
@@ -93,10 +93,10 @@ public class GameModeService {
 			result = hitChallengeAI(user_oauth, input);			//matchmaking
 			output.setGame_id(result.getId());
 			
-			System.out.println("GameModeService - playWithBotService - END - user_oauth >> " + user_oauth + " - input >> " + input);
+			System.out.println("GameModeService - playWithBotProcess - END - user_oauth >> " + user_oauth + " - input >> " + input);
 			return output;
 		} catch (Exception e) {
-			System.out.println("GameModeService - playWithBotService - ERROR - user_oauth >> " + user_oauth + " - input >> " + input + " - exception >> " + e.getMessage());
+			System.out.println("GameModeService - playWithBotProcess - ERROR - user_oauth >> " + user_oauth + " - input >> " + input + " - exception >> " + e.getMessage());
 			throw new Exception(e.getMessage());
 		}		
 	}
@@ -140,18 +140,18 @@ public class GameModeService {
 		}		
 	}
 
-	public Boolean abortGameService(String user_oauth, String game_id) throws Exception{
-		System.out.println("GameModeService - abortGameService - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id);
+	public Boolean abortGameProcess(String user_oauth, String game_id) throws Exception{
+		System.out.println("GameModeService - abortGameProcess - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id);
 		
 		boolean result = false;
 		
 		try {
 			result = hitAbortGame(user_oauth, game_id);
 			
-			System.out.println("GameModeService - abortGameService - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id);
+			System.out.println("GameModeService - abortGameProcess - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id);
 			return result;
 		} catch (Exception e) {
-			System.out.println("GameModeService - abortGameService - ERROR - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - exception >> " + e.getMessage());
+			System.out.println("GameModeService - abortGameProcess - ERROR - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - exception >> " + e.getMessage());
 			throw new Exception(e.getMessage());
 		}
 	}
@@ -192,18 +192,18 @@ public class GameModeService {
 		}
 	}
 	
-	public Boolean resignGameService(String user_oauth, String game_id) throws Exception{
-		System.out.println("GameModeService - resignGameService - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id);
+	public Boolean resignGameProcess(String user_oauth, String game_id) throws Exception{
+		System.out.println("GameModeService - resignGameProcess - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id);
 		
 		boolean result = false;
 		
 		try {
 			result = hitResignGame(user_oauth, game_id);
 			
-			System.out.println("GameModeService - resignGameService - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id);
+			System.out.println("GameModeService - resignGameProcess - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id);
 			return result;
 		} catch (Exception e) {
-			System.out.println("GameModeService - resignGameService - ERROR - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - exception >> " + e.getMessage());
+			System.out.println("GameModeService - resignGameProcess - ERROR - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - exception >> " + e.getMessage());
 			throw new Exception(e.getMessage());
 		}
 	}
@@ -260,23 +260,23 @@ public class GameModeService {
 		}
 	}
 	
-	public Boolean handleDrawOfferService(String user_oauth, String game_id, String accept) throws Exception{
-		System.out.println("GameModeService - handleDrawOfferService - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - accept >> " + accept);
+	public Boolean handleDrawOfferProcess(String user_oauth, String game_id, String accept) throws Exception{
+		System.out.println("GameModeService - handleDrawOfferProcess - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - accept >> " + accept);
 		
 		boolean result = false;
 		
 		try {
-			result = hithandleDrawOffer(user_oauth, game_id, accept);
+			result = hitHandleDrawOffer(user_oauth, game_id, accept);
 			
-			System.out.println("GameModeService - handleDrawOfferService - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - accept >> " + accept);
+			System.out.println("GameModeService - handleDrawOfferProcess - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - accept >> " + accept);
 			return result;
 		} catch (Exception e) {
-			System.out.println("GameModeService - handleDrawOfferService - ERROR - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - accept >> " + accept + " - exception >> " + e.getMessage());
+			System.out.println("GameModeService - handleDrawOfferProcess - ERROR - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - accept >> " + accept + " - exception >> " + e.getMessage());
 			throw new Exception(e.getMessage());
 		}
 	}
 	
-	private boolean hithandleDrawOffer(String user_oauth, String game_id, String accept) throws Exception{
+	private boolean hitHandleDrawOffer(String user_oauth, String game_id, String accept) throws Exception{
 		System.out.println("hithandleDrawOffer - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - accept >> " + accept);
 		
 		boolean result = false;

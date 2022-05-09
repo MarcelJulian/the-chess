@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -126,11 +127,11 @@ public class GamePlayService {
 			Path path = Paths.get(strPath);
 			byte[] data = Files.readAllBytes(path);
 			ByteString audioBytes = ByteString.copyFrom(data);
-			
+			System.out.println("masuk 2 >> " + Base64.getEncoder().encodeToString(data));
+
 			RecognitionConfig config =
 					RecognitionConfig.newBuilder()
-					.setEncoding(RecognitionConfig.AudioEncoding.FLAC)
-					.setSampleRateHertz(16000)
+					.setEncoding(AudioEncoding.LINEAR16)
 					.setLanguageCode("en-US")
 					.addSpeechContexts(speechContext)
 					.build();
