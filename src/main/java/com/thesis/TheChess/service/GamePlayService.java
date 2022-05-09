@@ -54,18 +54,18 @@ public class GamePlayService {
 	
 	RestTemplate restTemplate = new RestTemplate();
 
-	public Boolean movePieceService(String user_oauth, String game_id, String move) throws Exception{
-		System.out.println("GamePlayService - movePieceService - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - move >> " + move);
+	public Boolean movePieceProcess(String user_oauth, String game_id, String move) throws Exception{
+		System.out.println("GamePlayService - movePieceProcess - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - move >> " + move);
 		
 		boolean result = false;
 		
 		try {
 			result = hitMakeABoardMove(user_oauth, game_id, move);
 			
-			System.out.println("GamePlayService - movePieceService - END - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - move >> " + move);
+			System.out.println("GamePlayService - movePieceProcess - END - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - move >> " + move);
 			return result;
 		} catch (Exception e) {
-			System.out.println("GamePlayService - movePieceService - ERROR - user_oauth >> " + user_oauth  + " - game_id >> " + game_id + " - move >> " + move + " - exception >> " + e.getMessage());
+			System.out.println("GamePlayService - movePieceProcess - ERROR - user_oauth >> " + user_oauth  + " - game_id >> " + game_id + " - move >> " + move + " - exception >> " + e.getMessage());
 			throw new Exception(e.getMessage());
 		}
 	}
@@ -106,8 +106,8 @@ public class GamePlayService {
 		}
 	}
 	
-	public SpeechToTextOutput speechToTextService(String strPath) throws Exception {
-		System.out.println("GamePlayService - speechToTextService - START - path >> " + strPath);
+	public SpeechToTextOutput speechToTextProcess(String strPath) throws Exception {
+		System.out.println("GamePlayService - speechToTextProcess - START - path >> " + strPath);
 		SpeechToTextOutput output = null;
 		
 		try (SpeechClient speechClient = SpeechClient.create()) {
@@ -127,7 +127,7 @@ public class GamePlayService {
 			Path path = Paths.get(strPath);
 			byte[] data = Files.readAllBytes(path);
 			ByteString audioBytes = ByteString.copyFrom(data);
-			System.out.println("masuk 2 >> " + Base64.getEncoder().encodeToString(data));
+			System.out.println("masuk 2 >> ");
 
 			RecognitionConfig config =
 					RecognitionConfig.newBuilder()
@@ -141,16 +141,17 @@ public class GamePlayService {
 			RecognizeRequest request = RecognizeRequest.newBuilder().setConfig(config).setAudio(audio).build();
 			
 			RecognizeResponse response = speechClient.recognize(request);
+			System.out.println("masuk 6 >> " + response.getResultsList());
 			
 			for (SpeechRecognitionResult result : response.getResultsList()) {
 				SpeechRecognitionAlternative alternative = result.getAlternativesList().get(0);
 				String sttResult = alternative.getTranscript();
 				output = improveAccuracy(sttResult);
 			}
-			System.out.println("GamePlayService - speechToTextService - END - path >> " + strPath);
+			System.out.println("GamePlayService - speechToTextProcess - END - path >> " + strPath);
 			return output;
 		} catch (Exception e) {
-			System.out.println("ERROR - GamePlayService - speechToTextService - path >> " + strPath + " - exception >> " + e.getMessage());
+			System.out.println("ERROR - GamePlayService - speechToTextProcess - path >> " + strPath + " - exception >> " + e.getMessage());
 			throw new Exception(e.getMessage());
 		}
 	}
@@ -356,8 +357,8 @@ public class GamePlayService {
 		}
 	}
 
-	public SpeechToTextOutput speechToTextService(SpeechToTextInput data) throws Exception {
-		System.out.println("GamePlayService - speechToTextService - START - data >> " + data);
+	public SpeechToTextOutput speechToTextProcess(SpeechToTextInput data) throws Exception {
+		System.out.println("GamePlayService - speechToTextProcess - START - data >> " + data);
 		SpeechToTextOutput output = null;
 		
 		try (SpeechClient speechClient = SpeechClient.create()) {
@@ -398,10 +399,10 @@ public class GamePlayService {
 				String sttResult = alternative.getTranscript();
 				output = improveAccuracy(sttResult);
 			}
-			System.out.println("GamePlayService - speechToTextService - END - data >> " + data);
+			System.out.println("GamePlayService - speechToTextProcess - END - data >> " + data);
 			return output;
 		} catch (Exception e) {
-			System.out.println("ERROR - GamePlayService - speechToTextService - data >> " + data + " - exception >> " + e.getMessage());
+			System.out.println("ERROR - GamePlayService - speechToTextProcess - data >> " + data + " - exception >> " + e.getMessage());
 			throw new Exception(e.getMessage());
 		}
 	}
