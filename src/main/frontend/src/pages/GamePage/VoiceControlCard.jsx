@@ -10,6 +10,8 @@ import useTheme from "@mui/material/styles/useTheme";
 import Typography from "@mui/material/Typography";
 import { useSelector } from "react-redux";
 
+import Recorder from "components/Recorder";
+
 function VoiceControlCard() {
   const theme = useTheme();
   // Warna box voice
@@ -65,6 +67,7 @@ function VoiceControlCard() {
         backgroundColor
       }}
     >
+      <Recorder />
       <Typography
         variant="h6"
         sx={{
