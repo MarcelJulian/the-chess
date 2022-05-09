@@ -377,7 +377,7 @@ public class GamePlayService {
 
 //			Path path = Paths.get(strPath);
 //			byte[] data = Files.readAllBytes(path);
-			byte[] byteArray = data.getData().getBytes("UTF-8");
+			byte[] byteArray = data.getData();
 			ByteString audioBytes = ByteString.copyFrom(byteArray);
 			
 			RecognitionConfig config =
