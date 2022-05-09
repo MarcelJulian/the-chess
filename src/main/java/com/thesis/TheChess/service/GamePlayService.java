@@ -1,5 +1,6 @@
 package com.thesis.TheChess.service;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.google.api.gax.rpc.ApiException;
+import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.speech.v1p1beta1.AdaptationClient;
 import com.google.cloud.speech.v1p1beta1.CreateCustomClassRequest;
 import com.google.cloud.speech.v1p1beta1.CreatePhraseSetRequest;
@@ -38,6 +40,7 @@ import com.google.cloud.speech.v1p1beta1.SpeechClient;
 import com.google.cloud.speech.v1p1beta1.SpeechContext;
 import com.google.cloud.speech.v1p1beta1.SpeechRecognitionAlternative;
 import com.google.cloud.speech.v1p1beta1.SpeechRecognitionResult;
+import com.google.common.collect.Lists;
 import com.google.protobuf.ByteString;
 import com.thesis.TheChess.dto.MakeBoardMoveResult;
 import com.thesis.TheChess.dto.SpeechToTextInput;
@@ -109,6 +112,8 @@ public class GamePlayService {
 	public SpeechToTextOutput speechToTextProcess(String strPath) throws Exception {
 		System.out.println("GamePlayService - speechToTextProcess - START - path >> " + strPath);
 		SpeechToTextOutput output = null;
+		
+		authExplicit();
 		
 		try (SpeechClient speechClient = SpeechClient.create()) {
 			List<String> phrases = Arrays.asList(
@@ -361,6 +366,8 @@ public class GamePlayService {
 		System.out.println("GamePlayService - speechToTextProcess - START");
 		SpeechToTextOutput output = null;
 		
+		authExplicit();
+		
 		try (SpeechClient speechClient = SpeechClient.create()) {
 			List<String> phrases = Arrays.asList(
 					"$OOV_CLASS_ALPHANUMERIC_SEQUENCE",
@@ -406,4 +413,9 @@ public class GamePlayService {
 			throw new Exception(e.getMessage());
 		}
 	}
+	
+	static void authExplicit() throws IOException {
+		  GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream("src/main/resources/the-chess-347506-f74a8ba65a99.json"))
+		        .createScoped(Lists.newArrayList("https://www.googleapis.com/auth/cloud-platform"));
+		}
 }
