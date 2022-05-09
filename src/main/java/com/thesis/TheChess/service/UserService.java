@@ -41,8 +41,8 @@ public class UserService {
 	
 	RestTemplate restTemplate = new RestTemplate();
 	
-	public String loginService(HttpServletRequest request) throws Exception{
-		System.out.println("UserService - loginService START - request >> " + request);
+	public String loginProcess(HttpServletRequest request) throws Exception{
+		System.out.println("UserService - loginProcess START - request >> " + request);
 		
 		try {
 			String verifier = generateCodeVerifier();
@@ -53,11 +53,11 @@ public class UserService {
 			
 			String url = lichess_url + "oauth?response_type=code&client_id=" + client_id + "&redirect_uri=" + chess_url + "api/callback-the-chess&scope=board:play&code_challenge_method=S256&code_challenge=" + challenge;
 			
-			System.out.println("UserService - loginService END - output: " + url);
+			System.out.println("UserService - loginProcess END - output: " + url);
 			return url;
 		} catch (Exception e) {
-			System.out.println("UserService - loginService ERROR - error: " + e.getMessage());
-			throw new Exception("ERROR loginService >> " + e.getMessage());
+			System.out.println("UserService - loginProcess ERROR - error: " + e.getMessage());
+			throw new Exception("ERROR loginProcess >> " + e.getMessage());
 		}
 	}
 	
@@ -77,8 +77,8 @@ public class UserService {
 	    return Base64.getUrlEncoder().withoutPadding().encodeToString(digest);
 	}
 
-	public CallbackOutput callbackService(HttpServletRequest request) throws Exception{
-		System.out.println("UserService - callbackService START");
+	public CallbackOutput callbackProcess(HttpServletRequest request) throws Exception{
+		System.out.println("UserService - callbackProcess START");
 		
 		CallbackOutput output = null;
 		String session_value = "";
@@ -94,11 +94,11 @@ public class UserService {
 			username = getLichessUser(lichess_token);
 			output = new CallbackOutput(lichess_token, username);
 	
-			System.out.println("UserService - callbackService END - output >> " + output);
+			System.out.println("UserService - callbackProcess END - output >> " + output);
 			return output;
 		} catch (Exception e) {
-			System.out.println("UserService - callbackService ERROR - error >> " + e.getMessage());
-			throw new Exception("ERROR callbackService >> " + e.getMessage());
+			System.out.println("UserService - callbackProcess ERROR - error >> " + e.getMessage());
+			throw new Exception("ERROR callbackProcess >> " + e.getMessage());
 		}
 	}
 	

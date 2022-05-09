@@ -1,8 +1,12 @@
 package com.thesis.TheChess.service;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,379 +38,371 @@ import com.google.cloud.speech.v1p1beta1.SpeechClient;
 import com.google.cloud.speech.v1p1beta1.SpeechContext;
 import com.google.cloud.speech.v1p1beta1.SpeechRecognitionAlternative;
 import com.google.cloud.speech.v1p1beta1.SpeechRecognitionResult;
+import com.google.protobuf.ByteString;
 import com.thesis.TheChess.dto.MakeBoardMoveResult;
+import com.thesis.TheChess.dto.SpeechToTextInput;
+import com.thesis.TheChess.dto.SpeechToTextOutput;
 
 @Service
 public class GamePlayService {
 
     @Value("${lichess_api_url}") // https://lichess.org/api/
     public String lichess_api_url;
+	
+	@Value("${gcloud_project_id}")
+	public String project_id;
+	
+	RestTemplate restTemplate = new RestTemplate();
 
-    @Value("${gcloud_project_id}")
-    public String project_id;
+	public Boolean movePieceService(String user_oauth, String game_id, String move) throws Exception{
+		System.out.println("GamePlayService - movePieceService - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - move >> " + move);
+		
+		boolean result = false;
+		
+		try {
+			result = hitMakeABoardMove(user_oauth, game_id, move);
+			
+			System.out.println("GamePlayService - movePieceService - END - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - move >> " + move);
+			return result;
+		} catch (Exception e) {
+			System.out.println("GamePlayService - movePieceService - ERROR - user_oauth >> " + user_oauth  + " - game_id >> " + game_id + " - move >> " + move + " - exception >> " + e.getMessage());
+			throw new Exception(e.getMessage());
+		}
+	}
 
-    RestTemplate restTemplate = new RestTemplate();
+	private boolean hitMakeABoardMove(String user_oauth, String game_id, String move) throws Exception{
+		System.out.println("hitMakeABoardMove - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - move >> " + move);
+		
+		boolean result = false;
+		
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Authorization", "Bearer " + user_oauth);
+			
+			HttpEntity request = new HttpEntity("", headers);
+			System.out.println("hitMakeABoardMove - request >> " + request);
+			
+			String uri = lichess_api_url + "board/game/" + game_id + "/move/" + move;
+			System.out.println("hitMakeABoardMove - uri >> " + uri);
+			
+			ResponseEntity<MakeBoardMoveResult> responseHit = restTemplate.exchange(uri, HttpMethod.POST, request, MakeBoardMoveResult.class);
+			System.out.println("hitChallengeAI - responseHit >> " + responseHit);
+			
+			if (responseHit.getStatusCodeValue() == 200) {
+				MakeBoardMoveResult output = responseHit.getBody();
+				
+				if (output.getOk().equalsIgnoreCase("true")){
+					result = true;
+				}
+			} else {
+				throw new Exception("Failed Make A Board Move; error code value >> " + responseHit.getStatusCodeValue());
+			}
 
-    public Boolean movePieceService(String user_oauth, String game_id, String move) throws Exception {
-        System.out.println("GamePlayService - movePieceService - START - user_oauth >> " + user_oauth + " - game_id >> "
-                + game_id + " - move >> " + move);
+			System.out.println("hitMakeABoardMove - END - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - move >> " + move);
+			return result;
+		} catch (Exception e) {
+			System.out.println("hitMakeABoardMove - ERROR - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - move >> " + move + " - exception >> " + e.getMessage());
+			throw new Exception(e.getMessage());
+		}
+	}
+	
+	public SpeechToTextOutput speechToTextService(String strPath) throws Exception {
+		System.out.println("GamePlayService - speechToTextService - START - path >> " + strPath);
+		SpeechToTextOutput output = null;
+		
+		try (SpeechClient speechClient = SpeechClient.create()) {
+			List<String> phrases = Arrays.asList(
+					"$OOV_CLASS_ALPHANUMERIC_SEQUENCE",
+					"Bishop $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
+					"Knight $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
+					"Rook $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
+					"Queen $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
+					"King $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
+					"Kingside Castle",
+					"Queenside Castle"
+					);
 
-        boolean result = false;
+			SpeechContext speechContext = SpeechContext.newBuilder().addAllPhrases(phrases).build();
 
-        try {
-            result = hitMakeABoardMove(user_oauth, game_id, move);
+			Path path = Paths.get(strPath);
+			byte[] data = Files.readAllBytes(path);
+			ByteString audioBytes = ByteString.copyFrom(data);
+			System.out.println("masuk 2 >> " + Base64.getEncoder().encodeToString(data));
 
-            System.out.println("GamePlayService - movePieceService - END - user_oauth >> " + user_oauth
-                    + " - game_id >> " + game_id + " - move >> " + move);
-            return result;
-        } catch (Exception e) {
-            System.out.println("GamePlayService - movePieceService - ERROR - user_oauth >> " + user_oauth
-                    + " - game_id >> " + game_id + " - move >> " + move + " - exception >> " + e.getMessage());
-            throw new Exception(e.getMessage());
-        }
-    }
+			RecognitionConfig config =
+					RecognitionConfig.newBuilder()
+					.setEncoding(AudioEncoding.LINEAR16)
+					.setLanguageCode("en-US")
+					.addSpeechContexts(speechContext)
+					.build();
+			
+			RecognitionAudio audio = RecognitionAudio.newBuilder().setContent(audioBytes).build();
+			
+			RecognizeRequest request = RecognizeRequest.newBuilder().setConfig(config).setAudio(audio).build();
+			
+			RecognizeResponse response = speechClient.recognize(request);
+			
+			for (SpeechRecognitionResult result : response.getResultsList()) {
+				SpeechRecognitionAlternative alternative = result.getAlternativesList().get(0);
+				String sttResult = alternative.getTranscript();
+				output = improveAccuracy(sttResult);
+			}
+			System.out.println("GamePlayService - speechToTextService - END - path >> " + strPath);
+			return output;
+		} catch (Exception e) {
+			System.out.println("ERROR - GamePlayService - speechToTextService - path >> " + strPath + " - exception >> " + e.getMessage());
+			throw new Exception(e.getMessage());
+		}
+	}
+	
+	private SpeechToTextOutput improveAccuracy(String sttResult) throws Exception{
+		System.out.println("improveAccuracy START - string >> " + sttResult);
+		SpeechToTextOutput output = new SpeechToTextOutput();
+		
+		if (sttResult.contains("sign")) {
+			output.setType("command");
+			output.setValue("Resign");
+		} else if (sttResult.contains("cept")) {
+			output.setType("command");
+			output.setValue("Accept Draw");
+		} else if (sttResult.contains("line")) {
+			output.setType("command");
+			output.setValue("Decline Draw");
+		} else if (sttResult.contains("bor")) {
+			output.setType("command");
+			output.setValue("Abort");
+		} else if (sttResult.contains("raw")) {
+			output.setType("command");
+			output.setValue("Draw");
+		} else {
+			String[] splited = sttResult.split("\\s+");
+			int totalWord = splited.length;
+			
+			switch (totalWord) {
+			case 1:
+				try {
+					String temp = splited[0];
+					String temp0 = "";
+					if (temp.length() == 2) {
+						if (isAccurate(temp.charAt(0), temp.charAt(1))) {
+							output.setType("move");
+							output.setValue(temp.toLowerCase());
+						} else {
+							output.setType("error");
+							output.setValue(temp);
+						}
+					} else {
+						if (containNumeric(temp)) {
+							if (temp.charAt(0) == '9') {
+								temp0 = "N";
+							} else if (temp.charAt(0) == 'r' || temp.charAt(0) == 'R') {
+								temp0 = "R";
+							}
+							temp = removeDuplicateChar(temp);
+							temp = cleanString(temp.toUpperCase()).toLowerCase();
+							
+							if (temp.length() != 2) {
+								output.setType("error");
+								output.setValue(temp);
+							} else {
+								if (isAccurate(temp.charAt(0), temp.charAt(1))) {
+									if (temp0 != "") {
+										temp = temp0 + temp;
+									}
+									output.setType("move");
+									output.setValue(temp);
+								} else {
+									output.setType("error");
+									output.setValue(temp);
+								}
+							}
+						} else {
+							output.setType("error");
+							output.setValue(temp);
+						}
+					}
+				} catch (Exception e) {
+					throw new Exception("ERROR improveAccuracy -- exception >> " + e.getMessage());
+				}
+				break;
+			case 2:
+				try {
+					if (sttResult.equalsIgnoreCase("Queenside Castle") || ((sttResult.contains("queen") || sttResult.contains("Queen")) && (sttResult.contains("castle") || sttResult.contains("Castle")))) {
+						output.setType("move");
+						output.setValue("0-0-0");
+					} else if (sttResult.equalsIgnoreCase("Kingside Castle") || ((sttResult.contains("king") || sttResult.contains("King")) && (sttResult.contains("castle") || sttResult.contains("Castle")))) {
+						output.setType("move");
+						output.setValue("0-0");
+					} else {
+						String temp1 = splited[0];
+						String temp2 = splited[1];
+						
+						if (temp1.toLowerCase().equalsIgnoreCase("bishop")) {
+							temp1 = "B";
+						} else if (temp1.toLowerCase().equalsIgnoreCase("knight")) {
+							temp1 = "N";
+						} else if (temp1.toLowerCase().equalsIgnoreCase("rook")) {
+							temp1 = "R";
+						} else if (temp1.toLowerCase().equalsIgnoreCase("queen")) {
+							temp1 = "Q";
+						} else if (temp1.toLowerCase().equalsIgnoreCase("king")) {
+							temp1 = "K";
+						} else {
+							output.setType("error");
+							output.setValue(temp1 + temp2);
+						}
+						
+						if (containNumeric(temp2)) {
+							temp2 = removeDuplicateChar(temp2);
+							temp2 = cleanString(temp2.toUpperCase()).toLowerCase();
+							if (temp2.length() != 2) {
+								output.setType("error");
+								output.setValue(temp1 + temp2);
+							} else {
+								if (isAccurate(temp2.charAt(0), temp2.charAt(1))) {
+									output.setType("move");
+									output.setValue(temp1 + temp2);
+								} else {
+									output.setType("error");
+									output.setValue(temp1 + temp2);
+								}
+							}
+						} else {
+							output.setType("error");
+							output.setValue(temp1 + temp2);
+						}
+					}
+				} catch (Exception e) {
+					throw new Exception("ERROR improveAccuracy -- exception >> " + e.getMessage());
+				}
+				break;
+			case 3:
+				try {
+					if (sttResult.equalsIgnoreCase("Queen side Castle") || ((sttResult.contains("queen") || sttResult.contains("Queen")) && (sttResult.contains("castle") || sttResult.contains("Castle")))) {
+						output.setType("move");
+						output.setValue("0-0-0");
+					} else if (sttResult.equalsIgnoreCase("King side Castle") || ((sttResult.contains("king") || sttResult.contains("King")) && (sttResult.contains("castle") || sttResult.contains("Castle")))) {
+						output.setType("move");
+						output.setValue("0-0");
+					} else {
+						output.setType("error");
+						output.setValue(sttResult);
+					}
+				} catch (Exception e) {
+					throw new Exception("ERROR improveAccuracy -- exception >> " + e.getMessage());
+				}
+				break;
+			default:
+				output.setType("error");
+				output.setValue(sttResult);
+				break;
+			}
+		}
+		System.out.println("improveAccuracy END - string >> " + sttResult);
+		return output;
+	}
+	
+	private boolean containNumeric(String temp) {
+		return temp.matches(".*[0-9].*");
+	}
+	
+	private String removeDuplicateChar(String str) {
+		char temp1, temp2;
+		for (int i=1; i<str.length(); i++) {
+			temp1 = str.charAt(i-1);
+			temp2 = str.charAt(i);
+			if (temp1 == temp2) {
+				StringBuilder sb = new StringBuilder(str);
+				sb.deleteCharAt(i-1);
+				str = sb.toString();
+			}
+		}
+		return str;
+	}
+	
+	private String cleanString(String str) {
+		char[] strArray = str.toCharArray();
+		
+		StringBuilder sb = new StringBuilder();
+		for (int i=0; i<strArray.length; i++) {
+			if (strArray[i] == isFound(strArray[i]) && strArray[i] != '0') {
+				sb.append(strArray[i]);
+			}
+		}
+		
+		String newStr = sb.toString();
+		if (newStr.length() > 2) {
+			return String.valueOf(newStr.charAt(0)) + String.valueOf(newStr.charAt(newStr.length()-1));
+		} else {
+			return newStr;
+		}
+	}
+	
+	private char isFound(char src) {
+		char[] piecesChar = {'A','B','C','D','E','F','G','H','1','2','3','4','5','6','7','8'};
+		for (int i=0; i<piecesChar.length; i++) {
+			if (src == piecesChar[i]) {
+				return src;
+			}
+		}
+		return '0';
+	}
+	
+	private boolean isAccurate(char first, char second) {
+		if (Character.isDigit(second) && !(Character.isDigit(first))) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
-    private boolean hitMakeABoardMove(String user_oauth, String game_id, String move) throws Exception {
-        System.out.println("hitMakeABoardMove - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id
-                + " - move >> " + move);
+	public SpeechToTextOutput speechToTextService(SpeechToTextInput data) throws Exception {
+		System.out.println("GamePlayService - speechToTextService - START - data >> " + data);
+		SpeechToTextOutput output = null;
+		
+		try (SpeechClient speechClient = SpeechClient.create()) {
+			List<String> phrases = Arrays.asList(
+					"$OOV_CLASS_ALPHANUMERIC_SEQUENCE",
+					"Bishop $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
+					"Knight $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
+					"Rook $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
+					"Queen $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
+					"King $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
+					"Kingside Castle",
+					"Queenside Castle"
+					);
 
-        boolean result = false;
+			SpeechContext speechContext = SpeechContext.newBuilder().addAllPhrases(phrases).build();
 
-        try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Authorization", "Bearer " + user_oauth);
-
-            HttpEntity request = new HttpEntity("", headers);
-            System.out.println("hitMakeABoardMove - request >> " + request);
-
-            String uri = lichess_api_url + "board/game/" + game_id + "/move/" + move;
-            System.out.println("hitMakeABoardMove - uri >> " + uri);
-
-            ResponseEntity<MakeBoardMoveResult> responseHit = restTemplate.exchange(uri, HttpMethod.POST, request,
-                    MakeBoardMoveResult.class);
-            System.out.println("hitChallengeAI - responseHit >> " + responseHit);
-
-            if (responseHit.getStatusCodeValue() == 200) {
-                MakeBoardMoveResult output = responseHit.getBody();
-
-                if (output.getOk().equalsIgnoreCase("true")) {
-                    result = true;
-                }
-            } else {
-                throw new Exception(
-                        "Failed Make A Board Move; error code value >> " + responseHit.getStatusCodeValue());
-            }
-
-            System.out.println("hitMakeABoardMove - END - user_oauth >> " + user_oauth + " - game_id >> " + game_id
-                    + " - move >> " + move);
-            return result;
-        } catch (Exception e) {
-            System.out.println("hitMakeABoardMove - ERROR - user_oauth >> " + user_oauth + " - game_id >> " + game_id
-                    + " - move >> " + move + " - exception >> " + e.getMessage());
-            throw new Exception(e.getMessage());
-        }
-    }
-
-    public String speechToTextService() throws Exception {
-        String output = "";
-
-        try (SpeechClient speechClient = SpeechClient.create()) {
-            System.out.println("masuk 2");
-
-            List<String> phrases = Arrays.asList(
-                    // "Bishop takes $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
-                    // "Knight takes $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
-                    // "Rook takes $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
-                    // "Queen takes $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
-                    // "King takes $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
-                    // "$OOV_CLASS_ALPHA_SEQUENCE takes $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
-                    // "Rook $OOV_CLASS_ALPHA_SEQUENCE takes $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
-                    // "Knight $OOV_CLASS_ALPHA_SEQUENCE takes $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
-                    // "Rook $OOV_CLASS_DIGIT_SEQUENCE takes $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
-                    // "Knight $OOV_CLASS_DIGIT_SEQUENCE takes $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
-                    "$OOV_CLASS_ALPHANUMERIC_SEQUENCE",
-                    "Bishop $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
-                    "Knight $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
-                    "Rook $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
-                    "Queen $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
-                    "King $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
-                    "Kingside Castle",
-                    "Queenside Castle");
-
-            SpeechContext speechContext = SpeechContext.newBuilder().addAllPhrases(phrases).build();
-
-            RecognitionConfig config = RecognitionConfig.newBuilder()
-                    .setEncoding(RecognitionConfig.AudioEncoding.FLAC)
-                    .setSampleRateHertz(16000)
-                    .setLanguageCode("en-US")
-                    .addSpeechContexts(speechContext)
-                    // .setAdaptation(adaptation)
-                    .build();
-            // System.out.println("masuk 8");
-
-            List<String> listUrl = Arrays.asList("gs://the-chess-bucket/a5-1.flac",
-                    "gs://the-chess-bucket/a5-2.flac",
-                    "gs://the-chess-bucket/bishopb8-1.flac",
-                    "gs://the-chess-bucket/bishopb8-2.flac",
-                    "gs://the-chess-bucket/king-e2.flac",
-                    "gs://the-chess-bucket/kinge2-1.flac",
-                    "gs://the-chess-bucket/kinge2-2.flac",
-                    "gs://the-chess-bucket/knight-h-three.flac",
-                    "gs://the-chess-bucket/Rh3.flac",
-                    "gs://the-chess-bucket/Rg7.flac",
-                    "gs://the-chess-bucket/Rc5.flac",
-                    "gs://the-chess-bucket/Ra1.flac",
-                    "gs://the-chess-bucket/queenside-castle2.flac",
-                    "gs://the-chess-bucket/queenside-castle1.flac",
-                    "gs://the-chess-bucket/Qh7.flac",
-                    "gs://the-chess-bucket/Qe5.flac",
-                    "gs://the-chess-bucket/Qc8.flac",
-                    "gs://the-chess-bucket/Qa4.flac",
-                    "gs://the-chess-bucket/Ne6.flac",
-                    "gs://the-chess-bucket/Nf8.flac",
-                    "gs://the-chess-bucket/Nd4.flac",
-                    "gs://the-chess-bucket/Nd1.flac",
-                    "gs://the-chess-bucket/kingside-castle2.flac",
-                    "gs://the-chess-bucket/kingside-castle1.flac",
-                    "gs://the-chess-bucket/Kd3.flac",
-                    "gs://the-chess-bucket/Kc6.flac",
-                    "gs://the-chess-bucket/Kf2.flac",
-                    "gs://the-chess-bucket/d7.flac",
-                    "gs://the-chess-bucket/c1.flac",
-                    "gs://the-chess-bucket/Kb2.flac",
-                    "gs://the-chess-bucket/Bg6.flac",
-                    "gs://the-chess-bucket/Bh8.flac",
-                    "gs://the-chess-bucket/Bf4.flac",
-                    "gs://the-chess-bucket/Be2.flac",
-                    "gs://the-chess-bucket/b5.flac",
-                    "gs://the-chess-bucket/a3.flac",
-                    // "gs://the-chess-bucket/RxH6.flac",
-                    // "gs://the-chess-bucket/RxD4.flac",
-                    // "gs://the-chess-bucket/RxB5.flac",
-                    // "gs://the-chess-bucket/RxA8.flac",
-                    "gs://the-chess-bucket/Rh1.flac",
-                    // "gs://the-chess-bucket/RdxG2.flac",
-                    // "gs://the-chess-bucket/RcxF3.flac",
-                    "gs://the-chess-bucket/Rd5.flac",
-                    "gs://the-chess-bucket/Rc3.flac",
-                    "gs://the-chess-bucket/Ra7.flac",
-                    // "gs://the-chess-bucket/R5xE4.flac",
-                    // "gs://the-chess-bucket/R4xH1.flac",
-                    // "gs://the-chess-bucket/QxG1.flac",
-                    // "gs://the-chess-bucket/QxF4.flac",
-                    // "gs://the-chess-bucket/QxC4.flac",
-                    // "gs://the-chess-bucket/QxA2.flac",
-                    "gs://the-chess-bucket/Qh5.flac",
-                    "gs://the-chess-bucket/Qe8.flac",
-                    "gs://the-chess-bucket/Qc7.flac",
-                    "gs://the-chess-bucket/Qb7.flac",
-                    // "gs://the-chess-bucket/NxH4.flac",
-                    // "gs://the-chess-bucket/NxG3.flac",
-                    // "gs://the-chess-bucket/NxA5.flac",
-                    // "gs://the-chess-bucket/NxA1.flac",
-                    "gs://the-chess-bucket/Ng4.flac",
-                    "gs://the-chess-bucket/Nf7.flac",
-                    // "gs://the-chess-bucket/NbxD5.flac",
-                    "gs://the-chess-bucket/Nb8.flac",
-                    // "gs://the-chess-bucket/NaxB4.flac",
-                    "gs://the-chess-bucket/Na6.flac",
-                    // "gs://the-chess-bucket/N7xD6.flac",
-                    // "gs://the-chess-bucket/N2xF3.flac",
-                    // "gs://the-chess-bucket/KxH1.flac",
-                    // "gs://the-chess-bucket/KxC6.flac",
-                    // "gs://the-chess-bucket/KxB4.flac",
-                    // "gs://the-chess-bucket/KxB2.flac",
-                    "gs://the-chess-bucket/Kg2.flac",
-                    "gs://the-chess-bucket/Kf3.flac",
-                    "gs://the-chess-bucket/Ke4.flac",
-                    "gs://the-chess-bucket/h7.flac",
-                    "gs://the-chess-bucket/g1.flac",
-                    // "gs://the-chess-bucket/fxG7.flac",
-                    "gs://the-chess-bucket/f5.flac",
-                    // "gs://the-chess-bucket/exD4.flac",
-                    "gs://the-chess-bucket/e3.flac",
-                    // "gs://the-chess-bucket/cxD5.flac",
-                    // "gs://the-chess-bucket/BxE1.flac",
-                    // "gs://the-chess-bucket/BxD1.flac",
-                    // "gs://the-chess-bucket/BxB2.flac",
-                    // "gs://the-chess-bucket/BxB1.flac",
-                    "gs://the-chess-bucket/Bd8.flac",
-                    "gs://the-chess-bucket/Bc4.flac",
-                    "gs://the-chess-bucket/Bb6.flac",
-                    // "gs://the-chess-bucket/axB4.flac",
-                    "gs://the-chess-bucket/Rh1_1.flac",
-                    "gs://the-chess-bucket/Qh5_1.flac",
-                    "gs://the-chess-bucket/Re7.flac	",
-                    "gs://the-chess-bucket/Qh2.flac",
-                    "gs://the-chess-bucket/Rb3.flac",
-                    "gs://the-chess-bucket/Ba3.flac",
-                    "gs://the-chess-bucket/Bd6.flac",
-                    "gs://the-chess-bucket/Ba2.flac");
-
-            for (String strUrl : listUrl) {
-                RecognitionAudio audio = RecognitionAudio.newBuilder().setUri(strUrl).build();
-
-                RecognizeRequest request = RecognizeRequest.newBuilder().setConfig(config).setAudio(audio).build();
-
-                RecognizeResponse response = speechClient.recognize(request);
-                for (SpeechRecognitionResult result : response.getResultsList()) {
-                    SpeechRecognitionAlternative alternative = result.getAlternativesList().get(0);
-                    String sttResult = alternative.getTranscript();
-                    System.out.println("strUrl >> " + strUrl);
-                    System.out.println("sttResult >> " + sttResult);
-
-                    String fin = improveAccuracy(sttResult);
-                    System.out.println("after improve >> " + fin);
-                    // return improveAccuracy(sttResult);
-                }
-            }
-
-            return output;
-        } catch (Exception e) {
-            System.out.println("error - " + e.getMessage());
-            throw new Exception(e.getMessage());
-        }
-    }
-
-    private String improveAccuracy(String sttResult) throws Exception {
-        String[] splited = sttResult.split("\\s+");
-        int totalWord = splited.length;
-
-        switch (totalWord) {
-            case 1:
-                try {
-                    String temp = splited[0];
-                    if (temp.length() == 2) {
-                        return temp.toLowerCase();
-                    } else {
-                        if (containNumeric(temp)) {
-                            temp = removeDuplicateChar(temp);
-                            temp = cleanString(temp.toUpperCase()).toLowerCase();
-
-                            if (temp.length() != 2) {
-                                return "ERROR - " + temp;
-                            } else {
-                                if (isAccurate(temp.charAt(0), temp.charAt(1))) {
-                                    return temp;
-                                } else {
-                                    return "ERROR - " + temp;
-                                }
-                            }
-                        } else {
-                            return "ERROR - " + temp;
-                        }
-                    }
-                } catch (Exception e) {
-                    throw new Exception("ERROR improveAccuracy -- exception >> " + e.getMessage());
-                }
-            case 2:
-                try {
-                    if (sttResult.equalsIgnoreCase("Queenside Castle")) {
-                        return "0-0-0";
-                    } else if (sttResult.equalsIgnoreCase("Kingside Castle")) {
-                        return "0-0";
-                    } else {
-                        String temp1 = splited[0];
-                        String temp2 = splited[1];
-
-                        if (temp1.toLowerCase().equalsIgnoreCase("bishop")) {
-                            temp1 = "B";
-                        } else if (temp1.toLowerCase().equalsIgnoreCase("knight")) {
-                            temp1 = "N";
-                        } else if (temp1.toLowerCase().equalsIgnoreCase("rook")) {
-                            temp1 = "R";
-                        } else if (temp1.toLowerCase().equalsIgnoreCase("queen")) {
-                            temp1 = "Q";
-                        } else if (temp1.toLowerCase().equalsIgnoreCase("king")) {
-                            temp1 = "K";
-                        } else {
-                            return "ERROR - " + temp1 + temp2;
-                        }
-
-                        if (containNumeric(temp2)) {
-                            temp2 = removeDuplicateChar(temp2);
-                            temp2 = cleanString(temp2.toUpperCase()).toLowerCase();
-                            if (temp2.length() != 2) {
-                                return "ERROR - " + temp1 + temp2;
-                            } else {
-                                return temp1 + temp2;
-                            }
-                        } else {
-                            return "ERROR - " + temp1 + temp2;
-                        }
-                    }
-                } catch (Exception e) {
-                    throw new Exception("ERROR improveAccuracy -- exception >> " + e.getMessage());
-                }
-            case 3:
-                try {
-                    if (sttResult.equalsIgnoreCase("Queen side Castle")) {
-                        return "0-0-0";
-                    } else if (sttResult.equalsIgnoreCase("King side Castle")) {
-                        return "0-0";
-                    } else {
-                        return "ERROR - " + sttResult;
-                    }
-                } catch (Exception e) {
-                    throw new Exception("ERROR improveAccuracy -- exception >> " + e.getMessage());
-                }
-            default:
-                return "ERROR - " + sttResult;
-        }
-    }
-
-    private boolean containNumeric(String temp) {
-        return temp.matches(".*[0-9].*");
-    }
-
-    private String removeDuplicateChar(String str) {
-        char temp1, temp2;
-        for (int i = 1; i < str.length(); i++) {
-            temp1 = str.charAt(i - 1);
-            temp2 = str.charAt(i);
-            if (temp1 == temp2) {
-                StringBuilder sb = new StringBuilder(str);
-                sb.deleteCharAt(i - 1);
-                str = sb.toString();
-            }
-        }
-        return str;
-    }
-
-    private String cleanString(String str) {
-        char[] strArray = str.toCharArray();
-
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < strArray.length; i++) {
-            if (strArray[i] == isFound(strArray[i])) {
-                sb.append(strArray[i]);
-            }
-        }
-
-        String newStr = sb.toString();
-        if (newStr.length() > 2) {
-            return String.valueOf(newStr.charAt(0)) + String.valueOf(newStr.charAt(newStr.length() - 1));
-        } else {
-            return newStr;
-        }
-    }
-
-    private char isFound(char src) {
-        char[] piecesChar = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', '1', '2', '3', '4', '5', '6', '7', '8' };
-        for (int i = 0; i < piecesChar.length; i++) {
-            if (src == piecesChar[i]) {
-                return src;
-            }
-        }
-        return '0';
-    }
-
-    private boolean isAccurate(char first, char second) {
-        if (Character.isDigit(second) && !(Character.isDigit(first))) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
+//			Path path = Paths.get(strPath);
+//			byte[] data = Files.readAllBytes(path);
+			byte[] byteArray = data.getData().getBytes("UTF-8");
+			ByteString audioBytes = ByteString.copyFrom(byteArray);
+			
+			RecognitionConfig config =
+					RecognitionConfig.newBuilder()
+					.setEncoding(RecognitionConfig.AudioEncoding.FLAC)
+					.setSampleRateHertz(16000)
+					.setLanguageCode("en-US")
+					.addSpeechContexts(speechContext)
+					.build();
+			
+			RecognitionAudio audio = RecognitionAudio.newBuilder().setContent(audioBytes).build();
+			
+			RecognizeRequest request = RecognizeRequest.newBuilder().setConfig(config).setAudio(audio).build();
+			
+			RecognizeResponse response = speechClient.recognize(request);
+			
+			for (SpeechRecognitionResult result : response.getResultsList()) {
+				SpeechRecognitionAlternative alternative = result.getAlternativesList().get(0);
+				String sttResult = alternative.getTranscript();
+				output = improveAccuracy(sttResult);
+			}
+			System.out.println("GamePlayService - speechToTextService - END - data >> " + data);
+			return output;
+		} catch (Exception e) {
+			System.out.println("ERROR - GamePlayService - speechToTextService - data >> " + data + " - exception >> " + e.getMessage());
+			throw new Exception(e.getMessage());
+		}
+	}
 }

@@ -37,7 +37,7 @@ public class UserController {
 		String output = null;
 
 		try {
-			output = service.loginService(request);
+			output = service.loginProcess(request);
 			
 			System.out.println("UserController - loginController END");
 			
@@ -67,7 +67,7 @@ public class UserController {
 		CallbackOutput output = null;
 		
 		try {
-			output = service.callbackService(request);
+			output = service.callbackProcess(request);
 			
 			ra.addAttribute("access-token", output.getToken());
 			ra.addAttribute("username", output.getUsername());
