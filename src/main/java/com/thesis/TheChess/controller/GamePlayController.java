@@ -39,6 +39,7 @@ public class GamePlayController {
 	}
 	
 	@PostMapping(path = "api/speech-to-text")
+	@PostMapping(path = "api/speech-to-text/path")
 	public ResponseEntity<SpeechToTextOutput> speechToTextController(@RequestHeader("path") String path){
 		System.out.println("GamePlayController - speechToTextController START - path >> " + path);
 		
