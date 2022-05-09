@@ -55,7 +55,6 @@ function NavBar({ themeHandler }) {
   const { isSignedIn } = useSelector((state) => state.session);
   const theme = useTheme();
   const backgroundColor = theme.palette.primary.main;
-  const darkerBackgroundColor = theme.palette.neutral.darker;
 
   const handleShowAuthButton = () => {
     if (isSignedIn) return UserButtonGroup();

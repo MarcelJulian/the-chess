@@ -7,9 +7,9 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { setColor } from "store/reducers/botFormSlice";
 
-import { BotColorEnum } from "./LocalEnums";
+import { BotColorEnum } from "../LocalEnums";
 
-function BotColorButtonGroup() {
+function BotColorButtonGroup({ size }) {
   const botColor = useSelector((state) => state.botForm.color);
   const dispatch = useDispatch();
   const handleBotColorChange = (_, value) => dispatch(setColor(value));
@@ -27,6 +27,7 @@ function BotColorButtonGroup() {
           value={value}
           disableFocusRipple
           disableRipple
+          size={size}
         >
           <Typography variant="button" sx={{ paddingX: "0.5rem" }}>
             {value}

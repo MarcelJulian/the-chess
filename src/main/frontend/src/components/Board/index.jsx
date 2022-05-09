@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useMemo } from "react";
 
 import { Chessboard } from "react-chessboard";
 import { useSelector } from "react-redux";
@@ -9,7 +9,7 @@ function Board({ game, setGameHandler, boardOrientation = "white" }) {
   const boardSet = useSelector((state) => state.board.boardSet);
   const [moveFrom, setMoveFrom] = useState("");
 
-  const [moveSquares, setMoveSquares] = useState({});
+  //   const [moveSquares, setMoveSquares] = useState({});
   const [optionSquares, setOptionSquares] = useState({});
 
   const calculateBoardWidth = () => {
@@ -68,6 +68,9 @@ function Board({ game, setGameHandler, boardOrientation = "white" }) {
     setOptionSquares(newSquares);
   };
 
+  const audio = useMemo(() => new Audio(`/sfx/move.mp3`));
+  const playAudio = () => audio.play();
+
   // allows click to move
   function onSquareClick(square) {
     function resetFirstMove(tempSquare) {
@@ -96,6 +99,8 @@ function Board({ game, setGameHandler, boardOrientation = "white" }) {
       return;
     }
 
+    playAudio();
+
     setMoveFrom("");
     setOptionSquares({});
   }
@@ -123,7 +128,7 @@ function Board({ game, setGameHandler, boardOrientation = "white" }) {
           style={{
             width: squareWidth,
             height: squareWidth,
-            backgroundImage: `url(${process.env.PUBLIC_URL}/${pieceSet}/${p}.png)`,
+            backgroundImage: `url(${process.env.PUBLIC_URL}/piece_set/${pieceSet}/${p}.png)`,
             backgroundSize: "100%"
           }}
         />
@@ -132,7 +137,6 @@ function Board({ game, setGameHandler, boardOrientation = "white" }) {
     });
     return returnPieces;
   };
-
   return (
     <Chessboard
       id="StyledBoard"
@@ -149,43 +153,18 @@ function Board({ game, setGameHandler, boardOrientation = "white" }) {
       onPieceDragBegin={(_, square) => onSquareClick(square)}
       onSquareClick={onSquareClick}
       customSquareStyles={{
-        ...moveSquares,
+        // ...moveSquares,
         ...optionSquares
       }}
       customDarkSquareStyle={{
-        backgroundImage: `url(${process.env.PUBLIC_URL}/${boardSet}/dark.jpg)`
+        backgroundImage: `url(${process.env.PUBLIC_URL}/tile_set/${boardSet}/dark.jpg)`
       }}
       customLightSquareStyle={{
-        backgroundImage: `url(${process.env.PUBLIC_URL}/${boardSet}/light.jpg)`
+        backgroundImage: `url(${process.env.PUBLIC_URL}/tile_set/${boardSet}/light.jpg)`
       }}
       customPieces={getCustomPieces()}
       ref={chessboardRef}
     />
-    // <button
-    //     className="rc-button"
-    //     onClick={() => {
-    //       safeGameMutate((game) => {
-    //         game.reset();
-    //       });
-    //       chessboardRef.current.clearPremoves();
-    //       setMoveSquares({});
-    //       setRightClickedSquares({});
-    //     }}
-    //   >
-    //     reset
-    //   </button>
-    //   <button
-    //     className="rc-button"
-    //     onClick={() => {
-    //       safeGameMutate((game) => {
-    //         game.undo();
-    //       });
-    //       chessboardRef.current.clearPremoves();
-    //       setMoveSquares({});
-    //     }}
-    //   >
-    //     undo
-    //   </button>
   );
 }
 

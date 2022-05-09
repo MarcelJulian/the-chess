@@ -4,7 +4,7 @@ export const boardSlice = createSlice({
   name: "board",
   initialState: {
     boardSet: "tile5",
-    pieceSet: "ver1",
+    pieceSet: "piece1",
     sound: ""
   },
   reducers: {

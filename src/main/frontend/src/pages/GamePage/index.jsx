@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 
 import Box from "@mui/material/Box";
 import Chess from "chess.js";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 import Board from "components/Board";
 import { movePiece } from "services/gameService";
 import { streamBoardGameState } from "services/gameStreamService";
 import { initializeGame, setGameState } from "store/reducers/gameSlice";
 import {
+  sendMoveRequested,
+  sendMoveResponded,
   showErrorToast,
   showSuccessToast,
   showRequestErrorToast
@@ -34,13 +36,19 @@ function GamePage() {
   const { gameId } = useParams();
 
   const { isWhite } = useSelector((state) => state.game);
-  const { accessToken, username } = useSelector((state) => state.session);
+  const { accessToken, username, isSignedIn } = useSelector(
+    (state) => state.session
+  );
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [isGameEnd, setIsGameEnd] = useState(false);
 
   const [game, setGame] = useState(new Chess());
   const setGameHandler = (g) => setGame(g);
+
+  const audio = useMemo(() => new Audio(`/sfx/move.mp3`));
+  const playAudio = () => audio.play();
 
   const getTurnAndLastMove = (moves, isWhiteParam) => {
     if (moves === "" || moves === null || moves === undefined)
@@ -135,6 +143,7 @@ function GamePage() {
       const tryMove = gameCopy.move(lastMove, { sloppy: true });
 
       if (tryMove !== null) {
+        playAudio();
         setGameHandler(gameCopy);
 
         dispatch(
@@ -150,6 +159,10 @@ function GamePage() {
   };
 
   useEffect(() => {
+    // if (!isSignedIn) {
+    //   dispatch(showErrorToast("Please sign in first. Redirecting..."));
+    //   setTimeout(() => navigate(`/`), 3000);
+    // } else
     streamBoardGameState(
       accessToken,
       gameId,
@@ -163,8 +176,10 @@ function GamePage() {
   // Handle sending the move made by the player
   useEffect(() => {
     const sendMoveRequest = async (move) => {
+      dispatch(sendMoveRequested());
       const response = await movePiece(accessToken, gameId, move);
       if (response.status !== 200) dispatch(showRequestErrorToast(response));
+      dispatch(sendMoveResponded());
     };
 
     if (accessToken !== null && isWhite !== null && isGameEnd === false)

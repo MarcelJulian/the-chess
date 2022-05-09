@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import LoadingButton from "@mui/lab/LoadingButton";
+import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import Container from "@mui/material/Container";
@@ -8,6 +9,7 @@ import useTheme from "@mui/material/styles/useTheme";
 import { useSelector, useDispatch } from "react-redux";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
+import signInToLichess from "services/authService";
 import { getOnGoingGames, matchWithBot } from "services/gameService";
 import { signIn } from "store/reducers/sessionSlice";
 import {
@@ -62,15 +64,30 @@ function HomePage() {
   }, [isSignedIn]);
 
   return (
-    <Box sx={{ marginTop: "1rem" }}>
-      <Container>
-        {/* TODO: isSignedIn === false, show what? */}
-        <Box display="flex" justifyContent="space-between">
-          <BotCard />
-          <HumanCard />
-        </Box>
-      </Container>
-    </Box>
+    <Container
+      sx={{
+        height: "calc(100vh - 64px)"
+        // display: "flex",
+        // flexDirection: "column",
+        // justifyContent: "space-around"
+      }}
+    >
+      <Box
+        paddingTop="4rem"
+        // paddingBottom="auto"
+        display="flex"
+        justifyContent={isSignedIn ? "space-between" : "center"}
+      >
+        {isSignedIn === false ? (
+          <DefaultCard />
+        ) : (
+          <>
+            <BotCard />
+            <HumanCard />
+          </>
+        )}
+      </Box>
+    </Container>
   );
 }
 
@@ -103,12 +120,18 @@ function BotCard() {
 
   const matchWithBotHandler = async () => {
     setIsLoading(true);
-    const bodyParams = {
+
+    let bodyParams = {
       level: strength,
-      clock_limit: isUnlimited ? 0 : timeControlMinute * 60,
-      clock_increment: isUnlimited ? 0 : timeControlIncrement,
       color
     };
+    if (!isUnlimited)
+      bodyParams = {
+        ...bodyParams,
+        clock_limit: isUnlimited ? 0 : timeControlMinute * 60,
+        clock_increment: isUnlimited ? 0 : timeControlIncrement
+      };
+
     const response = await matchWithBot(accessToken, bodyParams);
     if (response.status !== 200) dispatch(showRequestErrorToast(response));
     else {
@@ -120,7 +143,7 @@ function BotCard() {
   return (
     <Card
       sx={{
-        marginBottom: "1rem",
+        // marginBottom: "1rem",
         borderRadius: "16px",
         width: "48%",
         paddingTop: "1rem",
@@ -151,9 +174,10 @@ function HumanCard() {
   return (
     <Card
       sx={{
-        marginBottom: "1rem",
+        // marginBottom: "1rem",
         borderRadius: "16px",
         width: "48%",
+        paddingTop: "1rem",
         backgroundColor
       }}
     >
@@ -161,12 +185,55 @@ function HumanCard() {
         display="flex"
         flexDirection="column"
         alignItems="center"
-        sx={{ height: "100%", paddingTop: "1rem" }}
+        sx={{ height: "100%" }}
       >
         <CardTitle label="Play with Human" />
         <Box display="flex" alignItems="center" sx={{ height: "100%" }}>
           <HumanCardContent />
         </Box>
+      </Box>
+    </Card>
+  );
+}
+
+function DefaultCard() {
+  const theme = useTheme();
+  const backgroundColor = theme.palette.neutral.main;
+
+  const dispatch = useDispatch();
+
+  const signInHandler = async () => {
+    const response = await signInToLichess();
+    if (response.status !== 200) dispatch(showRequestErrorToast(response));
+  };
+
+  return (
+    <Card
+      sx={{
+        marginBottom: "1rem",
+        paddingX: "1rem",
+        borderRadius: "16px",
+        width: "50%",
+        backgroundColor
+      }}
+    >
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        sx={{ height: "100%", paddingY: "1rem" }}
+      >
+        Please sign in with your lichess account to continue.
+        <Button
+          variant="contained"
+          onClick={signInHandler}
+          sx={{ display: "block", color: "white", marginTop: "1rem" }}
+        >
+          Sign In
+        </Button>
+        <Alert severity="info" sx={{ marginTop: "1rem", width: "100%" }}>
+          As a third party application, a slight lag is to be tolerated
+        </Alert>
       </Box>
     </Card>
   );

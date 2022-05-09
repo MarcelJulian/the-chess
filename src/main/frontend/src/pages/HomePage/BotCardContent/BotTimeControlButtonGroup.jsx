@@ -7,9 +7,9 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { setTimeControlMode } from "store/reducers/botFormSlice";
 
-import { BotTimeControlEnum } from "./LocalEnums";
+import { BotTimeControlEnum } from "../LocalEnums";
 
-function BotTimeControlButtonGroup() {
+function BotTimeControlButtonGroup({ size }) {
   const botTimeControlMode = useSelector(
     (state) => state.botForm.timeControlMode
   );
@@ -23,6 +23,7 @@ function BotTimeControlButtonGroup() {
       exclusive
       onChange={handleBotTimeControlModeChange}
       sx={{ border: 1 }}
+      size={size}
     >
       {Object.values(BotTimeControlEnum).map(({ value, label }) => (
         <ToggleButton

@@ -37,17 +37,19 @@ const streamIncomingEvents = async (accessToken, bodyParams) => {
 
   const exampleReader = ndjsonStream(response.body).getReader();
 
-  const seekResponse = await createASeek(accessToken, bodyParams);
+  const seekResponse = createASeek(accessToken, bodyParams);
 
-  if (seekResponse.status === 200) {
-    let result;
-    while (!result || !result.done) {
-      result = await exampleReader.read();
-      if (result.value.type === "gameStart") break;
-    }
-    return { status: response.status, data: result.value.gameId };
+  //   if (seekResponse.status === 200) {
+  //     console.log("seek success");
+  //     let result;
+  let result;
+  while (!result || !result.done) {
+    result = await exampleReader.read();
+    if (result.value.type === "gameStart") break;
   }
-  return seekResponse;
+  return { status: response.status, data: result.value.game.id };
+  //   }
+  //   return seekResponse;
 };
 
 const findMatchHandler = async (accessToken, bodyParams) => {
@@ -55,7 +57,6 @@ const findMatchHandler = async (accessToken, bodyParams) => {
 
   try {
     const streamResponse = await streamIncomingEvents(token, bodyParams);
-
     return { status: streamResponse.status, data: streamResponse.data };
   } catch (err) {
     return err;
@@ -79,10 +80,6 @@ const streamBoardGameState = async (
   let result;
   while (!result || !result.done) {
     result = await exampleReader.read();
-    console.log(
-      "🚀 ~ file: gameStreamService.js ~ line 82 ~ result",
-      result.value
-    );
 
     if (result.value !== undefined)
       if (result.value.type === "gameFull") initializeGameHandler(result.value);
