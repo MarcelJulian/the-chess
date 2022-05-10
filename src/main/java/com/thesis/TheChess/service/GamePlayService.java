@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.google.api.gax.core.FixedCredentialsProvider;
 import com.google.api.gax.paging.Page;
 import com.google.api.gax.rpc.ApiException;
 import com.google.auth.oauth2.GoogleCredentials;
@@ -41,6 +42,7 @@ import com.google.cloud.speech.v1p1beta1.SpeechClient;
 import com.google.cloud.speech.v1p1beta1.SpeechContext;
 import com.google.cloud.speech.v1p1beta1.SpeechRecognitionAlternative;
 import com.google.cloud.speech.v1p1beta1.SpeechRecognitionResult;
+import com.google.cloud.speech.v1p1beta1.SpeechSettings;
 import com.google.cloud.storage.Bucket;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
@@ -117,9 +119,14 @@ public class GamePlayService {
 		System.out.println("GamePlayService - speechToTextProcess - START - path >> " + strPath);
 		SpeechToTextOutput output = null;
 		
-		authExplicit();
+		GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream("src/main/resources/the-chess-347506-f74a8ba65a99.json"))
+		        .createScoped(Lists.newArrayList("https://www.googleapis.com/auth/cloud-platform"));
 		
-		try (SpeechClient speechClient = SpeechClient.create()) {
+		SpeechSettings speechSettings = SpeechSettings.newBuilder()
+			         .setCredentialsProvider(FixedCredentialsProvider.create(credentials))
+			         .build();
+			 
+		try (SpeechClient speechClient = SpeechClient.create(speechSettings)) {
 			List<String> phrases = Arrays.asList(
 					"$OOV_CLASS_ALPHANUMERIC_SEQUENCE",
 					"Bishop $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
@@ -136,7 +143,6 @@ public class GamePlayService {
 			Path path = Paths.get(strPath);
 			byte[] data = Files.readAllBytes(path);
 			ByteString audioBytes = ByteString.copyFrom(data);
-			System.out.println("masuk 2 >> ");
 
 			RecognitionConfig config =
 					RecognitionConfig.newBuilder()
@@ -370,9 +376,14 @@ public class GamePlayService {
 		System.out.println("GamePlayService - speechToTextProcess - START");
 		SpeechToTextOutput output = null;
 		
-		authExplicit();
+		GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream("src/main/resources/the-chess-347506-f74a8ba65a99.json"))
+		        .createScoped(Lists.newArrayList("https://www.googleapis.com/auth/cloud-platform"));
 		
-		try (SpeechClient speechClient = SpeechClient.create()) {
+		SpeechSettings speechSettings = SpeechSettings.newBuilder()
+			         .setCredentialsProvider(FixedCredentialsProvider.create(credentials))
+			         .build();
+		
+		try (SpeechClient speechClient = SpeechClient.create(speechSettings)) {
 			List<String> phrases = Arrays.asList(
 					"$OOV_CLASS_ALPHANUMERIC_SEQUENCE",
 					"Bishop $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
@@ -386,8 +397,6 @@ public class GamePlayService {
 
 			SpeechContext speechContext = SpeechContext.newBuilder().addAllPhrases(phrases).build();
 
-//			Path path = Paths.get(strPath);
-//			byte[] data = Files.readAllBytes(path);
 			byte[] byteArray = data.getData();
 			ByteString audioBytes = ByteString.copyFrom(byteArray);
 			
@@ -417,17 +426,4 @@ public class GamePlayService {
 			throw new Exception(e.getMessage());
 		}
 	}
-	
-	static void authExplicit() throws IOException {
-		  GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream("src/main/resources/the-chess-347506-f74a8ba65a99.json"))
-		        .createScoped(Lists.newArrayList("https://www.googleapis.com/auth/cloud-platform"));
-		  
-		  Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
-
-		  System.out.println("Buckets:");
-		  Page<Bucket> buckets = storage.list();
-		  for (Bucket bucket : buckets.iterateAll()) {
-		    System.out.println(bucket.toString());
-		  }
-		}
 }
