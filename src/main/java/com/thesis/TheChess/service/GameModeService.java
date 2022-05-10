@@ -13,14 +13,10 @@ import org.springframework.web.client.RestTemplate;
 
 import com.thesis.TheChess.dto.AbortResignDrawOfferResult;
 import com.thesis.TheChess.dto.ChallengeAIResult;
-import com.thesis.TheChess.dto.CommonAbortResignDrawOfferResult;
-import com.thesis.TheChess.dto.LichessErrorResult;
 import com.thesis.TheChess.dto.OngoingGamesOutput;
 import com.thesis.TheChess.dto.OngoingGamesResult;
 import com.thesis.TheChess.dto.PlayWithBotInput;
 import com.thesis.TheChess.dto.PlayWithBotOutput;
-import com.thesis.TheChess.dto.PlayWithHumanInput;
-import com.thesis.TheChess.dto.PlayWithHumanOutput;
 
 @Service
 public class GameModeService {
@@ -223,22 +219,6 @@ public class GameModeService {
 			String uri = lichess_api_url + "board/game/" + game_id + "/resign";
 			System.out.println("hitResignGame - uri >> " + uri);
 			
-//			ResponseEntity<CommonAbortResignDrawOfferResult> responseHit = restTemplate.postForEntity(uri, request, CommonAbortResignDrawOfferResult.class);
-//			System.out.println("hitResignGame - responseHit >> " + responseHit);
-//			
-//			if (responseHit.getStatusCodeValue() == 200) {
-//				AbortResignDrawOfferResult output = responseHit.getBody().getOkObject();
-//				
-//				if (output.getOk().equalsIgnoreCase("true")){
-//					result = true;
-//				}
-//			} else if (responseHit.getStatusCodeValue() == 400) {
-//				LichessErrorResult error = responseHit.getBody().getErrorObject();
-//				throw new Exception("Failed Resign Game; error >> " + error);
-//			} else {
-//				throw new Exception("Failed Resign Game; error code value >> " + responseHit.getStatusCodeValue());
-//			}
-			
 			ResponseEntity<AbortResignDrawOfferResult> responseHit = restTemplate.exchange(uri, HttpMethod.POST, request, AbortResignDrawOfferResult.class);
 			System.out.println("hitResignGame - responseHit >> " + responseHit);
 			
@@ -290,22 +270,6 @@ public class GameModeService {
 			
 			String uri = lichess_api_url + "board/game/" + game_id + "/draw/" + accept;
 			System.out.println("hithandleDrawOffer - uri >> " + uri);
-			
-//			ResponseEntity<CommonAbortResignDrawOfferResult> responseHit = restTemplate.postForEntity(uri, request, CommonAbortResignDrawOfferResult.class);
-//			System.out.println("hithandleDrawOffer - responseHit >> " + responseHit);
-//			
-//			if (responseHit.getStatusCodeValue() == 200) {
-//				AbortResignDrawOfferResult output = responseHit.getBody().getOkObject();
-//				
-//				if (output.getOk().equalsIgnoreCase("true")){
-//					result = true;
-//				}
-//			} else if (responseHit.getStatusCodeValue() == 400) {
-//				LichessErrorResult error = responseHit.getBody().getErrorObject();
-//				throw new Exception("Failed Handle Draw Offer; error >> " + error);
-//			} else {
-//				throw new Exception("Failed Handle Draw Offer; error code value >> " + responseHit.getStatusCodeValue());
-//			}
 			
 			ResponseEntity<AbortResignDrawOfferResult> responseHit = restTemplate.exchange(uri, HttpMethod.POST, request, AbortResignDrawOfferResult.class);
 			System.out.println("hithandleDrawOffer - responseHit >> " + responseHit);
