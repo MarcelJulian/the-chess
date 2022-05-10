@@ -1,5 +1,6 @@
 package com.thesis.TheChess.service;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,7 +20,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.google.api.gax.core.FixedCredentialsProvider;
+import com.google.api.gax.paging.Page;
 import com.google.api.gax.rpc.ApiException;
+import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.speech.v1p1beta1.AdaptationClient;
 import com.google.cloud.speech.v1p1beta1.CreateCustomClassRequest;
 import com.google.cloud.speech.v1p1beta1.CreatePhraseSetRequest;
@@ -38,6 +42,11 @@ import com.google.cloud.speech.v1p1beta1.SpeechClient;
 import com.google.cloud.speech.v1p1beta1.SpeechContext;
 import com.google.cloud.speech.v1p1beta1.SpeechRecognitionAlternative;
 import com.google.cloud.speech.v1p1beta1.SpeechRecognitionResult;
+import com.google.cloud.speech.v1p1beta1.SpeechSettings;
+import com.google.cloud.storage.Bucket;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageOptions;
+import com.google.common.collect.Lists;
 import com.google.protobuf.ByteString;
 import com.thesis.TheChess.dto.MakeBoardMoveResult;
 import com.thesis.TheChess.dto.SpeechToTextInput;
@@ -54,18 +63,18 @@ public class GamePlayService {
 	
 	RestTemplate restTemplate = new RestTemplate();
 
-	public Boolean movePieceService(String user_oauth, String game_id, String move) throws Exception{
-		System.out.println("GamePlayService - movePieceService - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - move >> " + move);
+	public Boolean movePieceProcess(String user_oauth, String game_id, String move) throws Exception{
+		System.out.println("GamePlayService - movePieceProcess - START - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - move >> " + move);
 		
 		boolean result = false;
 		
 		try {
 			result = hitMakeABoardMove(user_oauth, game_id, move);
 			
-			System.out.println("GamePlayService - movePieceService - END - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - move >> " + move);
+			System.out.println("GamePlayService - movePieceProcess - END - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - move >> " + move);
 			return result;
 		} catch (Exception e) {
-			System.out.println("GamePlayService - movePieceService - ERROR - user_oauth >> " + user_oauth  + " - game_id >> " + game_id + " - move >> " + move + " - exception >> " + e.getMessage());
+			System.out.println("GamePlayService - movePieceProcess - ERROR - user_oauth >> " + user_oauth  + " - game_id >> " + game_id + " - move >> " + move + " - exception >> " + e.getMessage());
 			throw new Exception(e.getMessage());
 		}
 	}
@@ -106,11 +115,18 @@ public class GamePlayService {
 		}
 	}
 	
-	public SpeechToTextOutput speechToTextService(String strPath) throws Exception {
-		System.out.println("GamePlayService - speechToTextService - START - path >> " + strPath);
+	public SpeechToTextOutput speechToTextProcess(String strPath) throws Exception {
+		System.out.println("GamePlayService - speechToTextProcess - START - path >> " + strPath);
 		SpeechToTextOutput output = null;
 		
-		try (SpeechClient speechClient = SpeechClient.create()) {
+		GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream("src/main/resources/the-chess-347506-f74a8ba65a99.json"))
+		        .createScoped(Lists.newArrayList("https://www.googleapis.com/auth/cloud-platform"));
+		
+		SpeechSettings speechSettings = SpeechSettings.newBuilder()
+			         .setCredentialsProvider(FixedCredentialsProvider.create(credentials))
+			         .build();
+			 
+		try (SpeechClient speechClient = SpeechClient.create(speechSettings)) {
 			List<String> phrases = Arrays.asList(
 					"$OOV_CLASS_ALPHANUMERIC_SEQUENCE",
 					"Bishop $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
@@ -127,7 +143,6 @@ public class GamePlayService {
 			Path path = Paths.get(strPath);
 			byte[] data = Files.readAllBytes(path);
 			ByteString audioBytes = ByteString.copyFrom(data);
-			System.out.println("masuk 2 >> " + Base64.getEncoder().encodeToString(data));
 
 			RecognitionConfig config =
 					RecognitionConfig.newBuilder()
@@ -141,16 +156,17 @@ public class GamePlayService {
 			RecognizeRequest request = RecognizeRequest.newBuilder().setConfig(config).setAudio(audio).build();
 			
 			RecognizeResponse response = speechClient.recognize(request);
+			System.out.println("masuk 6 >> " + response.getResultsList());
 			
 			for (SpeechRecognitionResult result : response.getResultsList()) {
 				SpeechRecognitionAlternative alternative = result.getAlternativesList().get(0);
 				String sttResult = alternative.getTranscript();
 				output = improveAccuracy(sttResult);
 			}
-			System.out.println("GamePlayService - speechToTextService - END - path >> " + strPath);
+			System.out.println("GamePlayService - speechToTextProcess - END - path >> " + strPath);
 			return output;
 		} catch (Exception e) {
-			System.out.println("ERROR - GamePlayService - speechToTextService - path >> " + strPath + " - exception >> " + e.getMessage());
+			System.out.println("ERROR - GamePlayService - speechToTextProcess - path >> " + strPath + " - exception >> " + e.getMessage());
 			throw new Exception(e.getMessage());
 		}
 	}
@@ -356,11 +372,18 @@ public class GamePlayService {
 		}
 	}
 
-	public SpeechToTextOutput speechToTextService(SpeechToTextInput data) throws Exception {
-		System.out.println("GamePlayService - speechToTextService - START - data >> " + data);
+	public SpeechToTextOutput speechToTextProcess(SpeechToTextInput data) throws Exception {
+		System.out.println("GamePlayService - speechToTextProcess - START");
 		SpeechToTextOutput output = null;
 		
-		try (SpeechClient speechClient = SpeechClient.create()) {
+		GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream("src/main/resources/the-chess-347506-f74a8ba65a99.json"))
+		        .createScoped(Lists.newArrayList("https://www.googleapis.com/auth/cloud-platform"));
+		
+		SpeechSettings speechSettings = SpeechSettings.newBuilder()
+			         .setCredentialsProvider(FixedCredentialsProvider.create(credentials))
+			         .build();
+		
+		try (SpeechClient speechClient = SpeechClient.create(speechSettings)) {
 			List<String> phrases = Arrays.asList(
 					"$OOV_CLASS_ALPHANUMERIC_SEQUENCE",
 					"Bishop $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
@@ -374,15 +397,12 @@ public class GamePlayService {
 
 			SpeechContext speechContext = SpeechContext.newBuilder().addAllPhrases(phrases).build();
 
-//			Path path = Paths.get(strPath);
-//			byte[] data = Files.readAllBytes(path);
-			byte[] byteArray = data.getData().getBytes("UTF-8");
+			byte[] byteArray = data.getData();
 			ByteString audioBytes = ByteString.copyFrom(byteArray);
 			
 			RecognitionConfig config =
 					RecognitionConfig.newBuilder()
-					.setEncoding(RecognitionConfig.AudioEncoding.FLAC)
-					.setSampleRateHertz(16000)
+					.setEncoding(AudioEncoding.LINEAR16)
 					.setLanguageCode("en-US")
 					.addSpeechContexts(speechContext)
 					.build();
@@ -392,16 +412,17 @@ public class GamePlayService {
 			RecognizeRequest request = RecognizeRequest.newBuilder().setConfig(config).setAudio(audio).build();
 			
 			RecognizeResponse response = speechClient.recognize(request);
+			System.out.println("Response >> " + response.getResultsList());
 			
 			for (SpeechRecognitionResult result : response.getResultsList()) {
 				SpeechRecognitionAlternative alternative = result.getAlternativesList().get(0);
 				String sttResult = alternative.getTranscript();
 				output = improveAccuracy(sttResult);
 			}
-			System.out.println("GamePlayService - speechToTextService - END - data >> " + data);
+			System.out.println("GamePlayService - speechToTextProcess - END");
 			return output;
 		} catch (Exception e) {
-			System.out.println("ERROR - GamePlayService - speechToTextService - data >> " + data + " - exception >> " + e.getMessage());
+			System.out.println("ERROR - GamePlayService - speechToTextProcess - exception >> " + e.getMessage());
 			throw new Exception(e.getMessage());
 		}
 	}

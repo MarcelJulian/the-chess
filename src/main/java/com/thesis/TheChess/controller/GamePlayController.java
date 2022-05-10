@@ -28,7 +28,7 @@ public class GamePlayController {
 		Boolean output = false;
 		
 		try {
-			output = service.movePieceService(user_oauth, game_id, move);
+			output = service.movePieceProcess(user_oauth, game_id, move);
 			
 			System.out.println("GamePlayController - movePieceController END - user_oauth >> " + user_oauth + " - game_id >> " + game_id + " - move >> " + move);
 			return ResponseEntity.status(HttpStatus.OK).body(output);
@@ -38,14 +38,14 @@ public class GamePlayController {
 		}
 	}
 	
-	@PostMapping(path = "api/speech-to-text")
+	@PostMapping(path = "api/speech-to-text/path")
 	public ResponseEntity<SpeechToTextOutput> speechToTextController(@RequestHeader("path") String path){
 		System.out.println("GamePlayController - speechToTextController START - path >> " + path);
 		
 		SpeechToTextOutput output = null;
 		
 		try {
-			output = service.speechToTextService(path);
+			output = service.speechToTextProcess(path);
 			
 			System.out.println("GamePlayController - speechToTextController END");
 			return ResponseEntity.status(HttpStatus.OK).body(output);
@@ -62,7 +62,7 @@ public class GamePlayController {
 		SpeechToTextOutput output = null;
 		
 		try {
-			output = service.speechToTextService(data);
+			output = service.speechToTextProcess(data);
 			
 			System.out.println("GamePlayController - speechToTextController END");
 			return ResponseEntity.status(HttpStatus.OK).body(output);
