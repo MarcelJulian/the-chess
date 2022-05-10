@@ -389,8 +389,7 @@ public class GamePlayService {
 			
 			RecognitionConfig config =
 					RecognitionConfig.newBuilder()
-					.setEncoding(RecognitionConfig.AudioEncoding.FLAC)
-					.setSampleRateHertz(16000)
+					.setEncoding(AudioEncoding.LINEAR16)
 					.setLanguageCode("en-US")
 					.addSpeechContexts(speechContext)
 					.build();
