@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 
-import { brown } from "@mui/material/colors";
 import CssBaseline from "@mui/material/CssBaseline";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import Paper from "@mui/material/Paper";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import useTheme from "@mui/material/styles/useTheme";
 import { useSelector, useDispatch } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 
@@ -59,7 +57,7 @@ export default function App() {
         light: "#FAFAFA",
         main: "#F5F5F5",
         darker: "#E0E0E0",
-        darkest: "#9E9E9E"
+        darkest: "#BDBDBD"
       }
     },
     typography,

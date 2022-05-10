@@ -1,5 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+export const InputStatus = {
+  IDLE: 0,
+  SEND_MOVE: 1,
+  MOVE_SENT: 2,
+  MOVE_REJECTED: 3,
+  RECORD: 4,
+  TRANSCRIBE: 5,
+  CONFIRM_MOVE: 6,
+  CONFIRM_COMMAND: 7,
+  TRANSCRIBE_ERROR: 8
+};
+
 export const uiSlice = createSlice({
   name: "ui",
   initialState: {
@@ -7,8 +19,7 @@ export const uiSlice = createSlice({
     toastType: "success",
     toastMessage: "",
     isSettingsDialogShown: false,
-    // to show loading when move sent
-    isSendingMove: false
+    inputStatus: InputStatus.IDLE
   },
   reducers: {
     showSettingsDialog: (state, _) => {
@@ -17,15 +28,6 @@ export const uiSlice = createSlice({
     hideSettingsDialog: (state, _) => {
       state.isSettingsDialogShown = false;
     },
-
-    // to show loading
-    sendMoveRequested: (state, _) => {
-      state.isSendingMove = true;
-    },
-    sendMoveResponded: (state, _) => {
-      state.isSendingMove = false;
-    },
-
     showSuccessToast: (state, action) => {
       state.isToastShown = true;
       state.toastType = "success";
@@ -44,6 +46,9 @@ export const uiSlice = createSlice({
     },
     hideToast: (state, _) => {
       state.isToastShown = false;
+    },
+    setInputStatus: (state, action) => {
+      state.inputStatus = action.payload;
     }
   }
 });
@@ -51,12 +56,11 @@ export const uiSlice = createSlice({
 export const {
   showSuccessToast,
   showErrorToast,
-  sendMoveRequested,
-  sendMoveResponded,
   showRequestErrorToast,
   hideToast,
   hideSettingsDialog,
-  showSettingsDialog
+  showSettingsDialog,
+  setInputStatus
 } = uiSlice.actions;
 
 export default uiSlice.reducer;

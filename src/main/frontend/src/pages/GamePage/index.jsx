@@ -8,10 +8,14 @@ import { useParams, useNavigate } from "react-router-dom";
 import Board from "components/Board";
 import { movePiece } from "services/gameService";
 import { streamBoardGameState } from "services/gameStreamService";
+import {
+  setIsKeyPressedTrue,
+  setIsKeyPressedFalse
+} from "store/reducers/boardSlice";
 import { initializeGame, setGameState } from "store/reducers/gameSlice";
 import {
-  sendMoveRequested,
-  sendMoveResponded,
+  InputStatus,
+  setInputStatus,
   showErrorToast,
   showSuccessToast,
   showRequestErrorToast
@@ -39,6 +43,8 @@ function GamePage() {
   const { accessToken, username, isSignedIn } = useSelector(
     (state) => state.session
   );
+  const { key, isKeyPressed } = useSelector((state) => state.board);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -176,10 +182,12 @@ function GamePage() {
   // Handle sending the move made by the player
   useEffect(() => {
     const sendMoveRequest = async (move) => {
-      dispatch(sendMoveRequested());
+      dispatch(setInputStatus(InputStatus.SEND_MOVE));
       const response = await movePiece(accessToken, gameId, move);
-      if (response.status !== 200) dispatch(showRequestErrorToast(response));
-      dispatch(sendMoveResponded());
+      if (response.status !== 200) {
+        dispatch(setInputStatus(InputStatus.MOVE_REJECTED));
+        dispatch(showRequestErrorToast(response));
+      } else dispatch(setInputStatus(InputStatus.MOVE_SENT));
     };
 
     if (accessToken !== null && isWhite !== null && isGameEnd === false)
@@ -192,6 +200,14 @@ function GamePage() {
           sendMoveRequest(`${playerMove.from}${playerMove.to}`);
       }
   }, [gameTurn, isGameEnd]);
+
+  const onKeyDownHandler = (e) => {
+    if (!isKeyPressed && e.key === key) dispatch(setIsKeyPressedTrue());
+  };
+
+  const onKeyUpHandler = (e) => {
+    if (isKeyPressed && e.key === key) dispatch(setIsKeyPressedFalse());
+  };
 
   /** 
    Outer box (1 rem)
@@ -212,6 +228,9 @@ function GamePage() {
       // 64px is the navbar height
       height="calc(100vh - 64px)"
       paddingX="1rem"
+      tabIndex="0"
+      onKeyDown={onKeyDownHandler}
+      onKeyUp={onKeyUpHandler}
     >
       <CenteredFlexBox width="30%" padding="3rem">
         <VoiceControlCard />
