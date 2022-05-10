@@ -40,7 +40,7 @@ public class GamePlayController {
 	
 	@PostMapping(path = "api/speech-to-text")
 	public ResponseEntity<SpeechToTextOutput> speechToTextController(@RequestBody SpeechToTextInput data){
-		System.out.println("GamePlayController - speechToTextController START - data >> " + data);
+		System.out.println("GamePlayController - speechToTextController START");
 		
 		SpeechToTextOutput output = null;
 		
