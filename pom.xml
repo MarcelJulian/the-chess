@@ -64,6 +64,11 @@
         	<artifactId>google-cloud-speech</artifactId>
         	<version>2.2.14</version>
         </dependency>
+        <dependency>
+        	<groupId>org.json</groupId>
+        	<artifactId>json</artifactId>
+        	<version>20180130</version>
+        </dependency>
     </dependencies>
     
     <dependencyManagement>
