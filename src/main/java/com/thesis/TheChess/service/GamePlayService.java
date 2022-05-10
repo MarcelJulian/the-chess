@@ -105,6 +105,11 @@ public class GamePlayService {
 		
 		try (SpeechClient speechClient = SpeechClient.create(speechSettings)) {
 			List<String> phrases = Arrays.asList(
+					"Resign",
+					"Accept Draw",
+					"Decline Draw",
+					"Abort",
+					"Draw",
 					"$OOV_CLASS_ALPHANUMERIC_SEQUENCE",
 					"Bishop $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
 					"Knight $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
