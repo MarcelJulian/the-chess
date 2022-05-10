@@ -50,7 +50,7 @@ public class GamePlayController {
 			System.out.println("GamePlayController - speechToTextController END");
 			return ResponseEntity.status(HttpStatus.OK).body(output);
 		} catch (Exception e) {
-			System.out.println("GamePlayController - speechToTextController ERROR");
+			System.out.println("GamePlayController - speechToTextController ERROR - exception >> " + e.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(output);
 		}
 	}
