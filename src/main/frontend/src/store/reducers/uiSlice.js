@@ -19,7 +19,10 @@ export const uiSlice = createSlice({
     toastType: "success",
     toastMessage: "",
     isSettingsDialogShown: false,
-    inputStatus: InputStatus.IDLE
+    inputStatus: InputStatus.IDLE,
+
+    // used in GameControlCard
+    isDrawOffered: false
   },
   reducers: {
     showSettingsDialog: (state, _) => {
@@ -49,6 +52,9 @@ export const uiSlice = createSlice({
     },
     setInputStatus: (state, action) => {
       state.inputStatus = action.payload;
+    },
+    setIsDrawOffered: (state, action) => {
+      state.isDrawOffered = action.payload;
     }
   }
 });
@@ -60,7 +66,8 @@ export const {
   hideToast,
   hideSettingsDialog,
   showSettingsDialog,
-  setInputStatus
+  setInputStatus,
+  setIsDrawOffered
 } = uiSlice.actions;
 
 export default uiSlice.reducer;

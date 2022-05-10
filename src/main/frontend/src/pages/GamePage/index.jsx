@@ -233,7 +233,7 @@ function GamePage() {
       onKeyUp={onKeyUpHandler}
     >
       <CenteredFlexBox width="30%" padding="3rem">
-        <VoiceControlCard />
+        <VoiceControlCard game={game} setGameHandler={setGameHandler} />
       </CenteredFlexBox>
       <CenteredFlexBox width="40%" padding="1rem">
         <Board
