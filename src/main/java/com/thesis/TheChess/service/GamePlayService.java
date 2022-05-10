@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.google.api.gax.paging.Page;
 import com.google.api.gax.rpc.ApiException;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.speech.v1p1beta1.AdaptationClient;
@@ -40,6 +41,9 @@ import com.google.cloud.speech.v1p1beta1.SpeechClient;
 import com.google.cloud.speech.v1p1beta1.SpeechContext;
 import com.google.cloud.speech.v1p1beta1.SpeechRecognitionAlternative;
 import com.google.cloud.speech.v1p1beta1.SpeechRecognitionResult;
+import com.google.cloud.storage.Bucket;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageOptions;
 import com.google.common.collect.Lists;
 import com.google.protobuf.ByteString;
 import com.thesis.TheChess.dto.MakeBoardMoveResult;
@@ -417,5 +421,13 @@ public class GamePlayService {
 	static void authExplicit() throws IOException {
 		  GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream("src/main/resources/the-chess-347506-f74a8ba65a99.json"))
 		        .createScoped(Lists.newArrayList("https://www.googleapis.com/auth/cloud-platform"));
+		  
+		  Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+
+		  System.out.println("Buckets:");
+		  Page<Bucket> buckets = storage.list();
+		  for (Bucket bucket : buckets.iterateAll()) {
+		    System.out.println(bucket.toString());
+		  }
 		}
 }
