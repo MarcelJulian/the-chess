@@ -5,7 +5,8 @@ export const boardSlice = createSlice({
   initialState: {
     boardSet: "tile5",
     pieceSet: "piece1",
-    sound: ""
+    key: "Escape",
+    isKeyPressed: false
   },
   reducers: {
     setPieceSet: (state, action) => {
@@ -13,11 +14,26 @@ export const boardSlice = createSlice({
     },
     setBoardSet: (state, action) => {
       state.boardSet = action.payload;
+    },
+    setKey: (state, action) => {
+      state.key = action.payload;
+    },
+    setIsKeyPressedTrue: (state, _) => {
+      state.isKeyPressed = true;
+    },
+    setIsKeyPressedFalse: (state, _) => {
+      state.isKeyPressed = false;
     }
   }
 });
 
 // Action creators are generated for each case reducer function
-export const { setPieceSet, setBoardSet } = boardSlice.actions;
+export const {
+  setPieceSet,
+  setBoardSet,
+  setKey,
+  setIsKeyPressedTrue,
+  setIsKeyPressedFalse
+} = boardSlice.actions;
 
 export default boardSlice.reducer;

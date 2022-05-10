@@ -1,105 +1,100 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
-import MicIcon from "@mui/icons-material/Mic";
-import MicOffIcon from "@mui/icons-material/MicOff";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CircularProgress from "@mui/material/CircularProgress";
-import IconButton from "@mui/material/IconButton";
 import useTheme from "@mui/material/styles/useTheme";
 import Typography from "@mui/material/Typography";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import Recorder from "components/Recorder";
+import { InputStatus, setInputStatus } from "store/reducers/uiSlice";
+
+function StatusProgressBox({ text, color = "secondary" }) {
+  return (
+    <Box
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      marginLeft="0.25rem"
+    >
+      {text}
+      <CircularProgress
+        color={color}
+        size="1rem"
+        sx={{ marginLeft: "0.5rem" }}
+      />
+    </Box>
+  );
+}
 
 function VoiceControlCard() {
   const theme = useTheme();
+  const dispatch = useDispatch();
   // Warna box voice
   const backgroundColor = theme.palette.neutral.main;
 
-  const [isRequestSuccess, setIsRequestSuccess] = useState(true);
-  const isSendingMove = useSelector((state) => state.ui.isSendingMove);
+  const inputStatus = useSelector((state) => state.ui.inputStatus);
 
-  useEffect(() => {
-    if (isSendingMove === false && isRequestSuccess === false) {
-      setIsRequestSuccess(true);
-      setTimeout(() => setIsRequestSuccess(false), 5000);
-      // setting initial state
-    } else if (isRequestSuccess) setIsRequestSuccess(false);
-  }, [isSendingMove]);
+  const [transcribedData, setTranscribedData] = useState(null);
 
-  const progressUiHandler = () => {
-    if (isSendingMove)
-      return (
-        <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          marginLeft="0.5rem"
-        >
-          Sending move
-          <CircularProgress
-            color="secondary"
-            size="1rem"
-            sx={{ marginLeft: "1rem" }}
-          />
-        </Box>
-      );
-    if (isRequestSuccess)
-      return (
-        <Box display="flex" marginLeft="0.5rem">
-          Move sent! ✅
-        </Box>
-      );
-    return (
-      <Box display="flex" marginLeft="0.5rem">
-        Idle ➖
-      </Box>
-    );
+  const setDataHandler = (input) => setTranscribedData(input);
+
+  const statusRenderer = () => {
+    switch (inputStatus) {
+      case InputStatus.IDLE:
+        return " Idle ➖";
+
+      case InputStatus.SEND_MOVE:
+        return <StatusProgressBox text="Sending move" />;
+
+      case InputStatus.MOVE_SENT:
+        setTimeout(() => dispatch(setInputStatus(InputStatus.IDLE), 5000));
+        return " Move sent! ✅";
+
+      case InputStatus.MOVE_REJECTED:
+        setTimeout(() => dispatch(setInputStatus(InputStatus.IDLE), 5000));
+        return " Move rejected! ❌";
+
+      case InputStatus.RECORD:
+        return <StatusProgressBox text="Recording" color="error" />;
+
+      case InputStatus.TRANSCRIBE:
+        return <StatusProgressBox text="Transforming into text" />;
+
+      case InputStatus.CONFIRM_MOVE:
+        return " Confirm move! [Yes/No]";
+
+      case InputStatus.CONFIRM_COMMAND:
+        return " Confirm command! [Yes/No]";
+
+      case InputStatus.TRANSCRIBE_ERROR:
+        return " Transcribe error. Please try again.";
+
+      default:
+        return <div />;
+    }
   };
 
   return (
     <Card
       sx={{
-        justifyContent: "center",
         padding: "1rem",
         width: "100%",
         backgroundColor
       }}
     >
-      <Recorder />
-      <Typography
-        variant="h6"
-        sx={{
-          marginTop: "2rem",
-          marginBottom: "2rem",
-          fontSize: "14",
-          textAlign: "center"
-        }}
-      >
-        Movement :
-      </Typography>
-      <Typography
-        variant="h6"
-        sx={{
-          marginTop: "0.5rem",
-          textAlign: "center"
-        }}
-      >
-        Your Input :
-      </Typography>
-      <Box marginTop="15%">
-        <IconButton>
-          <MicIcon />
-        </IconButton>
-        <IconButton>
-          <MicOffIcon />
-        </IconButton>
-      </Box>
-      <Box display="flex">
+      <Typography variant="h6">{`Your Input: ${
+        transcribedData?.value ?? " "
+      }`}</Typography>
+      <Box display="flex" marginTop="0.5rem">
         Status:
-        {progressUiHandler()}
+        {statusRenderer()}
       </Box>
+      <Recorder
+        setDataHandler={setDataHandler}
+        transcribedData={transcribedData}
+      />
     </Card>
   );
 }

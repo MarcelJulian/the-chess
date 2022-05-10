@@ -2,6 +2,13 @@ import axios from "axios";
 
 const BASE_URL = "/api";
 
+export const ResponseType = {
+  MOVE: "move",
+  COMMAND: "command",
+  ERROR: "error",
+  CONFIRM: "confirm"
+};
+
 const transcribeAudio = async (byteArray) => {
   try {
     const url = `${BASE_URL}/speech-to-text`;
