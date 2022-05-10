@@ -28,7 +28,7 @@ function StatusProgressBox({ text, color = "secondary" }) {
   );
 }
 
-function VoiceControlCard() {
+function VoiceControlCard({ game, setGameHandler }) {
   const theme = useTheme();
   const dispatch = useDispatch();
   // Warna box voice
@@ -69,7 +69,7 @@ function VoiceControlCard() {
         return " Confirm command! [Yes/No]";
 
       case InputStatus.TRANSCRIBE_ERROR:
-        return " Transcribe error. Please try again.";
+        return " Move/Command invalid. Please try again.";
 
       default:
         return <div />;
@@ -94,6 +94,8 @@ function VoiceControlCard() {
       <Recorder
         setDataHandler={setDataHandler}
         transcribedData={transcribedData}
+        game={game}
+        setGameHandler={setGameHandler}
       />
     </Card>
   );

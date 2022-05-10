@@ -6,12 +6,18 @@ import Typography from "@mui/material/Typography";
 import { useReactMediaRecorder } from "react-media-recorder";
 import { useDispatch, useSelector } from "react-redux";
 
-import { movePiece } from "services/gameService";
+import {
+  movePiece,
+  abortGame,
+  resignGame,
+  handleDrawOffer
+} from "services/gameService";
 import transcibeAudio, { ResponseType } from "services/transcibeService";
 import {
   InputStatus,
   setInputStatus,
-  showRequestErrorToast
+  showRequestErrorToast,
+  setIsDrawOffered
 } from "store/reducers/uiSlice";
 
 const audioEncoder = require("audio-encoder");
@@ -29,15 +35,23 @@ const saveBlob = (() => {
   };
 })();
 
-function Recorder({ setDataHandler, transcribedData }) {
+function Recorder({ setDataHandler, transcribedData, game, setGameHandler }) {
   const dispatch = useDispatch();
   const { key, isKeyPressed } = useSelector((state) => state.board);
-  const inputStatus = useSelector((state) => state.ui.inputStatus);
+  const { isDrawOffered, inputStatus } = useSelector((state) => state.ui);
   const accessToken = useSelector((state) => state.session.accessToken);
   const gameId = useSelector((state) => state.game.id);
 
   const theme = useTheme();
   const backgroundColor = theme.palette.neutral.darkest;
+
+  const parseMoveAsUCI = (move) => {
+    const gameCopy = { ...game };
+    gameCopy.move(move, { sloppy: true });
+    const playerMove = gameCopy.undo();
+    if (playerMove !== null) return `${playerMove.from}${playerMove.to}`;
+    return null;
+  };
 
   const sendMoveRequest = async (move) => {
     dispatch(setInputStatus(InputStatus.SEND_MOVE));
@@ -46,6 +60,72 @@ function Recorder({ setDataHandler, transcribedData }) {
       dispatch(setInputStatus(InputStatus.MOVE_REJECTED));
       dispatch(showRequestErrorToast(response));
     } else dispatch(setInputStatus(InputStatus.MOVE_SENT));
+  };
+
+  const sloppyMoveChecker = (move) => {
+    const gameCopy = { ...game };
+    const tryMove = gameCopy.move(move, { sloppy: true });
+    if (tryMove !== null) return tryMove.san;
+
+    // checks piece moves that might be mistaken as pawn moves
+    if (move.length > 2) return null;
+    const moves = game.moves();
+    const filteredMoves = [];
+    for (let i = 0; i < moves.length; i++) {
+      if (moves[i].slice(-2) === move) filteredMoves.push(moves[i]);
+    }
+    // finds a single move that might be correct
+    if (filteredMoves.length === 1) return filteredMoves[0];
+
+    // multiple moves are possible, return null because of ambiguity
+    return null;
+  };
+
+  const Command = {
+    ABORT: "abort",
+    RESIGN: "resign",
+    DRAW_OFFER: "draw",
+    DRAW_ACCEPT: "accept draw",
+    DRAW_DECLINE: "decline draw"
+  };
+
+  const abortGameHandler = async () => {
+    const response = await abortGame(accessToken, gameId);
+    if (response.status !== 200) dispatch(showRequestErrorToast(response));
+  };
+
+  // TODO: test offer, accept, decline
+  const offerDrawHandler = async (accept) => {
+    if (isDrawOffered) dispatch(setIsDrawOffered(false));
+    const response = await handleDrawOffer(accessToken, gameId, accept);
+    if (response.status !== 200) dispatch(showRequestErrorToast(response));
+  };
+
+  const resignGameHandler = async () => {
+    const response = await resignGame(accessToken, gameId);
+    if (response.status !== 200) dispatch(showRequestErrorToast(response));
+  };
+
+  const commandHandler = (command) => {
+    switch (command) {
+      case Command.ABORT:
+        abortGameHandler();
+        break;
+      case Command.RESIGN:
+        resignGameHandler();
+        break;
+      case Command.DRAW_OFFER:
+        offerDrawHandler("yes");
+        break;
+      case Command.DRAW_ACCEPT:
+        offerDrawHandler("yes");
+        break;
+      case Command.DRAW_DECLINE:
+        offerDrawHandler("no");
+        break;
+      default:
+        break;
+    }
   };
 
   const handleOnStop = async (_, blob) => {
@@ -66,16 +146,29 @@ function Recorder({ setDataHandler, transcribedData }) {
       } else {
         console.log(response);
 
+        let checkedMove;
+
         switch (response.data.type) {
           case ResponseType.MOVE:
-            setDataHandler(response.data);
-            dispatch(setInputStatus(InputStatus.CONFIRM_MOVE));
-            // confirm move
-            // voice the input
+            checkedMove = sloppyMoveChecker(response.data.value);
+
+            // illegal or ambiguous move
+            if (checkedMove === null) {
+              setDataHandler(response.data);
+              dispatch(setInputStatus(InputStatus.TRANSCRIBE_ERROR));
+            } else {
+              setDataHandler({ ...response.data, value: checkedMove });
+              dispatch(setInputStatus(InputStatus.CONFIRM_MOVE));
+              // voice the input
+            }
             break;
           case ResponseType.COMMAND:
-            setDataHandler(response.data);
+            setDataHandler({
+              ...response.data,
+              value: response.data.value.toLocaleLowerCase()
+            });
             dispatch(setInputStatus(InputStatus.CONFIRM_COMMAND));
+            // voice the input
             break;
           case ResponseType.ERROR:
             setDataHandler(response.data);
@@ -83,10 +176,12 @@ function Recorder({ setDataHandler, transcribedData }) {
             break;
           case ResponseType.CONFIRM:
             if (response.data.value === "yes") {
-              if (transcribedData.type === ResponseType.MOVE)
-                console.log(response);
-              else if (transcribedData.type === ResponseType.COMMAND)
-                console.log(response);
+              if (transcribedData.type === ResponseType.MOVE) {
+                sendMoveRequest(parseMoveAsUCI(transcribedData.value));
+              } else if (transcribedData.type === ResponseType.COMMAND) {
+                dispatch(setInputStatus(InputStatus.IDLE));
+                commandHandler(transcribedData.value);
+              }
             } else if (response.data.value === "no")
               dispatch(setInputStatus(InputStatus.IDLE));
             break;

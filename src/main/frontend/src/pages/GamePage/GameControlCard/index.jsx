@@ -8,7 +8,10 @@ import Typography from "@mui/material/Typography";
 import { useSelector, useDispatch } from "react-redux";
 
 import { abortGame, resignGame, handleDrawOffer } from "services/gameService";
-import { showRequestErrorToast } from "store/reducers/uiSlice";
+import {
+  showRequestErrorToast,
+  setIsDrawOffered
+} from "store/reducers/uiSlice";
 
 import GameMovesInnerCard from "./GameMovesInnerCard";
 import TimeUsernameBox from "./TimeUsernameBox";
@@ -19,8 +22,6 @@ function GameControlCard({ pgn, isGameEnd }) {
   const backgroundColor = theme.palette.neutral.main;
   // Warna header table movement
   const darkerBackgroundColor = theme.palette.neutral.darker;
-
-  const [isDrawOffered, setIsDrawOffered] = useState(false);
 
   const dispatch = useDispatch();
   const {
@@ -36,6 +37,7 @@ function GameControlCard({ pgn, isGameEnd }) {
   } = useSelector((state) => state.game);
 
   const accessToken = useSelector((state) => state.session.accessToken);
+  const isDrawOffered = useSelector((state) => state.ui.isDrawOffered);
 
   const checkIsTurn = (isTurnParam) => hasMoved && !isGameEnd && isTurnParam;
 
@@ -66,7 +68,7 @@ function GameControlCard({ pgn, isGameEnd }) {
 
   // TODO: test offer, accept, decline
   const offerDrawHandler = async (accessTokenParam, gameIdParam, accept) => {
-    if (isDrawOffered) setIsDrawOffered(false);
+    if (isDrawOffered) dispatch(setIsDrawOffered(false));
     const response = await handleDrawOffer(
       accessTokenParam,
       gameIdParam,
@@ -75,14 +77,13 @@ function GameControlCard({ pgn, isGameEnd }) {
     if (response.status !== 200) dispatch(showRequestErrorToast(response));
   };
 
-  // TODO: test
   const resignGameHandler = async (accessTokenParam, gameIdParam) => {
     const response = await resignGame(accessTokenParam, gameIdParam);
     if (response.status !== 200) dispatch(showRequestErrorToast(response));
   };
 
   if ((gameState?.wdraw && !isWhite) || (gameState?.bdraw && isWhite))
-    setIsDrawOffered(true);
+    dispatch(setIsDrawOffered(true));
 
   const drawOfferUiHandler = () => {
     if (isDrawOffered)
