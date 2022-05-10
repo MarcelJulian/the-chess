@@ -1,17 +1,8 @@
 package com.thesis.TheChess.service;
 
 import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Base64;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -21,31 +12,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.google.api.gax.core.FixedCredentialsProvider;
-import com.google.api.gax.paging.Page;
-import com.google.api.gax.rpc.ApiException;
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.cloud.speech.v1p1beta1.AdaptationClient;
-import com.google.cloud.speech.v1p1beta1.CreateCustomClassRequest;
-import com.google.cloud.speech.v1p1beta1.CreatePhraseSetRequest;
-import com.google.cloud.speech.v1p1beta1.CustomClass;
-import com.google.cloud.speech.v1p1beta1.CustomClass.ClassItem;
-import com.google.cloud.speech.v1p1beta1.LocationName;
-import com.google.cloud.speech.v1p1beta1.PhraseSet;
-import com.google.cloud.speech.v1p1beta1.PhraseSet.Phrase;
 import com.google.cloud.speech.v1p1beta1.RecognitionAudio;
 import com.google.cloud.speech.v1p1beta1.RecognitionConfig;
 import com.google.cloud.speech.v1p1beta1.RecognitionConfig.AudioEncoding;
 import com.google.cloud.speech.v1p1beta1.RecognizeRequest;
 import com.google.cloud.speech.v1p1beta1.RecognizeResponse;
-import com.google.cloud.speech.v1p1beta1.SpeechAdaptation;
 import com.google.cloud.speech.v1p1beta1.SpeechClient;
 import com.google.cloud.speech.v1p1beta1.SpeechContext;
 import com.google.cloud.speech.v1p1beta1.SpeechRecognitionAlternative;
 import com.google.cloud.speech.v1p1beta1.SpeechRecognitionResult;
 import com.google.cloud.speech.v1p1beta1.SpeechSettings;
-import com.google.cloud.storage.Bucket;
-import com.google.cloud.storage.Storage;
-import com.google.cloud.storage.StorageOptions;
 import com.google.common.collect.Lists;
 import com.google.protobuf.ByteString;
 import com.thesis.TheChess.dto.MakeBoardMoveResult;
@@ -115,8 +92,8 @@ public class GamePlayService {
 		}
 	}
 	
-	public SpeechToTextOutput speechToTextProcess(String strPath) throws Exception {
-		System.out.println("GamePlayService - speechToTextProcess - START - path >> " + strPath);
+	public SpeechToTextOutput speechToTextProcess(SpeechToTextInput data) throws Exception {
+		System.out.println("GamePlayService - speechToTextProcess - START");
 		SpeechToTextOutput output = null;
 		
 		GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream("src/main/resources/the-chess-347506-f74a8ba65a99.json"))
@@ -125,7 +102,7 @@ public class GamePlayService {
 		SpeechSettings speechSettings = SpeechSettings.newBuilder()
 			         .setCredentialsProvider(FixedCredentialsProvider.create(credentials))
 			         .build();
-			 
+		
 		try (SpeechClient speechClient = SpeechClient.create(speechSettings)) {
 			List<String> phrases = Arrays.asList(
 					"$OOV_CLASS_ALPHANUMERIC_SEQUENCE",
@@ -140,10 +117,9 @@ public class GamePlayService {
 
 			SpeechContext speechContext = SpeechContext.newBuilder().addAllPhrases(phrases).build();
 
-			Path path = Paths.get(strPath);
-			byte[] data = Files.readAllBytes(path);
-			ByteString audioBytes = ByteString.copyFrom(data);
-
+			byte[] byteArray = data.getData();
+			ByteString audioBytes = ByteString.copyFrom(byteArray);
+			
 			RecognitionConfig config =
 					RecognitionConfig.newBuilder()
 					.setEncoding(AudioEncoding.LINEAR16)
@@ -156,17 +132,17 @@ public class GamePlayService {
 			RecognizeRequest request = RecognizeRequest.newBuilder().setConfig(config).setAudio(audio).build();
 			
 			RecognizeResponse response = speechClient.recognize(request);
-			System.out.println("masuk 6 >> " + response.getResultsList());
+			System.out.println("Response >> " + response.getResultsList());
 			
 			for (SpeechRecognitionResult result : response.getResultsList()) {
 				SpeechRecognitionAlternative alternative = result.getAlternativesList().get(0);
 				String sttResult = alternative.getTranscript();
-				output = improveAccuracy(sttResult);
+				output = improveAccuracy(sttResult.toLowerCase());
 			}
-			System.out.println("GamePlayService - speechToTextProcess - END - path >> " + strPath);
+			System.out.println("GamePlayService - speechToTextProcess - END");
 			return output;
 		} catch (Exception e) {
-			System.out.println("ERROR - GamePlayService - speechToTextProcess - path >> " + strPath + " - exception >> " + e.getMessage());
+			System.out.println("ERROR - GamePlayService - speechToTextProcess - exception >> " + e.getMessage());
 			throw new Exception(e.getMessage());
 		}
 	}
@@ -190,6 +166,12 @@ public class GamePlayService {
 		} else if (sttResult.contains("raw")) {
 			output.setType("command");
 			output.setValue("Draw");
+		} else if (sttResult.contains("yes")) {
+			output.setType("command");
+			output.setValue("Yes");
+		} else if (sttResult.contains("no")) {
+			output.setType("command");
+			output.setValue("No");
 		} else {
 			String[] splited = sttResult.split("\\s+");
 			int totalWord = splited.length;
@@ -202,7 +184,7 @@ public class GamePlayService {
 					if (temp.length() == 2) {
 						if (isAccurate(temp.charAt(0), temp.charAt(1))) {
 							output.setType("move");
-							output.setValue(temp.toLowerCase());
+							output.setValue(temp);
 						} else {
 							output.setType("error");
 							output.setValue(temp);
@@ -211,11 +193,11 @@ public class GamePlayService {
 						if (containNumeric(temp)) {
 							if (temp.charAt(0) == '9') {
 								temp0 = "N";
-							} else if (temp.charAt(0) == 'r' || temp.charAt(0) == 'R') {
+							} else if (temp.charAt(0) == 'r') {
 								temp0 = "R";
 							}
 							temp = removeDuplicateChar(temp);
-							temp = cleanString(temp.toUpperCase()).toLowerCase();
+							temp = cleanString(temp);
 							
 							if (temp.length() != 2) {
 								output.setType("error");
@@ -243,25 +225,25 @@ public class GamePlayService {
 				break;
 			case 2:
 				try {
-					if (sttResult.equalsIgnoreCase("Queenside Castle") || ((sttResult.contains("queen") || sttResult.contains("Queen")) && (sttResult.contains("castle") || sttResult.contains("Castle")))) {
+					if (sttResult.equals("queenside castle") || (sttResult.contains("queen") && sttResult.contains("castle"))) {
 						output.setType("move");
 						output.setValue("0-0-0");
-					} else if (sttResult.equalsIgnoreCase("Kingside Castle") || ((sttResult.contains("king") || sttResult.contains("King")) && (sttResult.contains("castle") || sttResult.contains("Castle")))) {
+					} else if (sttResult.equals("kingside castle") || (sttResult.contains("king") && sttResult.contains("castle"))) {
 						output.setType("move");
 						output.setValue("0-0");
 					} else {
 						String temp1 = splited[0];
 						String temp2 = splited[1];
 						
-						if (temp1.toLowerCase().equalsIgnoreCase("bishop")) {
+						if (temp1.equalsIgnoreCase("bishop")) {
 							temp1 = "B";
-						} else if (temp1.toLowerCase().equalsIgnoreCase("knight")) {
+						} else if (temp1.equalsIgnoreCase("knight")) {
 							temp1 = "N";
-						} else if (temp1.toLowerCase().equalsIgnoreCase("rook")) {
+						} else if (temp1.equalsIgnoreCase("rook")) {
 							temp1 = "R";
-						} else if (temp1.toLowerCase().equalsIgnoreCase("queen")) {
+						} else if (temp1.equalsIgnoreCase("queen")) {
 							temp1 = "Q";
-						} else if (temp1.toLowerCase().equalsIgnoreCase("king")) {
+						} else if (temp1.equalsIgnoreCase("king")) {
 							temp1 = "K";
 						} else {
 							output.setType("error");
@@ -270,7 +252,7 @@ public class GamePlayService {
 						
 						if (containNumeric(temp2)) {
 							temp2 = removeDuplicateChar(temp2);
-							temp2 = cleanString(temp2.toUpperCase()).toLowerCase();
+							temp2 = cleanString(temp2);
 							if (temp2.length() != 2) {
 								output.setType("error");
 								output.setValue(temp1 + temp2);
@@ -294,10 +276,10 @@ public class GamePlayService {
 				break;
 			case 3:
 				try {
-					if (sttResult.equalsIgnoreCase("Queen side Castle") || ((sttResult.contains("queen") || sttResult.contains("Queen")) && (sttResult.contains("castle") || sttResult.contains("Castle")))) {
+					if (sttResult.equals("queen side castle") || (sttResult.contains("queen") && sttResult.contains("castle"))) {
 						output.setType("move");
 						output.setValue("0-0-0");
-					} else if (sttResult.equalsIgnoreCase("King side Castle") || ((sttResult.contains("king") || sttResult.contains("King")) && (sttResult.contains("castle") || sttResult.contains("Castle")))) {
+					} else if (sttResult.equals("King side Castle") || (sttResult.contains("king") && sttResult.contains("castle"))) {
 						output.setType("move");
 						output.setValue("0-0");
 					} else {
@@ -355,7 +337,7 @@ public class GamePlayService {
 	}
 	
 	private char isFound(char src) {
-		char[] piecesChar = {'A','B','C','D','E','F','G','H','1','2','3','4','5','6','7','8'};
+		char[] piecesChar = {'a','b','c','d','e','f','g','h','1','2','3','4','5','6','7','8'};
 		for (int i=0; i<piecesChar.length; i++) {
 			if (src == piecesChar[i]) {
 				return src;
@@ -369,61 +351,6 @@ public class GamePlayService {
 			return true;
 		} else {
 			return false;
-		}
-	}
-
-	public SpeechToTextOutput speechToTextProcess(SpeechToTextInput data) throws Exception {
-		System.out.println("GamePlayService - speechToTextProcess - START");
-		SpeechToTextOutput output = null;
-		
-		GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream("src/main/resources/the-chess-347506-f74a8ba65a99.json"))
-		        .createScoped(Lists.newArrayList("https://www.googleapis.com/auth/cloud-platform"));
-		
-		SpeechSettings speechSettings = SpeechSettings.newBuilder()
-			         .setCredentialsProvider(FixedCredentialsProvider.create(credentials))
-			         .build();
-		
-		try (SpeechClient speechClient = SpeechClient.create(speechSettings)) {
-			List<String> phrases = Arrays.asList(
-					"$OOV_CLASS_ALPHANUMERIC_SEQUENCE",
-					"Bishop $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
-					"Knight $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
-					"Rook $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
-					"Queen $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
-					"King $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
-					"Kingside Castle",
-					"Queenside Castle"
-					);
-
-			SpeechContext speechContext = SpeechContext.newBuilder().addAllPhrases(phrases).build();
-
-			byte[] byteArray = data.getData();
-			ByteString audioBytes = ByteString.copyFrom(byteArray);
-			
-			RecognitionConfig config =
-					RecognitionConfig.newBuilder()
-					.setEncoding(AudioEncoding.LINEAR16)
-					.setLanguageCode("en-US")
-					.addSpeechContexts(speechContext)
-					.build();
-			
-			RecognitionAudio audio = RecognitionAudio.newBuilder().setContent(audioBytes).build();
-			
-			RecognizeRequest request = RecognizeRequest.newBuilder().setConfig(config).setAudio(audio).build();
-			
-			RecognizeResponse response = speechClient.recognize(request);
-			System.out.println("Response >> " + response.getResultsList());
-			
-			for (SpeechRecognitionResult result : response.getResultsList()) {
-				SpeechRecognitionAlternative alternative = result.getAlternativesList().get(0);
-				String sttResult = alternative.getTranscript();
-				output = improveAccuracy(sttResult);
-			}
-			System.out.println("GamePlayService - speechToTextProcess - END");
-			return output;
-		} catch (Exception e) {
-			System.out.println("ERROR - GamePlayService - speechToTextProcess - exception >> " + e.getMessage());
-			throw new Exception(e.getMessage());
 		}
 	}
 }

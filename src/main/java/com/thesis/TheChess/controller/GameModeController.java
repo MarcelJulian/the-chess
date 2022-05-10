@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.thesis.TheChess.dto.OngoingGamesOutput;
 import com.thesis.TheChess.dto.PlayWithBotInput;
 import com.thesis.TheChess.dto.PlayWithBotOutput;
-import com.thesis.TheChess.dto.PlayWithHumanInput;
-import com.thesis.TheChess.dto.PlayWithHumanOutput;
 import com.thesis.TheChess.service.GameModeService;
 
 @RestController
