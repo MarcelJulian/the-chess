@@ -105,6 +105,11 @@ public class GamePlayService {
 		
 		try (SpeechClient speechClient = SpeechClient.create(speechSettings)) {
 			List<String> phrases = Arrays.asList(
+					"Resign",
+					"Accept Draw",
+					"Decline Draw",
+					"Abort",
+					"Draw",
 					"$OOV_CLASS_ALPHANUMERIC_SEQUENCE",
 					"Bishop $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
 					"Knight $OOV_CLASS_ALPHANUMERIC_SEQUENCE",
@@ -167,10 +172,10 @@ public class GamePlayService {
 			output.setType("command");
 			output.setValue("Draw");
 		} else if (sttResult.contains("yes")) {
-			output.setType("command");
+			output.setType("confirm");
 			output.setValue("Yes");
 		} else if (sttResult.contains("no")) {
-			output.setType("command");
+			output.setType("confirm");
 			output.setValue("No");
 		} else {
 			String[] splited = sttResult.split("\\s+");
