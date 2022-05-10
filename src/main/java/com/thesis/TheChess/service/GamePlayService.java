@@ -399,6 +399,7 @@ public class GamePlayService {
 			RecognizeRequest request = RecognizeRequest.newBuilder().setConfig(config).setAudio(audio).build();
 			
 			RecognizeResponse response = speechClient.recognize(request);
+			System.out.println("Response >> " + response.getResultsList());
 			
 			for (SpeechRecognitionResult result : response.getResultsList()) {
 				SpeechRecognitionAlternative alternative = result.getAlternativesList().get(0);
