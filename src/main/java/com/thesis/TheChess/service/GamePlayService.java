@@ -161,7 +161,7 @@ public class GamePlayService {
 			for (SpeechRecognitionResult result : response.getResultsList()) {
 				SpeechRecognitionAlternative alternative = result.getAlternativesList().get(0);
 				String sttResult = alternative.getTranscript();
-				output = improveAccuracy(sttResult);
+				output = improveAccuracy(sttResult.toLowerCase());
 			}
 			System.out.println("GamePlayService - speechToTextProcess - END - path >> " + strPath);
 			return output;
@@ -190,6 +190,12 @@ public class GamePlayService {
 		} else if (sttResult.contains("raw")) {
 			output.setType("command");
 			output.setValue("Draw");
+		} else if (sttResult.contains("yes")) {
+			output.setType("command");
+			output.setValue("Yes");
+		} else if (sttResult.contains("no")) {
+			output.setType("command");
+			output.setValue("No");
 		} else {
 			String[] splited = sttResult.split("\\s+");
 			int totalWord = splited.length;
@@ -202,7 +208,7 @@ public class GamePlayService {
 					if (temp.length() == 2) {
 						if (isAccurate(temp.charAt(0), temp.charAt(1))) {
 							output.setType("move");
-							output.setValue(temp.toLowerCase());
+							output.setValue(temp);
 						} else {
 							output.setType("error");
 							output.setValue(temp);
@@ -211,11 +217,11 @@ public class GamePlayService {
 						if (containNumeric(temp)) {
 							if (temp.charAt(0) == '9') {
 								temp0 = "N";
-							} else if (temp.charAt(0) == 'r' || temp.charAt(0) == 'R') {
+							} else if (temp.charAt(0) == 'r') {
 								temp0 = "R";
 							}
 							temp = removeDuplicateChar(temp);
-							temp = cleanString(temp.toUpperCase()).toLowerCase();
+							temp = cleanString(temp);
 							
 							if (temp.length() != 2) {
 								output.setType("error");
@@ -243,25 +249,25 @@ public class GamePlayService {
 				break;
 			case 2:
 				try {
-					if (sttResult.equalsIgnoreCase("Queenside Castle") || ((sttResult.contains("queen") || sttResult.contains("Queen")) && (sttResult.contains("castle") || sttResult.contains("Castle")))) {
+					if (sttResult.equals("queenside castle") || (sttResult.contains("queen") && sttResult.contains("castle"))) {
 						output.setType("move");
 						output.setValue("0-0-0");
-					} else if (sttResult.equalsIgnoreCase("Kingside Castle") || ((sttResult.contains("king") || sttResult.contains("King")) && (sttResult.contains("castle") || sttResult.contains("Castle")))) {
+					} else if (sttResult.equals("kingside castle") || (sttResult.contains("king") && sttResult.contains("castle"))) {
 						output.setType("move");
 						output.setValue("0-0");
 					} else {
 						String temp1 = splited[0];
 						String temp2 = splited[1];
 						
-						if (temp1.toLowerCase().equalsIgnoreCase("bishop")) {
+						if (temp1.equalsIgnoreCase("bishop")) {
 							temp1 = "B";
-						} else if (temp1.toLowerCase().equalsIgnoreCase("knight")) {
+						} else if (temp1.equalsIgnoreCase("knight")) {
 							temp1 = "N";
-						} else if (temp1.toLowerCase().equalsIgnoreCase("rook")) {
+						} else if (temp1.equalsIgnoreCase("rook")) {
 							temp1 = "R";
-						} else if (temp1.toLowerCase().equalsIgnoreCase("queen")) {
+						} else if (temp1.equalsIgnoreCase("queen")) {
 							temp1 = "Q";
-						} else if (temp1.toLowerCase().equalsIgnoreCase("king")) {
+						} else if (temp1.equalsIgnoreCase("king")) {
 							temp1 = "K";
 						} else {
 							output.setType("error");
@@ -270,7 +276,7 @@ public class GamePlayService {
 						
 						if (containNumeric(temp2)) {
 							temp2 = removeDuplicateChar(temp2);
-							temp2 = cleanString(temp2.toUpperCase()).toLowerCase();
+							temp2 = cleanString(temp2);
 							if (temp2.length() != 2) {
 								output.setType("error");
 								output.setValue(temp1 + temp2);
@@ -294,10 +300,10 @@ public class GamePlayService {
 				break;
 			case 3:
 				try {
-					if (sttResult.equalsIgnoreCase("Queen side Castle") || ((sttResult.contains("queen") || sttResult.contains("Queen")) && (sttResult.contains("castle") || sttResult.contains("Castle")))) {
+					if (sttResult.equals("queen side castle") || (sttResult.contains("queen") && sttResult.contains("castle"))) {
 						output.setType("move");
 						output.setValue("0-0-0");
-					} else if (sttResult.equalsIgnoreCase("King side Castle") || ((sttResult.contains("king") || sttResult.contains("King")) && (sttResult.contains("castle") || sttResult.contains("Castle")))) {
+					} else if (sttResult.equals("King side Castle") || (sttResult.contains("king") && sttResult.contains("castle"))) {
 						output.setType("move");
 						output.setValue("0-0");
 					} else {
@@ -355,7 +361,7 @@ public class GamePlayService {
 	}
 	
 	private char isFound(char src) {
-		char[] piecesChar = {'A','B','C','D','E','F','G','H','1','2','3','4','5','6','7','8'};
+		char[] piecesChar = {'a','b','c','d','e','f','g','h','1','2','3','4','5','6','7','8'};
 		for (int i=0; i<piecesChar.length; i++) {
 			if (src == piecesChar[i]) {
 				return src;
@@ -417,7 +423,7 @@ public class GamePlayService {
 			for (SpeechRecognitionResult result : response.getResultsList()) {
 				SpeechRecognitionAlternative alternative = result.getAlternativesList().get(0);
 				String sttResult = alternative.getTranscript();
-				output = improveAccuracy(sttResult);
+				output = improveAccuracy(sttResult.toLowerCase());
 			}
 			System.out.println("GamePlayService - speechToTextProcess - END");
 			return output;
