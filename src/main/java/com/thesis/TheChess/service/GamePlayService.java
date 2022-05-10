@@ -181,40 +181,53 @@ public class GamePlayService {
 				try {
 					String temp = splited[0];
 					String temp0 = "";
+					System.out.println("temp0 >> " + temp0 + " -- temp >> " + temp);
+					
 					if (temp.length() == 2) {
+						System.out.println("temp.length() == 2");
 						if (isAccurate(temp.charAt(0), temp.charAt(1))) {
+							System.out.println("isAccurate == true; temp >> " + temp);
 							output.setType("move");
 							output.setValue(temp);
 						} else {
+							System.out.println("isAccurate == false; temp >> " + temp);
 							output.setType("error");
 							output.setValue(temp);
 						}
 					} else {
+						System.out.println("temp.length() != 2");
 						if (containNumeric(temp)) {
+							System.out.println("containNumeric(temp) == true");
 							if (temp.charAt(0) == '9') {
 								temp0 = "N";
 							} else if (temp.charAt(0) == 'r') {
 								temp0 = "R";
 							}
+							System.out.println("temp0 >> " + temp0);
 							temp = removeDuplicateChar(temp);
 							temp = cleanString(temp);
 							
 							if (temp.length() != 2) {
+								System.out.println("temp.length() != 2 after remove and clean; temp >> " + temp);
 								output.setType("error");
 								output.setValue(temp);
 							} else {
+								System.out.println("temp.length() == 2 after remove and clean");
 								if (isAccurate(temp.charAt(0), temp.charAt(1))) {
 									if (temp0 != "") {
 										temp = temp0 + temp;
 									}
 									output.setType("move");
 									output.setValue(temp);
+									System.out.println("isAccurate == true; temp >> " + temp);
 								} else {
+									System.out.println("isAccurate == false; temp >> " + temp);
 									output.setType("error");
 									output.setValue(temp);
 								}
 							}
 						} else {
+							System.out.println("containNumeric(temp) == false; temp >> " + temp);
 							output.setType("error");
 							output.setValue(temp);
 						}
@@ -309,10 +322,12 @@ public class GamePlayService {
 		for (int i=1; i<str.length(); i++) {
 			temp1 = str.charAt(i-1);
 			temp2 = str.charAt(i);
+			System.out.println("removeDuplicateChar -- temp1 >> " + temp1 + " -- temp2 >> " + temp2);
 			if (temp1 == temp2) {
 				StringBuilder sb = new StringBuilder(str);
 				sb.deleteCharAt(i-1);
 				str = sb.toString();
+				System.out.println("removeDuplicateChar -- str >> " + str);
 			}
 		}
 		return str;
@@ -323,15 +338,20 @@ public class GamePlayService {
 		
 		StringBuilder sb = new StringBuilder();
 		for (int i=0; i<strArray.length; i++) {
+			System.out.println("cleanString -- strArray[i] >> " + strArray[i]);
 			if (strArray[i] == isFound(strArray[i]) && strArray[i] != '0') {
 				sb.append(strArray[i]);
+				System.out.println("cleanString -- sb.append(strArray[i]) >> " + sb.toString());
 			}
 		}
 		
 		String newStr = sb.toString();
+		System.out.println("cleanString -- newStr >> " + newStr);
 		if (newStr.length() > 2) {
+			System.out.println("cleanString -- newStr.length() > 2 -- " + String.valueOf(newStr.charAt(0)) + String.valueOf(newStr.charAt(newStr.length()-1)));
 			return String.valueOf(newStr.charAt(0)) + String.valueOf(newStr.charAt(newStr.length()-1));
 		} else {
+			System.out.println("cleanString -- newStr.length() <= 2 -- " + newStr);
 			return newStr;
 		}
 	}
@@ -339,6 +359,7 @@ public class GamePlayService {
 	private char isFound(char src) {
 		char[] piecesChar = {'a','b','c','d','e','f','g','h','1','2','3','4','5','6','7','8'};
 		for (int i=0; i<piecesChar.length; i++) {
+			System.out.println("isFound -- src >> " + src + " -- piecesChar[i] >> " + piecesChar[i]);
 			if (src == piecesChar[i]) {
 				return src;
 			}
