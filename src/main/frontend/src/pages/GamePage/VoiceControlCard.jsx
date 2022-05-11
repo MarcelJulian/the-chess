@@ -28,17 +28,14 @@ function StatusProgressBox({ text, color = "secondary" }) {
   );
 }
 
-function VoiceControlCard({ game, setGameHandler }) {
+function VoiceControlCard({ game }) {
   const theme = useTheme();
   const dispatch = useDispatch();
   // Warna box voice
   const backgroundColor = theme.palette.neutral.main;
 
   const inputStatus = useSelector((state) => state.ui.inputStatus);
-
-  const [transcribedData, setTranscribedData] = useState(null);
-
-  const setDataHandler = (input) => setTranscribedData(input);
+  const transcribedData = useSelector((state) => state.board.transcribedData);
 
   const statusRenderer = () => {
     switch (inputStatus) {
@@ -91,12 +88,7 @@ function VoiceControlCard({ game, setGameHandler }) {
         Status:
         {statusRenderer()}
       </Box>
-      <Recorder
-        setDataHandler={setDataHandler}
-        transcribedData={transcribedData}
-        game={game}
-        setGameHandler={setGameHandler}
-      />
+      <Recorder game={game} />
     </Card>
   );
 }

@@ -3,6 +3,8 @@ import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import useTheme from "@mui/material/styles/useTheme";
 import Typography from "@mui/material/Typography";
+import Fuse from "fuse.js";
+import * as fuzzy from "fuzzy/lib/fuzzy";
 import { useReactMediaRecorder } from "react-media-recorder";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -13,6 +15,7 @@ import {
   handleDrawOffer
 } from "services/gameService";
 import transcibeAudio, { ResponseType } from "services/transcibeService";
+import { setTranscribedData } from "store/reducers/boardSlice";
 import {
   InputStatus,
   setInputStatus,
@@ -35,9 +38,11 @@ const saveBlob = (() => {
   };
 })();
 
-function Recorder({ setDataHandler, transcribedData, game, setGameHandler }) {
+function Recorder({ game }) {
   const dispatch = useDispatch();
-  const { key, isKeyPressed } = useSelector((state) => state.board);
+  const { key, isKeyPressed, confirmKey, transcribedData } = useSelector(
+    (state) => state.board
+  );
   const { isDrawOffered, inputStatus } = useSelector((state) => state.ui);
   const accessToken = useSelector((state) => state.session.accessToken);
   const gameId = useSelector((state) => state.game.id);
@@ -63,22 +68,26 @@ function Recorder({ setDataHandler, transcribedData, game, setGameHandler }) {
   };
 
   const sloppyMoveChecker = (move) => {
-    const gameCopy = { ...game };
-    const tryMove = gameCopy.move(move, { sloppy: true });
-    if (tryMove !== null) return tryMove.san;
-
-    // checks piece moves that might be mistaken as pawn moves
-    if (move.length > 2) return null;
     const moves = game.moves();
-    const filteredMoves = [];
-    for (let i = 0; i < moves.length; i++) {
-      if (moves[i].slice(-2) === move) filteredMoves.push(moves[i]);
-    }
-    // finds a single move that might be correct
-    if (filteredMoves.length === 1) return filteredMoves[0];
+    console.log("🚀 moves", moves);
 
-    // multiple moves are possible, return null because of ambiguity
-    return null;
+    const fuzzyResult = fuzzy.filter(move, moves);
+    console.log("🚀 fuzzyResult", fuzzyResult);
+
+    // exact move
+    if (fuzzyResult.find((res) => res === move)) return move;
+
+    // usually for Ne4 => Nxe4
+    if (fuzzyResult.length === 1) return fuzzyResult[0].original;
+
+    const fuse = new Fuse(moves, { isCaseSensitive: true });
+    const fuseResult = fuse.search(move);
+    console.log("🚀 fuseResult", fuseResult);
+
+    // check empry result
+    if (fuseResult.length === 0) return null;
+
+    return fuseResult[0]?.item;
   };
 
   const Command = {
@@ -154,38 +163,43 @@ function Recorder({ setDataHandler, transcribedData, game, setGameHandler }) {
 
             // illegal or ambiguous move
             if (checkedMove === null) {
-              setDataHandler(response.data);
+              dispatch(setTranscribedData(response.data));
               dispatch(setInputStatus(InputStatus.TRANSCRIBE_ERROR));
             } else {
-              setDataHandler({ ...response.data, value: checkedMove });
+              dispatch(
+                setTranscribedData({ ...response.data, value: checkedMove })
+              );
               dispatch(setInputStatus(InputStatus.CONFIRM_MOVE));
               // voice the input
             }
             break;
           case ResponseType.COMMAND:
-            setDataHandler({
-              ...response.data,
-              value: response.data.value.toLocaleLowerCase()
-            });
+            dispatch(
+              setTranscribedData({
+                ...response.data,
+                value: response.data.value.toLocaleLowerCase()
+              })
+            );
             dispatch(setInputStatus(InputStatus.CONFIRM_COMMAND));
             // voice the input
             break;
           case ResponseType.ERROR:
-            setDataHandler(response.data);
+            dispatch(setTranscribedData(response.data));
             dispatch(setInputStatus(InputStatus.TRANSCRIBE_ERROR));
             break;
           case ResponseType.CONFIRM:
-            if (response.data.value === "yes") {
+            if (response.data.value.toLocaleLowerCase() === "yes") {
               if (transcribedData.type === ResponseType.MOVE) {
                 sendMoveRequest(parseMoveAsUCI(transcribedData.value));
               } else if (transcribedData.type === ResponseType.COMMAND) {
                 dispatch(setInputStatus(InputStatus.IDLE));
                 commandHandler(transcribedData.value);
               }
-            } else if (response.data.value === "no")
+            } else if (response.data.value.toLocaleLowerCase() === "no")
               dispatch(setInputStatus(InputStatus.IDLE));
             break;
           default:
+            dispatch(setInputStatus(InputStatus.IDLE));
             break;
         }
       }
@@ -202,7 +216,7 @@ function Recorder({ setDataHandler, transcribedData, game, setGameHandler }) {
       dispatch(setInputStatus(InputStatus.RECORD));
       startRecording();
     } else if (!isKeyPressed && inputStatus === InputStatus.RECORD) {
-      dispatch(setInputStatus(InputStatus.TRANSCIBE));
+      dispatch(setInputStatus(InputStatus.TRANSCRIBE));
       stopRecording();
     }
   }, [isKeyPressed]);
@@ -224,6 +238,19 @@ function Recorder({ setDataHandler, transcribedData, game, setGameHandler }) {
       <br />
       <Typography variant="caption">
         Stop pressing to end the recording.
+      </Typography>
+      <br />
+      <Typography variant="caption">
+        Press{" "}
+        <code
+          style={{
+            backgroundColor,
+            paddingLeft: "0.25rem",
+            paddingRight: "0.25rem",
+            borderRadius: "0.25rem"
+          }}
+        >{`${confirmKey}`}</code>{" "}
+        to confirm your move.
       </Typography>
     </Box>
   );
