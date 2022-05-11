@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import Box from "@mui/material/Box";
 import Chess from "chess.js";
@@ -6,8 +6,14 @@ import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 
 import Board from "components/Board";
-import { movePiece } from "services/gameService";
+import {
+  movePiece,
+  abortGame,
+  resignGame,
+  handleDrawOffer
+} from "services/gameService";
 import { streamBoardGameState } from "services/gameStreamService";
+import { ResponseType } from "services/transcibeService";
 import {
   setIsKeyPressedTrue,
   setIsKeyPressedFalse
@@ -18,7 +24,8 @@ import {
   setInputStatus,
   showErrorToast,
   showSuccessToast,
-  showRequestErrorToast
+  showRequestErrorToast,
+  setIsDrawOffered
 } from "store/reducers/uiSlice";
 
 import GameControlCard from "./GameControlCard";
@@ -43,7 +50,11 @@ function GamePage() {
   const { accessToken, username, isSignedIn } = useSelector(
     (state) => state.session
   );
-  const { key, isKeyPressed } = useSelector((state) => state.board);
+  const { key, isKeyPressed, confirmKey, transcribedData } = useSelector(
+    (state) => state.board
+  );
+
+  const { isDrawOffered } = useSelector((state) => state.ui);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -53,8 +64,15 @@ function GamePage() {
   const [game, setGame] = useState(new Chess());
   const setGameHandler = (g) => setGame(g);
 
-  const audio = useMemo(() => new Audio(`/sfx/move.mp3`));
-  const playAudio = () => audio.play();
+  // set focus on page load for keyboard events
+  const ref = useRef(null);
+  useEffect(() => {
+    ref.current.focus();
+  }, []);
+
+  const audio = new Audio(
+    "https://raw.githubusercontent.com/lichess-org/lila/master/public/sound/standard/Move.mp3"
+  );
 
   const getTurnAndLastMove = (moves, isWhiteParam) => {
     if (moves === "" || moves === null || moves === undefined)
@@ -149,7 +167,7 @@ function GamePage() {
       const tryMove = gameCopy.move(lastMove, { sloppy: true });
 
       if (tryMove !== null) {
-        playAudio();
+        audio.play();
         setGameHandler(gameCopy);
 
         dispatch(
@@ -177,32 +195,103 @@ function GamePage() {
     );
   }, [gameId]);
 
-  const gameTurn = game.turn();
+  // const gameTurn = game.turn();
 
   // Handle sending the move made by the player
-  useEffect(() => {
-    const sendMoveRequest = async (move) => {
-      dispatch(setInputStatus(InputStatus.SEND_MOVE));
-      const response = await movePiece(accessToken, gameId, move);
-      if (response.status !== 200) {
-        dispatch(setInputStatus(InputStatus.MOVE_REJECTED));
-        dispatch(showRequestErrorToast(response));
-      } else dispatch(setInputStatus(InputStatus.MOVE_SENT));
+  //   useEffect(() => {
+  //     const sendMoveRequest = async (move) => {
+  //       dispatch(setInputStatus(InputStatus.SEND_MOVE));
+  //       const response = await movePiece(accessToken, gameId, move);
+  //       if (response.status !== 200) {
+  //         dispatch(setInputStatus(InputStatus.MOVE_REJECTED));
+  //         dispatch(showRequestErrorToast(response));
+  //       } else dispatch(setInputStatus(InputStatus.MOVE_SENT));
+  //     };
+
+  //     if (accessToken !== null && isWhite !== null && isGameEnd === false)
+  //       if ((isWhite && gameTurn === "b") || (!isWhite && gameTurn === "w")) {
+  //         // Every opponent's turn, means the last move was made by the player
+  //         const gameCopy = cloneDeep(game);
+
+  //         const playerMove = gameCopy.undo();
+  //         if (playerMove !== null)
+  //           sendMoveRequest(`${playerMove.from}${playerMove.to}`);
+  //       }
+  //   }, [gameTurn, isGameEnd]);
+
+  const parseMoveAsUCI = (move) => {
+    const gameCopy = { ...game };
+    gameCopy.move(move, { sloppy: true });
+    const playerMove = gameCopy.undo();
+    if (playerMove !== null) return `${playerMove.from}${playerMove.to}`;
+    return null;
+  };
+
+  const sendMoveRequest = async (move) => {
+    dispatch(setInputStatus(InputStatus.SEND_MOVE));
+    const response = await movePiece(accessToken, gameId, move);
+    if (response.status !== 200) {
+      dispatch(setInputStatus(InputStatus.MOVE_REJECTED));
+      dispatch(showRequestErrorToast(response));
+    } else dispatch(setInputStatus(InputStatus.MOVE_SENT));
+  };
+
+  const commandHandler = (command) => {
+    const abortGameHandler = async () => {
+      const response = await abortGame(accessToken, gameId);
+      if (response.status !== 200) dispatch(showRequestErrorToast(response));
     };
 
-    if (accessToken !== null && isWhite !== null && isGameEnd === false)
-      if ((isWhite && gameTurn === "b") || (!isWhite && gameTurn === "w")) {
-        // Every opponent's turn, means the last move was made by the player
-        const gameCopy = { ...game };
+    // TODO: test offer, accept, decline
+    const offerDrawHandler = async (accept) => {
+      if (isDrawOffered) dispatch(setIsDrawOffered(false));
+      const response = await handleDrawOffer(accessToken, gameId, accept);
+      if (response.status !== 200) dispatch(showRequestErrorToast(response));
+    };
 
-        const playerMove = gameCopy.undo();
-        if (playerMove !== null)
-          sendMoveRequest(`${playerMove.from}${playerMove.to}`);
-      }
-  }, [gameTurn, isGameEnd]);
+    const resignGameHandler = async () => {
+      const response = await resignGame(accessToken, gameId);
+      if (response.status !== 200) dispatch(showRequestErrorToast(response));
+    };
+
+    const Command = {
+      ABORT: "abort",
+      RESIGN: "resign",
+      DRAW_OFFER: "draw",
+      DRAW_ACCEPT: "accept draw",
+      DRAW_DECLINE: "decline draw"
+    };
+
+    switch (command) {
+      case Command.ABORT:
+        abortGameHandler();
+        break;
+      case Command.RESIGN:
+        resignGameHandler();
+        break;
+      case Command.DRAW_OFFER:
+        offerDrawHandler("yes");
+        break;
+      case Command.DRAW_ACCEPT:
+        offerDrawHandler("yes");
+        break;
+      case Command.DRAW_DECLINE:
+        offerDrawHandler("no");
+        break;
+      default:
+        break;
+    }
+  };
 
   const onKeyDownHandler = (e) => {
     if (!isKeyPressed && e.key === key) dispatch(setIsKeyPressedTrue());
+    else if (e.key === confirmKey)
+      if (transcribedData.type === ResponseType.MOVE) {
+        sendMoveRequest(parseMoveAsUCI(transcribedData.value));
+      } else if (transcribedData.type === ResponseType.COMMAND) {
+        dispatch(setInputStatus(InputStatus.IDLE));
+        commandHandler(transcribedData.value);
+      }
   };
 
   const onKeyUpHandler = (e) => {
@@ -223,29 +312,33 @@ function GamePage() {
    * */
 
   return (
-    <CenteredFlexBox
+    <Box
+      display="flex"
+      alignItems="center"
       justifyContent="center"
       // 64px is the navbar height
       height="calc(100vh - 64px)"
       paddingX="1rem"
       tabIndex="0"
+      ref={ref}
       onKeyDown={onKeyDownHandler}
       onKeyUp={onKeyUpHandler}
     >
       <CenteredFlexBox width="30%" padding="3rem">
-        <VoiceControlCard game={game} setGameHandler={setGameHandler} />
+        <VoiceControlCard game={game} />
       </CenteredFlexBox>
       <CenteredFlexBox width="40%" padding="1rem">
         <Board
           game={game}
           setGameHandler={setGameHandler}
           boardOrientation={isWhite ? "white" : "black"}
+          isSendMove
         />
       </CenteredFlexBox>
       <CenteredFlexBox width="30%" padding="3rem">
         <GameControlCard pgn={game.pgn()} isGameEnd={isGameEnd} />
       </CenteredFlexBox>
-    </CenteredFlexBox>
+    </Box>
   );
 }
 

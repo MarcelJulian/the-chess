@@ -1,12 +1,26 @@
 import { useRef, useState, useEffect, useMemo } from "react";
 
 import { Chessboard } from "react-chessboard";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
-function Board({ game, setGameHandler, boardOrientation = "white" }) {
+import { movePiece } from "services/gameService";
+import {
+  InputStatus,
+  setInputStatus,
+  showRequestErrorToast
+} from "store/reducers/uiSlice";
+
+function Board({
+  game,
+  setGameHandler,
+  boardOrientation = "white",
+  isSendMove = false
+}) {
   const chessboardRef = useRef();
-  const pieceSet = useSelector((state) => state.board.pieceSet);
-  const boardSet = useSelector((state) => state.board.boardSet);
+  const dispatch = useDispatch();
+  const { boardSet, pieceSet } = useSelector((state) => state.board);
+  const accessToken = useSelector((state) => state.session.accessToken);
+  const gameId = useSelector((state) => state.game.id);
   const [moveFrom, setMoveFrom] = useState("");
 
   //   const [moveSquares, setMoveSquares] = useState({});
@@ -19,6 +33,15 @@ function Board({ game, setGameHandler, boardOrientation = "white" }) {
     return width;
   };
   const [boardWidth, setBoardWidth] = useState(calculateBoardWidth());
+
+  const sendMoveRequest = async (move) => {
+    dispatch(setInputStatus(InputStatus.SEND_MOVE));
+    const response = await movePiece(accessToken, gameId, move);
+    if (response.status !== 200) {
+      dispatch(setInputStatus(InputStatus.MOVE_REJECTED));
+      dispatch(showRequestErrorToast(response));
+    } else dispatch(setInputStatus(InputStatus.MOVE_SENT));
+  };
 
   useEffect(() => {
     function handleResize() {
@@ -68,11 +91,13 @@ function Board({ game, setGameHandler, boardOrientation = "white" }) {
     setOptionSquares(newSquares);
   };
 
-  const audio = useMemo(() => new Audio(`/sfx/move.mp3`));
+  const audio = new Audio(
+    "https://raw.githubusercontent.com/lichess-org/lila/master/public/sound/standard/Move.mp3"
+  );
   const playAudio = () => audio.play();
 
   // allows click to move
-  function onSquareClick(square) {
+  async function onSquareClick(square) {
     function resetFirstMove(tempSquare) {
       setMoveFrom(tempSquare);
       getMoveOptions(tempSquare);
@@ -99,7 +124,8 @@ function Board({ game, setGameHandler, boardOrientation = "white" }) {
       return;
     }
 
-    playAudio();
+    audio.play();
+    if (isSendMove) await sendMoveRequest(`${moveFrom}${square}`);
 
     setMoveFrom("");
     setOptionSquares({});

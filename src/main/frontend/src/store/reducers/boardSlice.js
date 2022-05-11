@@ -6,7 +6,9 @@ export const boardSlice = createSlice({
     boardSet: "tile5",
     pieceSet: "piece1",
     key: "Escape",
-    isKeyPressed: false
+    confirmKey: "Enter",
+    isKeyPressed: false,
+    transcribedData: null
   },
   reducers: {
     setPieceSet: (state, action) => {
@@ -18,11 +20,17 @@ export const boardSlice = createSlice({
     setKey: (state, action) => {
       state.key = action.payload;
     },
+    setConfirmKey: (state, action) => {
+      state.key = action.payload;
+    },
     setIsKeyPressedTrue: (state, _) => {
       state.isKeyPressed = true;
     },
     setIsKeyPressedFalse: (state, _) => {
       state.isKeyPressed = false;
+    },
+    setTranscribedData: (state, action) => {
+      state.key = action.payload;
     }
   }
 });
@@ -32,8 +40,10 @@ export const {
   setPieceSet,
   setBoardSet,
   setKey,
+  setConfirmKey,
   setIsKeyPressedTrue,
-  setIsKeyPressedFalse
+  setIsKeyPressedFalse,
+  setTranscribedData
 } = boardSlice.actions;
 
 export default boardSlice.reducer;
