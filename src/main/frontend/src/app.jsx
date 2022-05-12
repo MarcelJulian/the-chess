@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 
 import CssBaseline from "@mui/material/CssBaseline";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import Paper from "@mui/material/Paper";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import { useSelector, useDispatch } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 
 import NavBar from "components/NavBar";
+import { lightTheme, darkTheme } from "components/Theme";
 import Toast from "components/Toast";
 import GamePage from "pages/GamePage";
 import HomePage from "pages/HomePage";
@@ -16,58 +17,10 @@ import SettingsPageDialog from "pages/SettingsPage";
 import { hideSettingsDialog } from "store/reducers/uiSlice";
 
 export default function App() {
-  const [darkMode, setDarkMode] = useState(false);
-  const themeHandler = () => setDarkMode(!darkMode);
-
-  const typography = { fontFamily: "Poppins" };
-  const MuiCard = {
-    defaultProps: {
-      elevation: 4,
-      style: { borderRadius: "0.5rem" }
-    }
-  };
-
-  const darkTheme = createTheme({
-    palette: {
-      mode: "dark",
-      primary: {
-        main: "#2e3f5a",
-        light: "#3d5270"
-      },
-      secondary: { main: "#5b7398" },
-      neutral: {
-        light: "#212121",
-        main: "#333333",
-        darker: "#515151",
-        darkest: "#646464"
-      }
-    },
-    typography,
-    components: { MuiCard }
-  });
-
-  const greenTheme = createTheme({
-    palette: {
-      primary: {
-        main: "#1B2B42",
-        light: "#899cbd"
-      },
-      secondary: { main: "#1B2B42" },
-      neutral: {
-        light: "#FAFAFA",
-        main: "#F5F5F5",
-        darker: "#E0E0E0",
-        darkest: "#BDBDBD"
-      }
-    },
-    typography,
-    components: { MuiCard }
-  });
-  const theme = darkMode ? darkTheme : greenTheme;
-
-  const isSettingsDialogShown = useSelector(
-    (state) => state.ui.isSettingsDialogShown
+  const { isDarkMode, isSettingsDialogShown } = useSelector(
+    (state) => state.ui
   );
+  const theme = isDarkMode ? darkTheme : lightTheme;
 
   const dispatch = useDispatch();
 
@@ -81,7 +34,7 @@ export default function App() {
           backgroundColor: theme.palette.neutral.light
         }}
       >
-        <NavBar themeHandler={themeHandler} />
+        <NavBar />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path=":gameId" element={<GamePage />} />
@@ -92,7 +45,13 @@ export default function App() {
           onClose={() => dispatch(hideSettingsDialog())}
           open={isSettingsDialogShown}
         >
-          <DialogTitle>Settings</DialogTitle>
+          <DialogTitle
+            sx={{
+              backgroundColor: theme.palette.neutral.main
+            }}
+          >
+            Settings
+          </DialogTitle>
           <SettingsPageDialog />
         </Dialog>
       </Paper>

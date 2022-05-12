@@ -15,16 +15,22 @@ export const InputStatus = {
 export const uiSlice = createSlice({
   name: "ui",
   initialState: {
+    isDarkMode: false,
     isToastShown: false,
     toastType: "success",
     toastMessage: "",
     isSettingsDialogShown: false,
+
     inputStatus: InputStatus.IDLE,
+    transcribedData: null,
 
     // used in GameControlCard
     isDrawOffered: false
   },
   reducers: {
+    setIsDarkMode: (state, action) => {
+      state.isDarkMode = action.payload;
+    },
     showSettingsDialog: (state, _) => {
       state.isSettingsDialogShown = true;
     },
@@ -53,6 +59,9 @@ export const uiSlice = createSlice({
     setInputStatus: (state, action) => {
       state.inputStatus = action.payload;
     },
+    setTranscribedData: (state, action) => {
+      state.transcribedData = action.payload;
+    },
     setIsDrawOffered: (state, action) => {
       state.isDrawOffered = action.payload;
     }
@@ -60,6 +69,7 @@ export const uiSlice = createSlice({
 });
 
 export const {
+  setIsDarkMode,
   showSuccessToast,
   showErrorToast,
   showRequestErrorToast,
@@ -67,6 +77,7 @@ export const {
   hideSettingsDialog,
   showSettingsDialog,
   setInputStatus,
+  setTranscribedData,
   setIsDrawOffered
 } = uiSlice.actions;
 

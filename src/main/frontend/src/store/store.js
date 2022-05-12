@@ -1,14 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import boardReducer from "./reducers/boardSlice";
 import botFormReducer from "./reducers/botFormSlice";
 import gameReducer from "./reducers/gameSlice";
 import sessionReducer from "./reducers/sessionSlice";
+import settingsReducer from "./reducers/settingsSlice";
 import uiReducer from "./reducers/uiSlice";
 
 export default configureStore({
   reducer: {
-    board: boardReducer,
+    settings: settingsReducer,
     botForm: botFormReducer,
     game: gameReducer,
     session: sessionReducer,

@@ -15,35 +15,24 @@ import {
   handleDrawOffer
 } from "services/gameService";
 import transcibeAudio, { ResponseType } from "services/transcibeService";
-import { setTranscribedData } from "store/reducers/boardSlice";
 import {
   InputStatus,
   setInputStatus,
+  setTranscribedData,
   showRequestErrorToast,
   setIsDrawOffered
 } from "store/reducers/uiSlice";
 
 const audioEncoder = require("audio-encoder");
 
-const saveBlob = (() => {
-  const a = document.createElement("a");
-  document.body.appendChild(a);
-  a.style = "display: none";
-  return (blobParam, fileName) => {
-    const url = window.URL.createObjectURL(blobParam);
-    a.href = url;
-    a.download = fileName;
-    a.click();
-    window.URL.revokeObjectURL(url);
-  };
-})();
-
 function Recorder({ game }) {
   const dispatch = useDispatch();
-  const { key, isKeyPressed, confirmKey, transcribedData } = useSelector(
-    (state) => state.board
+  const { key, isKeyPressed, confirmKey } = useSelector(
+    (state) => state.settings
   );
-  const { isDrawOffered, inputStatus } = useSelector((state) => state.ui);
+  const { isDrawOffered, inputStatus, transcribedData } = useSelector(
+    (state) => state.ui
+  );
   const accessToken = useSelector((state) => state.session.accessToken);
   const gameId = useSelector((state) => state.game.id);
 

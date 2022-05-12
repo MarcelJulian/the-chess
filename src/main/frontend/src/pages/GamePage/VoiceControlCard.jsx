@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useEffect } from "react";
 
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -9,7 +9,11 @@ import { useSelector, useDispatch } from "react-redux";
 
 import Recorder from "components/Recorder";
 import { ResponseType } from "services/transcibeService";
-import { InputStatus, setInputStatus } from "store/reducers/uiSlice";
+import {
+  InputStatus,
+  setInputStatus,
+  setTranscribedData
+} from "store/reducers/uiSlice";
 
 function StatusProgressBox({ text, color = "secondary" }) {
   return (
@@ -33,8 +37,8 @@ function VoiceControlCard({ game }) {
   const theme = useTheme();
   const dispatch = useDispatch();
 
-  const inputStatus = useSelector((state) => state.ui.inputStatus);
-  const transcribedData = useSelector((state) => state.board.transcribedData);
+  const { inputStatus, transcribedData } = useSelector((state) => state.ui);
+  const isSpeech = useSelector((state) => state.settings.isSpeech);
 
   const { speechSynthesis } = window;
   const utterance = new window.SpeechSynthesisUtterance();
@@ -96,35 +100,36 @@ function VoiceControlCard({ game }) {
     }
   };
 
+  // initialize
   useEffect(() => {
-    const pgn = game.pgn();
-    const lastMove = pgn.slice(pgn.lastIndexOf(" "));
-    console.log(
-      "🚀 ~ file: VoiceControlCard.jsx ~ line 109 ~ useEffect ~ lastMove",
-      lastMove
-    );
+    dispatch(setTranscribedData(null));
+    dispatch(setInputStatus(InputStatus.IDLE));
+  }, []);
 
-    utterance.text = parseMove(lastMove);
-    console.log(
-      "🚀 ~ file: VoiceControlCard.jsx ~ line 124 ~ useEffect ~ utterance",
-      utterance
-    );
-    speechSynthesis.speak(utterance);
+  useEffect(() => {
+    if (isSpeech) {
+      const pgn = game.pgn();
+      const lastMove = pgn.slice(pgn.lastIndexOf(" "));
+
+      utterance.text = parseMove(lastMove);
+      speechSynthesis.speak(utterance);
+    }
   }, [game.pgn()]);
 
   useEffect(() => {
-    switch (inputStatus) {
-      case InputStatus.CONFIRM_MOVE:
-      // eslint-disable-next-line no-fallthrough
-      case InputStatus.CONFIRM_COMMAND:
-      // eslint-disable-next-line no-fallthrough
-      case InputStatus.TRANSCRIBE_ERROR:
-        utterance.text = parseTranscribedText();
-        speechSynthesis.speak(utterance);
-        break;
-      default:
-        break;
-    }
+    if (isSpeech)
+      switch (inputStatus) {
+        case InputStatus.CONFIRM_MOVE:
+        // eslint-disable-next-line no-fallthrough
+        case InputStatus.CONFIRM_COMMAND:
+        // eslint-disable-next-line no-fallthrough
+        case InputStatus.TRANSCRIBE_ERROR:
+          utterance.text = parseTranscribedText();
+          speechSynthesis.speak(utterance);
+          break;
+        default:
+          break;
+      }
   }, [inputStatus]);
 
   const statusRenderer = () => {

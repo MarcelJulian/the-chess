@@ -8,7 +8,7 @@ export const gameSlice = createSlice({
     white: null,
     black: null,
     gameState: null,
-    isWhite: null,
+    isWhite: "white",
     isWhiteTurn: null,
     lastMove: null,
     hasMoved: null,
