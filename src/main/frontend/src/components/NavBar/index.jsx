@@ -45,7 +45,10 @@ function UserButtonGroup() {
 
   return (
     <>
-      <NavBarButton text="Settings" />
+      <NavBarButton
+        text="Settings"
+        onClick={() => dispatch(showSettingsDialog())}
+      />
       <NavBarButton text="Sign Out" onClick={signOutHandler} />
     </>
   );
