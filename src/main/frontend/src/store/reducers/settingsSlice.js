@@ -9,8 +9,7 @@ export const settingsSlice = createSlice({
     isBlind: false,
     key: "Escape",
     confirmKey: "Enter",
-    isKeyPressed: false,
-    transcribedData: null
+    isKeyPressed: false
   },
   reducers: {
     setPieceSet: (state, action) => {
@@ -36,9 +35,6 @@ export const settingsSlice = createSlice({
     },
     setIsKeyPressedFalse: (state, _) => {
       state.isKeyPressed = false;
-    },
-    setTranscribedData: (state, action) => {
-      state.transcribedData = action.payload;
     }
   }
 });
@@ -52,8 +48,7 @@ export const {
   setKey,
   setConfirmKey,
   setIsKeyPressedTrue,
-  setIsKeyPressedFalse,
-  setTranscribedData
+  setIsKeyPressedFalse
 } = settingsSlice.actions;
 
 export default settingsSlice.reducer;

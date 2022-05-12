@@ -9,8 +9,11 @@ import { useSelector, useDispatch } from "react-redux";
 
 import Recorder from "components/Recorder";
 import { ResponseType } from "services/transcibeService";
-import { setTranscribedData } from "store/reducers/settingsSlice";
-import { InputStatus, setInputStatus } from "store/reducers/uiSlice";
+import {
+  InputStatus,
+  setInputStatus,
+  setTranscribedData
+} from "store/reducers/uiSlice";
 
 function StatusProgressBox({ text, color = "secondary" }) {
   return (
@@ -34,8 +37,8 @@ function VoiceControlCard({ game }) {
   const theme = useTheme();
   const dispatch = useDispatch();
 
-  const inputStatus = useSelector((state) => state.ui.inputStatus);
-  const { isSpeech, transcribedData } = useSelector((state) => state.settings);
+  const { inputStatus, transcribedData } = useSelector((state) => state.ui);
+  const isSpeech = useSelector((state) => state.settings.isSpeech);
 
   const { speechSynthesis } = window;
   const utterance = new window.SpeechSynthesisUtterance();

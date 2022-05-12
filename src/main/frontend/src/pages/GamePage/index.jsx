@@ -50,10 +50,11 @@ function GamePage() {
   const { accessToken, username, isSignedIn } = useSelector(
     (state) => state.session
   );
-  const { isBlind, key, isKeyPressed, confirmKey, transcribedData } =
-    useSelector((state) => state.settings);
+  const { isBlind, key, isKeyPressed, confirmKey } = useSelector(
+    (state) => state.settings
+  );
 
-  const { isDrawOffered } = useSelector((state) => state.ui);
+  const { transcribedData, isDrawOffered } = useSelector((state) => state.ui);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
