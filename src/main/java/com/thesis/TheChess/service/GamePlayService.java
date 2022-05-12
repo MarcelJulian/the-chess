@@ -262,10 +262,10 @@ public class GamePlayService {
 				try {
 					if (sttResult.equals("queenside castle") || (sttResult.contains("queen") && sttResult.contains("castle"))) {
 						output.setType("move");
-						output.setValue("0-0-0");
+						output.setValue("O-O-O");
 					} else if (sttResult.equals("kingside castle") || (sttResult.contains("king") && sttResult.contains("castle"))) {
 						output.setType("move");
-						output.setValue("0-0");
+						output.setValue("O-O");
 					} else {
 						String temp1 = splited[0];
 						String temp2 = splited[1];
@@ -313,10 +313,10 @@ public class GamePlayService {
 				try {
 					if (sttResult.equals("queen side castle") || (sttResult.contains("queen") && sttResult.contains("castle"))) {
 						output.setType("move");
-						output.setValue("0-0-0");
+						output.setValue("O-O-O");
 					} else if (sttResult.equals("King side Castle") || (sttResult.contains("king") && sttResult.contains("castle"))) {
 						output.setType("move");
-						output.setValue("0-0");
+						output.setValue("O-O");
 					} else {
 						output.setType("error");
 						output.setValue(sttResult);
