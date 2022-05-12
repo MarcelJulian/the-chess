@@ -21,7 +21,7 @@ export const boardSlice = createSlice({
       state.key = action.payload;
     },
     setConfirmKey: (state, action) => {
-      state.key = action.payload;
+      state.confirmKey = action.payload;
     },
     setIsKeyPressedTrue: (state, _) => {
       state.isKeyPressed = true;
@@ -30,7 +30,7 @@ export const boardSlice = createSlice({
       state.isKeyPressed = false;
     },
     setTranscribedData: (state, action) => {
-      state.key = action.payload;
+      state.transcribedData = action.payload;
     }
   }
 });

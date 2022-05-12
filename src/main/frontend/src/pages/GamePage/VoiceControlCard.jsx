@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -8,6 +8,7 @@ import Typography from "@mui/material/Typography";
 import { useSelector, useDispatch } from "react-redux";
 
 import Recorder from "components/Recorder";
+import { ResponseType } from "services/transcibeService";
 import { InputStatus, setInputStatus } from "store/reducers/uiSlice";
 
 function StatusProgressBox({ text, color = "secondary" }) {
@@ -31,11 +32,100 @@ function StatusProgressBox({ text, color = "secondary" }) {
 function VoiceControlCard({ game }) {
   const theme = useTheme();
   const dispatch = useDispatch();
-  // Warna box voice
-  const backgroundColor = theme.palette.neutral.main;
 
   const inputStatus = useSelector((state) => state.ui.inputStatus);
   const transcribedData = useSelector((state) => state.board.transcribedData);
+
+  const { speechSynthesis } = window;
+  const utterance = new window.SpeechSynthesisUtterance();
+
+  // Warna box voice
+  const backgroundColor = theme.palette.neutral.main;
+
+  const parseMove = (move) => {
+    let resultingText = "";
+    if (move === "O-O") return "Kingside Castle";
+    if (move === "O-O-O") return "Queenside Castle";
+    for (let i = 0; i < move.length; i++) {
+      switch (move.charAt(i)) {
+        case "N":
+          resultingText += "Knight ";
+          break;
+        case "B":
+          resultingText += "Bishop ";
+          break;
+        case "R":
+          resultingText += "Rook ";
+          break;
+        case "Q":
+          resultingText += "Queen ";
+          break;
+        case "K":
+          resultingText += "King ";
+          break;
+        case "x":
+          resultingText += "takes ";
+          break;
+        case "+":
+          resultingText += "check";
+          break;
+        case "#":
+          resultingText += "checkmate";
+          break;
+        case "=":
+          resultingText += "promote to ";
+          break;
+        default:
+          resultingText += `${move.charAt(i)} `;
+          break;
+      }
+    }
+    return resultingText;
+  };
+
+  const parseTranscribedText = () => {
+    switch (transcribedData?.type) {
+      case ResponseType.MOVE:
+        return `${parseMove(transcribedData.value)}?`;
+      case ResponseType.COMMAND:
+        return transcribedData.value;
+      case ResponseType.ERROR:
+        return "Move/Command invalid. Please try again.";
+      default:
+        return "";
+    }
+  };
+
+  useEffect(() => {
+    const pgn = game.pgn();
+    const lastMove = pgn.slice(pgn.lastIndexOf(" "));
+    console.log(
+      "🚀 ~ file: VoiceControlCard.jsx ~ line 109 ~ useEffect ~ lastMove",
+      lastMove
+    );
+
+    utterance.text = parseMove(lastMove);
+    console.log(
+      "🚀 ~ file: VoiceControlCard.jsx ~ line 124 ~ useEffect ~ utterance",
+      utterance
+    );
+    speechSynthesis.speak(utterance);
+  }, [game.pgn()]);
+
+  useEffect(() => {
+    switch (inputStatus) {
+      case InputStatus.CONFIRM_MOVE:
+      // eslint-disable-next-line no-fallthrough
+      case InputStatus.CONFIRM_COMMAND:
+      // eslint-disable-next-line no-fallthrough
+      case InputStatus.TRANSCRIBE_ERROR:
+        utterance.text = parseTranscribedText();
+        speechSynthesis.speak(utterance);
+        break;
+      default:
+        break;
+    }
+  }, [inputStatus]);
 
   const statusRenderer = () => {
     switch (inputStatus) {
