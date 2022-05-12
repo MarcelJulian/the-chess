@@ -25,19 +25,6 @@ import {
 
 const audioEncoder = require("audio-encoder");
 
-const saveBlob = (() => {
-  const a = document.createElement("a");
-  document.body.appendChild(a);
-  a.style = "display: none";
-  return (blobParam, fileName) => {
-    const url = window.URL.createObjectURL(blobParam);
-    a.href = url;
-    a.download = fileName;
-    a.click();
-    window.URL.revokeObjectURL(url);
-  };
-})();
-
 function Recorder({ game }) {
   const dispatch = useDispatch();
   const { key, isKeyPressed, confirmKey, transcribedData } = useSelector(

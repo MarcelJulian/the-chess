@@ -99,16 +99,8 @@ function VoiceControlCard({ game }) {
   useEffect(() => {
     const pgn = game.pgn();
     const lastMove = pgn.slice(pgn.lastIndexOf(" "));
-    console.log(
-      "🚀 ~ file: VoiceControlCard.jsx ~ line 109 ~ useEffect ~ lastMove",
-      lastMove
-    );
 
     utterance.text = parseMove(lastMove);
-    console.log(
-      "🚀 ~ file: VoiceControlCard.jsx ~ line 124 ~ useEffect ~ utterance",
-      utterance
-    );
     speechSynthesis.speak(utterance);
   }, [game.pgn()]);
 
