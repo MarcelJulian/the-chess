@@ -15,7 +15,7 @@ import {
   handleDrawOffer
 } from "services/gameService";
 import transcibeAudio, { ResponseType } from "services/transcibeService";
-import { setTranscribedData } from "store/reducers/boardSlice";
+import { setTranscribedData } from "store/reducers/settingsSlice";
 import {
   InputStatus,
   setInputStatus,
@@ -28,7 +28,7 @@ const audioEncoder = require("audio-encoder");
 function Recorder({ game }) {
   const dispatch = useDispatch();
   const { key, isKeyPressed, confirmKey, transcribedData } = useSelector(
-    (state) => state.board
+    (state) => state.settings
   );
   const { isDrawOffered, inputStatus } = useSelector((state) => state.ui);
   const accessToken = useSelector((state) => state.session.accessToken);

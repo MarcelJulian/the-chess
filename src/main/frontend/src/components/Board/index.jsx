@@ -14,11 +14,12 @@ function Board({
   game,
   setGameHandler,
   boardOrientation = "white",
+  isBlind = false,
   isSendMove = false
 }) {
   const chessboardRef = useRef();
   const dispatch = useDispatch();
-  const { boardSet, pieceSet } = useSelector((state) => state.board);
+  const { boardSet, pieceSet } = useSelector((state) => state.settings);
   const accessToken = useSelector((state) => state.session.accessToken);
   const gameId = useSelector((state) => state.game.id);
   const [moveFrom, setMoveFrom] = useState("");
@@ -154,7 +155,9 @@ function Board({
           style={{
             width: squareWidth,
             height: squareWidth,
-            backgroundImage: `url(${process.env.PUBLIC_URL}/piece_set/${pieceSet}/${p}.png)`,
+            backgroundImage: isBlind
+              ? "none"
+              : `url(${process.env.PUBLIC_URL}/piece_set/${pieceSet}/${p}.png)`,
             backgroundSize: "100%"
           }}
         />

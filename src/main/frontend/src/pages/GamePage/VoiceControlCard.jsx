@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useEffect } from "react";
 
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import Recorder from "components/Recorder";
 import { ResponseType } from "services/transcibeService";
+import { setTranscribedData } from "store/reducers/settingsSlice";
 import { InputStatus, setInputStatus } from "store/reducers/uiSlice";
 
 function StatusProgressBox({ text, color = "secondary" }) {
@@ -34,7 +35,7 @@ function VoiceControlCard({ game }) {
   const dispatch = useDispatch();
 
   const inputStatus = useSelector((state) => state.ui.inputStatus);
-  const transcribedData = useSelector((state) => state.board.transcribedData);
+  const { isSpeech, transcribedData } = useSelector((state) => state.settings);
 
   const { speechSynthesis } = window;
   const utterance = new window.SpeechSynthesisUtterance();
@@ -96,27 +97,36 @@ function VoiceControlCard({ game }) {
     }
   };
 
+  // initialize
   useEffect(() => {
-    const pgn = game.pgn();
-    const lastMove = pgn.slice(pgn.lastIndexOf(" "));
+    dispatch(setTranscribedData(null));
+    dispatch(setInputStatus(InputStatus.IDLE));
+  }, []);
 
-    utterance.text = parseMove(lastMove);
-    speechSynthesis.speak(utterance);
+  useEffect(() => {
+    if (isSpeech) {
+      const pgn = game.pgn();
+      const lastMove = pgn.slice(pgn.lastIndexOf(" "));
+
+      utterance.text = parseMove(lastMove);
+      speechSynthesis.speak(utterance);
+    }
   }, [game.pgn()]);
 
   useEffect(() => {
-    switch (inputStatus) {
-      case InputStatus.CONFIRM_MOVE:
-      // eslint-disable-next-line no-fallthrough
-      case InputStatus.CONFIRM_COMMAND:
-      // eslint-disable-next-line no-fallthrough
-      case InputStatus.TRANSCRIBE_ERROR:
-        utterance.text = parseTranscribedText();
-        speechSynthesis.speak(utterance);
-        break;
-      default:
-        break;
-    }
+    if (isSpeech)
+      switch (inputStatus) {
+        case InputStatus.CONFIRM_MOVE:
+        // eslint-disable-next-line no-fallthrough
+        case InputStatus.CONFIRM_COMMAND:
+        // eslint-disable-next-line no-fallthrough
+        case InputStatus.TRANSCRIBE_ERROR:
+          utterance.text = parseTranscribedText();
+          speechSynthesis.speak(utterance);
+          break;
+        default:
+          break;
+      }
   }, [inputStatus]);
 
   const statusRenderer = () => {

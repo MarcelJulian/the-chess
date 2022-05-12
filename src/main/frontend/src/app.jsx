@@ -40,6 +40,9 @@ export default function App() {
         main: "#333333",
         darker: "#515151",
         darkest: "#646464"
+      },
+      neutralButton: {
+        main: "#646464"
       }
     },
     typography,
@@ -58,6 +61,9 @@ export default function App() {
         main: "#F5F5F5",
         darker: "#E0E0E0",
         darkest: "#BDBDBD"
+      },
+      neutralButton: {
+        main: "#BDBDBD"
       }
     },
     typography,
@@ -92,7 +98,13 @@ export default function App() {
           onClose={() => dispatch(hideSettingsDialog())}
           open={isSettingsDialogShown}
         >
-          <DialogTitle>Settings</DialogTitle>
+          <DialogTitle
+            sx={{
+              backgroundColor: theme.palette.neutral.main
+            }}
+          >
+            Settings
+          </DialogTitle>
           <SettingsPageDialog />
         </Dialog>
       </Paper>

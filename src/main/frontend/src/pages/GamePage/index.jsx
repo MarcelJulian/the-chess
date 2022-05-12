@@ -14,11 +14,11 @@ import {
 } from "services/gameService";
 import { streamBoardGameState } from "services/gameStreamService";
 import { ResponseType } from "services/transcibeService";
+import { initializeGame, setGameState } from "store/reducers/gameSlice";
 import {
   setIsKeyPressedTrue,
   setIsKeyPressedFalse
-} from "store/reducers/boardSlice";
-import { initializeGame, setGameState } from "store/reducers/gameSlice";
+} from "store/reducers/settingsSlice";
 import {
   InputStatus,
   setInputStatus,
@@ -50,9 +50,8 @@ function GamePage() {
   const { accessToken, username, isSignedIn } = useSelector(
     (state) => state.session
   );
-  const { key, isKeyPressed, confirmKey, transcribedData } = useSelector(
-    (state) => state.board
-  );
+  const { isBlind, key, isKeyPressed, confirmKey, transcribedData } =
+    useSelector((state) => state.settings);
 
   const { isDrawOffered } = useSelector((state) => state.ui);
 
@@ -182,6 +181,7 @@ function GamePage() {
     }
   };
 
+  // initialize board state
   useEffect(() => {
     // if (!isSignedIn) {
     //   dispatch(showErrorToast("Please sign in first. Redirecting..."));
@@ -194,30 +194,6 @@ function GamePage() {
       setGameStateHandler
     );
   }, [gameId]);
-
-  // const gameTurn = game.turn();
-
-  // Handle sending the move made by the player
-  //   useEffect(() => {
-  //     const sendMoveRequest = async (move) => {
-  //       dispatch(setInputStatus(InputStatus.SEND_MOVE));
-  //       const response = await movePiece(accessToken, gameId, move);
-  //       if (response.status !== 200) {
-  //         dispatch(setInputStatus(InputStatus.MOVE_REJECTED));
-  //         dispatch(showRequestErrorToast(response));
-  //       } else dispatch(setInputStatus(InputStatus.MOVE_SENT));
-  //     };
-
-  //     if (accessToken !== null && isWhite !== null && isGameEnd === false)
-  //       if ((isWhite && gameTurn === "b") || (!isWhite && gameTurn === "w")) {
-  //         // Every opponent's turn, means the last move was made by the player
-  //         const gameCopy = cloneDeep(game);
-
-  //         const playerMove = gameCopy.undo();
-  //         if (playerMove !== null)
-  //           sendMoveRequest(`${playerMove.from}${playerMove.to}`);
-  //       }
-  //   }, [gameTurn, isGameEnd]);
 
   const parseMoveAsUCI = (move) => {
     const gameCopy = { ...game };
@@ -332,6 +308,7 @@ function GamePage() {
           game={game}
           setGameHandler={setGameHandler}
           boardOrientation={isWhite ? "white" : "black"}
+          isBlind={isBlind}
           isSendMove
         />
       </CenteredFlexBox>
