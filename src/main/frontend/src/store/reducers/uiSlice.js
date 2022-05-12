@@ -15,6 +15,7 @@ export const InputStatus = {
 export const uiSlice = createSlice({
   name: "ui",
   initialState: {
+    isDarkMode: false,
     isToastShown: false,
     toastType: "success",
     toastMessage: "",
@@ -27,6 +28,9 @@ export const uiSlice = createSlice({
     isDrawOffered: false
   },
   reducers: {
+    setIsDarkMode: (state, action) => {
+      state.isDarkMode = action.payload;
+    },
     showSettingsDialog: (state, _) => {
       state.isSettingsDialogShown = true;
     },
@@ -65,6 +69,7 @@ export const uiSlice = createSlice({
 });
 
 export const {
+  setIsDarkMode,
   showSuccessToast,
   showErrorToast,
   showRequestErrorToast,
