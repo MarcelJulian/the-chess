@@ -1,9 +1,12 @@
 import React, { useEffect } from "react";
 
+import HelpIcon from "@mui/icons-material/Help";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CircularProgress from "@mui/material/CircularProgress";
+import IconButton from "@mui/material/IconButton";
 import useTheme from "@mui/material/styles/useTheme";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -12,7 +15,8 @@ import { ResponseType } from "services/transcibeService";
 import {
   InputStatus,
   setInputStatus,
-  setTranscribedData
+  setTranscribedData,
+  showHelpDialog
 } from "store/reducers/uiSlice";
 
 function StatusProgressBox({ text, color = "secondary" }) {
@@ -171,6 +175,7 @@ function VoiceControlCard({ game }) {
   return (
     <Card
       sx={{
+        position: "relative",
         padding: "1rem",
         width: "100%",
         backgroundColor
@@ -184,6 +189,20 @@ function VoiceControlCard({ game }) {
         {statusRenderer()}
       </Box>
       <Recorder game={game} />
+      <Tooltip title="Help">
+        <IconButton
+          color="secondary"
+          aria-label="help"
+          onClick={() => dispatch(showHelpDialog())}
+          sx={{
+            position: "absolute",
+            right: "0px",
+            bottom: "0px"
+          }}
+        >
+          <HelpIcon />
+        </IconButton>
+      </Tooltip>
     </Card>
   );
 }

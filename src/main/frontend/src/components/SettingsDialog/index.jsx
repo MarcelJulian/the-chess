@@ -41,7 +41,7 @@ function RowBox(props) {
   );
 }
 
-function SettingsPageDialog() {
+function SettingsDialog() {
   const { pieceSet, boardSet, isSpeech, isBlind, key, confirmKey } =
     useSelector((state) => state.settings);
 
@@ -180,7 +180,6 @@ function SettingsPageDialog() {
             color="secondary"
             checked={isSpeech}
             onChange={(e) => dispatch(setIsSpeech(e.target.checked))}
-            defaultChecked
           />
         </RowBox>
 
@@ -207,6 +206,7 @@ function SettingsPageDialog() {
           <RowBox marginBottom="0.25rem">
             <Typography variant="body2">Record</Typography>
             <ToggleButton
+              value="recordKey"
               color="neutralButton"
               size="small"
               disableRipple
@@ -221,6 +221,7 @@ function SettingsPageDialog() {
           <RowBox marginBottom="none">
             <Typography variant="body2">Confirm</Typography>
             <ToggleButton
+              value="confirmKey"
               variant="contained"
               color="neutralButton"
               size="small"
@@ -241,4 +242,4 @@ function SettingsPageDialog() {
   );
 }
 
-export default SettingsPageDialog;
+export default SettingsDialog;

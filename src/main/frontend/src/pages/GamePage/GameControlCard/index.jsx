@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useMemo } from "react";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -16,7 +16,7 @@ import {
 import GameMovesInnerCard from "./GameMovesInnerCard";
 import TimeUsernameBox from "./TimeUsernameBox";
 
-function GameControlCard({ pgn, isGameEnd }) {
+function GameControlCard({ game, setGameHandler, isGameEnd, isTutorial }) {
   const theme = useTheme();
   // Warna box keseluruhan
   const backgroundColor = theme.palette.neutral.main;
@@ -116,6 +116,18 @@ function GameControlCard({ pgn, isGameEnd }) {
     return <div />;
   };
 
+  const resetGameHandler = () => {
+    const gameCopy = { ...game };
+    gameCopy.reset();
+    setGameHandler(gameCopy);
+  };
+
+  const undoMoveHandler = () => {
+    const gameCopy = { ...game };
+    gameCopy.undo();
+    setGameHandler(gameCopy);
+  };
+
   return (
     <Card
       sx={{
@@ -124,7 +136,7 @@ function GameControlCard({ pgn, isGameEnd }) {
         backgroundColor
       }}
     >
-      <TimeUsernameBox user={opponent} />
+      {!isTutorial && <TimeUsernameBox user={opponent} />}
 
       <Card sx={{ backgroundColor, marginBottom: "1rem" }}>
         {/* currently unused. Optional feature */}
@@ -133,18 +145,18 @@ function GameControlCard({ pgn, isGameEnd }) {
           sx={{ height: "1.5rem", backgroundColor: darkerBackgroundColor }}
         />
         <GameMovesInnerCard
-          pgn={pgn}
+          pgn={game.pgn()}
           status={gameState?.status}
           isWhiteTurn={isWhiteTurn}
           backgroundColor={darkerBackgroundColor}
         />
       </Card>
 
-      <TimeUsernameBox user={player} />
+      {!isTutorial && <TimeUsernameBox user={player} />}
 
-      {drawOfferUiHandler()}
+      {!isTutorial && drawOfferUiHandler()}
 
-      {!isGameEnd && (
+      {!isTutorial && !isGameEnd && (
         <Box margin="auto" display="flex" justifyContent="space-evenly">
           <Button
             variant="outlined"
@@ -169,6 +181,25 @@ function GameControlCard({ pgn, isGameEnd }) {
             onClick={() => resignGameHandler(accessToken, id)}
           >
             Resign
+          </Button>
+        </Box>
+      )}
+
+      {isTutorial && (
+        <Box margin="auto" display="flex" justifyContent="space-evenly">
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={() => resetGameHandler()}
+          >
+            Reset
+          </Button>
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={() => undoMoveHandler()}
+          >
+            Undo
           </Button>
         </Box>
       )}

@@ -20,6 +20,7 @@ export const uiSlice = createSlice({
     toastType: "success",
     toastMessage: "",
     isSettingsDialogShown: false,
+    isHelpDialogShown: false,
 
     inputStatus: InputStatus.IDLE,
     transcribedData: null,
@@ -31,12 +32,21 @@ export const uiSlice = createSlice({
     setIsDarkMode: (state, action) => {
       state.isDarkMode = action.payload;
     },
+
     showSettingsDialog: (state, _) => {
       state.isSettingsDialogShown = true;
     },
     hideSettingsDialog: (state, _) => {
       state.isSettingsDialogShown = false;
     },
+
+    showHelpDialog: (state, _) => {
+      state.isHelpDialogShown = true;
+    },
+    hideHelpDialog: (state, _) => {
+      state.isHelpDialogShown = false;
+    },
+
     showSuccessToast: (state, action) => {
       state.isToastShown = true;
       state.toastType = "success";
@@ -76,6 +86,8 @@ export const {
   hideToast,
   hideSettingsDialog,
   showSettingsDialog,
+  hideHelpDialog,
+  showHelpDialog,
   setInputStatus,
   setTranscribedData,
   setIsDrawOffered

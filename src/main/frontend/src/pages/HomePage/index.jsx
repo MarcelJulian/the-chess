@@ -209,33 +209,41 @@ function DefaultCard() {
   };
 
   return (
-    <Card
-      sx={{
-        marginBottom: "1rem",
-        paddingX: "1rem",
-        borderRadius: "16px",
-        width: "50%",
-        backgroundColor
-      }}
-    >
-      <Box
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        sx={{ height: "100%", paddingY: "1rem" }}
-      >
-        Please sign in with your lichess account to continue.
-        <Button
-          variant="contained"
-          onClick={signInHandler}
-          sx={{ display: "block", color: "white", marginTop: "1rem" }}
-        >
-          Sign In
-        </Button>
-        <Alert severity="info" sx={{ marginTop: "1rem", width: "100%" }}>
-          As a third party application, a slight lag is to be tolerated
-        </Alert>
+    <Box display="flex" flexDirection="column" width="100%" alignItems="center">
+      <Box width="25%">
+        <img src="/theChessLogo-crop.png" alt="logo" />
       </Box>
-    </Card>
+      <Card
+        sx={{
+          marginBottom: "1rem",
+          paddingX: "1rem",
+          borderRadius: "16px",
+          width: "50%",
+          backgroundColor
+        }}
+      >
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          sx={{ height: "100%", paddingY: "1rem" }}
+        >
+          Please sign in with your lichess account to continue.
+          <Button
+            variant="contained"
+            onClick={signInHandler}
+            sx={{ display: "block", color: "white", marginTop: "1rem" }}
+          >
+            Sign In
+          </Button>
+          <Alert severity="info" sx={{ marginTop: "1rem", width: "100%" }}>
+            As a third party application, a slight lag is to be tolerated
+          </Alert>
+          <Alert severity="info" sx={{ marginTop: "1rem", width: "100%" }}>
+            Go to the tutorial page to learn more about chess notations
+          </Alert>
+        </Box>
+      </Card>
+    </Box>
   );
 }
