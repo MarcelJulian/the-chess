@@ -6,6 +6,7 @@ import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import IconButton from "@mui/material/IconButton";
 import useTheme from "@mui/material/styles/useTheme";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -207,22 +208,26 @@ function TutorialCard() {
         {getPage()}
       </Box>
       <Box display="flex" justifyContent="space-evenly" paddingTop="1rem">
-        <IconButton
-          color="secondary"
-          aria-label="previous page"
-          disabled={page === 1}
-          onClick={() => setPage(page - 1)}
-        >
-          <ArrowCircleLeftIcon />
-        </IconButton>
-        <IconButton
-          color="secondary"
-          aria-label="next page"
-          disabled={page === 4}
-          onClick={() => setPage(page + 1)}
-        >
-          <ArrowCircleRightIcon />
-        </IconButton>
+        <Tooltip title="Previous">
+          <IconButton
+            color="secondary"
+            aria-label="previous page"
+            disabled={page === 1}
+            onClick={() => setPage(page - 1)}
+          >
+            <ArrowCircleLeftIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Next">
+          <IconButton
+            color="secondary"
+            aria-label="next page"
+            disabled={page === 4}
+            onClick={() => setPage(page + 1)}
+          >
+            <ArrowCircleRightIcon />
+          </IconButton>
+        </Tooltip>
       </Box>
     </Card>
   );

@@ -8,16 +8,17 @@ import { ThemeProvider } from "@mui/material/styles";
 import { useSelector, useDispatch } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 
+import HelpDialog from "components/HelpDialog";
 import NavBar from "components/NavBar";
 import SettingsDialog from "components/SettingsDialog";
 import { lightTheme, darkTheme } from "components/Theme";
 import Toast from "components/Toast";
 import GamePage from "pages/GamePage";
 import HomePage from "pages/HomePage";
-import { hideSettingsDialog } from "store/reducers/uiSlice";
+import { hideSettingsDialog, hideHelpDialog } from "store/reducers/uiSlice";
 
 export default function App() {
-  const { isDarkMode, isSettingsDialogShown } = useSelector(
+  const { isDarkMode, isSettingsDialogShown, isHelpDialogShown } = useSelector(
     (state) => state.ui
   );
   const theme = isDarkMode ? darkTheme : lightTheme;
@@ -54,6 +55,20 @@ export default function App() {
             Settings
           </DialogTitle>
           <SettingsDialog />
+        </Dialog>
+
+        <Dialog
+          onClose={() => dispatch(hideHelpDialog())}
+          open={isHelpDialogShown}
+        >
+          <DialogTitle
+            sx={{
+              backgroundColor: theme.palette.neutral.main
+            }}
+          >
+            Help
+          </DialogTitle>
+          <HelpDialog />
         </Dialog>
       </Paper>
     </ThemeProvider>
