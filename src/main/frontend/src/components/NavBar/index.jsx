@@ -127,7 +127,7 @@ function NavBar() {
             <RouteLinkButton to="/" text="TheChess" />
             <RouteLinkButton to="/" text="Home" />
             {/* TODO:tutorial page */}
-            <RouteLinkButton to="/" text="Tutorial" />
+            <RouteLinkButton to="/tutorial" text="Tutorial" />
           </Box>
           <Box display="flex" ml="auto">
             <MaterialUISwitch

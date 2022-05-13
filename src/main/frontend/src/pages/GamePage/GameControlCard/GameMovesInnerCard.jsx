@@ -4,6 +4,7 @@ import React, { useEffect, useRef } from "react";
 import Box from "@mui/material/Box";
 import useTheme from "@mui/material/styles/useTheme";
 import Typography from "@mui/material/Typography";
+import { useSelector } from "react-redux";
 
 function ChessMoveBox({
   v,
@@ -73,6 +74,8 @@ function GameMovesInnerCard({ pgn, status, isWhiteTurn, backgroundColor }) {
   //   const [hoverValue, setHoverValue] = useState();
   //   const onHoverHandler = (v) => setHoverValue(v);
 
+  const isBlind = useSelector((state) => state.settings.isBlind);
+
   const gridEndRef = useRef(null);
 
   const scrollToBottom = () =>
@@ -140,13 +143,10 @@ function GameMovesInnerCard({ pgn, status, isWhiteTurn, backgroundColor }) {
 
   const statusText = statusParser(status, isWhiteTurn);
 
-  return (
-    <Box
-      sx={{
-        height: "calc(1.5rem * 4)",
-        overflow: "auto"
-      }}
-    >
+  return isBlind ? (
+    <Box height="calc(1.5rem * 4)" overflow="auto" />
+  ) : (
+    <Box height="calc(1.5rem * 4)" overflow="auto">
       {generateGridItems()}
       {statusText.length > 0 && (
         <Typography variant="body2" sx={{ backgroundColor, padding: "0.5rem" }}>

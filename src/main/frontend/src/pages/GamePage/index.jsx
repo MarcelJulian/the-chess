@@ -29,6 +29,7 @@ import {
 } from "store/reducers/uiSlice";
 
 import GameControlCard from "./GameControlCard";
+import TutorialCard from "./TutorialCard";
 import VoiceControlCard from "./VoiceControlCard";
 
 function CenteredFlexBox(props) {
@@ -43,7 +44,7 @@ function CenteredFlexBox(props) {
   );
 }
 
-function GamePage() {
+function GamePage({ isTutorial = false }) {
   const { gameId } = useParams();
 
   const { isWhite } = useSelector((state) => state.game);
@@ -184,16 +185,18 @@ function GamePage() {
 
   // initialize board state
   useEffect(() => {
-    // if (!isSignedIn) {
-    //   dispatch(showErrorToast("Please sign in first. Redirecting..."));
-    //   setTimeout(() => navigate(`/`), 3000);
-    // } else
-    streamBoardGameState(
-      accessToken,
-      gameId,
-      initializeGameHandler,
-      setGameStateHandler
-    );
+    if (!isTutorial) {
+      // if (!isSignedIn) {
+      //   dispatch(showErrorToast("Please sign in first. Redirecting..."));
+      //   setTimeout(() => navigate(`/`), 3000);
+      // } else
+      streamBoardGameState(
+        accessToken,
+        gameId,
+        initializeGameHandler,
+        setGameStateHandler
+      );
+    }
   }, [gameId]);
 
   const parseMoveAsUCI = (move) => {
@@ -264,8 +267,12 @@ function GamePage() {
     if (!isKeyPressed && e.key === key) dispatch(setIsKeyPressedTrue());
     else if (e.key === confirmKey)
       if (transcribedData.type === ResponseType.MOVE) {
-        sendMoveRequest(parseMoveAsUCI(transcribedData.value));
-      } else if (transcribedData.type === ResponseType.COMMAND) {
+        if (isTutorial) {
+          const gameCopy = { ...game };
+          gameCopy.move(transcribedData.value, { sloppy: true });
+          setGameHandler(gameCopy);
+        } else sendMoveRequest(parseMoveAsUCI(transcribedData.value));
+      } else if (transcribedData.type === ResponseType.COMMAND && !isTutorial) {
         dispatch(setInputStatus(InputStatus.IDLE));
         commandHandler(transcribedData.value);
       }
@@ -302,7 +309,8 @@ function GamePage() {
       onKeyUp={onKeyUpHandler}
     >
       <CenteredFlexBox width="30%" padding="3rem">
-        <VoiceControlCard game={game} />
+        {!isTutorial && <VoiceControlCard game={game} />}
+        {isTutorial && <TutorialCard />}
       </CenteredFlexBox>
       <CenteredFlexBox width="40%" padding="1rem">
         <Board
@@ -310,11 +318,19 @@ function GamePage() {
           setGameHandler={setGameHandler}
           boardOrientation={isWhite ? "white" : "black"}
           isBlind={isBlind}
-          isSendMove
+          isSendMove={!isTutorial}
         />
       </CenteredFlexBox>
-      <CenteredFlexBox width="30%" padding="3rem">
-        <GameControlCard pgn={game.pgn()} isGameEnd={isGameEnd} />
+
+      <CenteredFlexBox width="30%" padding="3rem" flexDirection="column">
+        {isTutorial && <VoiceControlCard game={game} />}
+        {isTutorial && <br />}
+        <GameControlCard
+          game={game}
+          setGameHandler={setGameHandler}
+          isGameEnd={isGameEnd}
+          isTutorial={isTutorial}
+        />
       </CenteredFlexBox>
     </Box>
   );

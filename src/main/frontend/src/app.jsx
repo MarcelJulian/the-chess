@@ -9,11 +9,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 
 import NavBar from "components/NavBar";
+import SettingsDialog from "components/SettingsDialog";
 import { lightTheme, darkTheme } from "components/Theme";
 import Toast from "components/Toast";
 import GamePage from "pages/GamePage";
 import HomePage from "pages/HomePage";
-import SettingsPageDialog from "pages/SettingsPage";
 import { hideSettingsDialog } from "store/reducers/uiSlice";
 
 export default function App() {
@@ -38,6 +38,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path=":gameId" element={<GamePage />} />
+          <Route path="/tutorial" element={<GamePage isTutorial />} />
         </Routes>
 
         <Toast />
@@ -52,7 +53,7 @@ export default function App() {
           >
             Settings
           </DialogTitle>
-          <SettingsPageDialog />
+          <SettingsDialog />
         </Dialog>
       </Paper>
     </ThemeProvider>

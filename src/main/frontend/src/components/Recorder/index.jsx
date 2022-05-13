@@ -213,7 +213,7 @@ function Recorder({ game }) {
   return (
     <Box>
       <Typography variant="caption">
-        Press{" "}
+        Press and hold{" "}
         <code
           style={{
             backgroundColor,
@@ -226,7 +226,7 @@ function Recorder({ game }) {
       </Typography>
       <br />
       <Typography variant="caption">
-        Stop pressing to end the recording.
+        Release to end and send the recording.
       </Typography>
       <br />
       <Typography variant="caption">

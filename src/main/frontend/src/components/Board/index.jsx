@@ -95,7 +95,6 @@ function Board({
   const audio = new Audio(
     "https://raw.githubusercontent.com/lichess-org/lila/master/public/sound/standard/Move.mp3"
   );
-  const playAudio = () => audio.play();
 
   // allows click to move
   async function onSquareClick(square) {
