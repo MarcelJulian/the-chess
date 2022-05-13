@@ -82,7 +82,9 @@ function GameMovesInnerCard({ pgn, status, isWhiteTurn, backgroundColor }) {
     gridEndRef.current.scrollIntoView({ behavior: "smooth" });
 
   // sets auto scroll when there's a new move
-  useEffect(() => scrollToBottom(), [pgn]);
+  useEffect(() => {
+    if (!isBlind) scrollToBottom();
+  }, [pgn]);
 
   const cleanGamePgn = (gamePgn) => {
     const moveStartIndex = gamePgn.indexOf("1.");
