@@ -209,24 +209,28 @@ function TutorialCard() {
       </Box>
       <Box display="flex" justifyContent="space-evenly" paddingTop="1rem">
         <Tooltip title="Previous">
-          <IconButton
-            color="secondary"
-            aria-label="previous page"
-            disabled={page === 1}
-            onClick={() => setPage(page - 1)}
-          >
-            <ArrowCircleLeftIcon />
-          </IconButton>
+          <span>
+            <IconButton
+              color="secondary"
+              aria-label="previous page"
+              disabled={page === 1}
+              onClick={() => setPage(page - 1)}
+            >
+              <ArrowCircleLeftIcon />
+            </IconButton>
+          </span>
         </Tooltip>
         <Tooltip title="Next">
-          <IconButton
-            color="secondary"
-            aria-label="next page"
-            disabled={page === 4}
-            onClick={() => setPage(page + 1)}
-          >
-            <ArrowCircleRightIcon />
-          </IconButton>
+          <span>
+            <IconButton
+              color="secondary"
+              aria-label="next page"
+              disabled={page === 4}
+              onClick={() => setPage(page + 1)}
+            >
+              <ArrowCircleRightIcon />
+            </IconButton>
+          </span>
         </Tooltip>
       </Box>
     </Card>
