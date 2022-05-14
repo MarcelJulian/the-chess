@@ -1,24 +1,10 @@
 /* eslint-disable import/no-unresolved */
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import useTheme from "@mui/material/styles/useTheme";
-import Switch from "@mui/material/Switch";
-import ToggleButton from "@mui/material/ToggleButton";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Typography from "@mui/material/Typography";
-import { useSelector, useDispatch } from "react-redux";
-
-import {
-  setBoardSet,
-  setPieceSet,
-  setIsSpeech,
-  setIsBlind,
-  setKey,
-  setConfirmKey
-} from "store/reducers/settingsSlice";
 
 function ColumnBox(props) {
   const { ...other } = props;
@@ -27,25 +13,9 @@ function ColumnBox(props) {
   );
 }
 
-function RowBox(props) {
-  const { ...other } = props;
-  return (
-    <Box
-      display="flex"
-      flexDirection="row"
-      justifyContent="space-between"
-      alignItems="center"
-      marginBottom="1rem"
-      {...other}
-    />
-  );
-}
-
 function HelpDialog() {
   const theme = useTheme();
   const backgroundColor = theme.palette.neutral.main;
-
-  const dispatch = useDispatch();
 
   return (
     <Container sx={{ backgroundColor }}>

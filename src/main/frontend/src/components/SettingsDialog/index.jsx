@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useRef } from "react";
 
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import useTheme from "@mui/material/styles/useTheme";
 import Switch from "@mui/material/Switch";
