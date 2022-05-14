@@ -26,14 +26,20 @@ function AuthButtonGroup() {
     if (response.status !== 200) dispatch(showRequestErrorToast(response));
   };
 
+  const openUrlInNewTab = (url) => {
+    window.open(url);
+  };
+
   return (
     <>
-      {/* TODO: */}
       <NavBarButton
         text="Settings"
         onClick={() => dispatch(showSettingsDialog())}
       />
-      <NavBarButton text="Register" />
+      <NavBarButton
+        text="Register"
+        onClick={() => openUrlInNewTab("https://lichess.org/signup")}
+      />
       <NavBarButton text="Sign In" onClick={signInHandler} />
     </>
   );
@@ -123,10 +129,9 @@ function NavBar() {
       >
         <Toolbar disableGutters>
           <Box display="flex">
-            {/* TODO:show logo */}
             <RouteLinkButton to="/" text="TheChess" />
             <RouteLinkButton to="/" text="Home" />
-            {/* TODO:tutorial page */}
+
             <RouteLinkButton to="/tutorial" text="Tutorial" />
           </Box>
           <Box display="flex" ml="auto">
