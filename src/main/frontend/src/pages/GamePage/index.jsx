@@ -186,16 +186,16 @@ function GamePage({ isTutorial = false }) {
   // initialize board state
   useEffect(() => {
     if (!isTutorial) {
-      // if (!isSignedIn) {
-      //   dispatch(showErrorToast("Please sign in first. Redirecting..."));
-      //   setTimeout(() => navigate(`/`), 3000);
-      // } else
-      streamBoardGameState(
-        accessToken,
-        gameId,
-        initializeGameHandler,
-        setGameStateHandler
-      );
+      if (!isSignedIn) {
+        dispatch(showErrorToast("Please sign in first. Redirecting..."));
+        setTimeout(() => navigate(`/`), 3000);
+      } else
+        streamBoardGameState(
+          accessToken,
+          gameId,
+          initializeGameHandler,
+          setGameStateHandler
+        );
     }
   }, [gameId]);
 
@@ -324,7 +324,7 @@ function GamePage({ isTutorial = false }) {
 
       <CenteredFlexBox width="30%" padding="3rem" flexDirection="column">
         {isTutorial && <VoiceControlCard game={game} />}
-        {isTutorial && <br />}
+        {isTutorial && <Box marginBottom="1rem" />}
         <GameControlCard
           game={game}
           setGameHandler={setGameHandler}
