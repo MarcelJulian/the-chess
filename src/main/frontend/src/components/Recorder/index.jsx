@@ -57,6 +57,7 @@ function Recorder({ game }) {
   };
 
   const sloppyMoveChecker = (move) => {
+    // [a3, a4, b3, b4, ...]
     const moves = game.moves();
     console.log("🚀 moves", moves);
 

@@ -170,7 +170,7 @@ function SettingsDialog() {
 
         <RowBox>
           <ColumnBox marginBottom="none">
-            <Typography>Speech Synthethizer</Typography>
+            <Typography>Audio Feedback</Typography>
             <Typography variant="caption">
               Enable to voice chess moves
             </Typography>

@@ -30,17 +30,18 @@ function HomePage() {
   const [searchParams, _] = useSearchParams();
 
   useEffect(() => {
+    const setSessionData = (token, user) => {
+      dispatch(signIn({ accessToken: token, username: user }));
+      dispatch(showSuccessToast("Sign in success!"));
+      // remove search param
+      navigate("/");
+    };
     if (!isSignedIn) {
       const tempAccessToken = searchParams.get("access-token");
       const tempUsername = searchParams.get("username");
 
       if (tempAccessToken !== null && tempUsername !== null) {
-        dispatch(
-          signIn({ accessToken: tempAccessToken, username: tempUsername })
-        );
-        dispatch(showSuccessToast("Sign in success!"));
-        // remove search param
-        navigate("/");
+        setSessionData(tempAccessToken, tempUsername);
       }
     }
   }, [searchParams, isSignedIn]);

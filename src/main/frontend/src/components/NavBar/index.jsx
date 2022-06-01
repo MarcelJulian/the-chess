@@ -12,6 +12,7 @@ import signInToLichess from "services/authService";
 import { signOut } from "store/reducers/sessionSlice";
 import {
   setIsDarkMode,
+  showSuccessToast,
   showRequestErrorToast,
   showSettingsDialog
 } from "store/reducers/uiSlice";
@@ -21,7 +22,7 @@ import RouteLinkButton from "./RouteLinkButton";
 
 function AuthButtonGroup() {
   const dispatch = useDispatch();
-  const signInHandler = async () => {
+  const openSignInPage = async () => {
     const response = await signInToLichess();
     if (response.status !== 200) dispatch(showRequestErrorToast(response));
   };
@@ -30,24 +31,26 @@ function AuthButtonGroup() {
     window.open(url);
   };
 
+  const openRegisterPage = () => openUrlInNewTab("https://lichess.org/signup");
+
   return (
     <>
       <NavBarButton
         text="Settings"
         onClick={() => dispatch(showSettingsDialog())}
       />
-      <NavBarButton
-        text="Register"
-        onClick={() => openUrlInNewTab("https://lichess.org/signup")}
-      />
-      <NavBarButton text="Sign In" onClick={signInHandler} />
+      <NavBarButton text="Register" onClick={openRegisterPage} />
+      <NavBarButton text="Sign In" onClick={openSignInPage} />
     </>
   );
 }
 
 function UserButtonGroup() {
   const dispatch = useDispatch();
-  const signOutHandler = () => dispatch(signOut());
+  const resetSessionData = () => {
+    dispatch(signOut());
+    dispatch(showSuccessToast("Sign out success!"));
+  };
 
   return (
     <>
@@ -55,7 +58,7 @@ function UserButtonGroup() {
         text="Settings"
         onClick={() => dispatch(showSettingsDialog())}
       />
-      <NavBarButton text="Sign Out" onClick={signOutHandler} />
+      <NavBarButton text="Sign Out" onClick={() => resetSessionData()} />
     </>
   );
 }
