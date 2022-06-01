@@ -59,10 +59,10 @@ function Recorder({ game }) {
   const sloppyMoveChecker = (move) => {
     // [a3, a4, b3, b4, ...]
     const moves = game.moves();
-    console.log("🚀 moves", moves);
+    // console.log("🚀 moves", moves);
 
     const fuzzyResult = fuzzy.filter(move, moves);
-    console.log("🚀 fuzzyResult", fuzzyResult);
+    // console.log("🚀 fuzzyResult", fuzzyResult);
 
     // exact move
     if (fuzzyResult.find((res) => res === move)) return move;
@@ -72,7 +72,7 @@ function Recorder({ game }) {
 
     const fuse = new Fuse(moves, { isCaseSensitive: true });
     const fuseResult = fuse.search(move);
-    console.log("🚀 fuseResult", fuseResult);
+    // console.log("🚀 fuseResult", fuseResult);
 
     // check empry result
     if (fuseResult.length === 0) return null;
@@ -143,7 +143,7 @@ function Recorder({ game }) {
         dispatch(setInputStatus(InputStatus.IDLE));
         dispatch(showRequestErrorToast(response));
       } else {
-        console.log(response);
+        // console.log(response);
 
         let checkedMove;
 
