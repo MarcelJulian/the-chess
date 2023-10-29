@@ -1,4 +1,4 @@
-package com.thesis.thechess.constants;
+package com.thesis.TheChess.constants;
 
 //import java.io.File;
 
