@@ -84,12 +84,13 @@ function GamePage({ isTutorial = false }) {
       };
 
     const splitMoves = moves.split(" ");
+
     const isWhiteTurn = splitMoves.length % 2 === 0;
 
     let hasMoved = true;
-    if (splitMoves.length < 2)
-      if (splitMoves.length === 1 && isWhiteParam) hasMoved = true;
-      else hasMoved = false;
+    if (splitMoves.length < 2) hasMoved = false;
+    //   if (splitMoves.length === 1 && isWhiteParam) hasMoved = true;
+    //   else hasMoved = false;
 
     const lastMove = splitMoves.pop();
     return { isWhiteTurn, lastMove, hasMoved };
@@ -170,16 +171,16 @@ function GamePage({ isTutorial = false }) {
       if (tryMove !== null) {
         audio.play();
         setGameHandler(gameCopy);
-
-        dispatch(
-          setGameState({
-            ...gameStateResponse,
-            isWhiteTurn,
-            lastMove,
-            hasMoved
-          })
-        );
       }
+
+      dispatch(
+        setGameState({
+          ...gameStateResponse,
+          isWhiteTurn,
+          lastMove,
+          hasMoved
+        })
+      );
     }
   };
 
@@ -312,6 +313,7 @@ function GamePage({ isTutorial = false }) {
         {!isTutorial && <VoiceControlCard game={game} />}
         {isTutorial && <TutorialCard />}
       </CenteredFlexBox>
+
       <CenteredFlexBox width="40%" padding="1rem">
         <Board
           game={game}

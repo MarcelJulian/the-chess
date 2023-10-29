@@ -47,7 +47,7 @@ function GameControlCard({ game, setGameHandler, isGameEnd, isTutorial }) {
       time: clock === null ? null : gameState.btime,
       isTurn: checkIsTurn(!isWhiteTurn)
     }),
-    [gameState?.btime, isWhiteTurn]
+    [gameState?.btime, isWhiteTurn, hasMoved, isGameEnd]
   );
   const whiteTemp = useMemo(
     () => ({
@@ -55,7 +55,7 @@ function GameControlCard({ game, setGameHandler, isGameEnd, isTutorial }) {
       time: clock === null ? null : gameState.wtime,
       isTurn: checkIsTurn(isWhiteTurn)
     }),
-    [gameState?.wtime, isWhiteTurn]
+    [gameState?.wtime, isWhiteTurn, hasMoved, isGameEnd]
   );
 
   const opponent = isWhite ? blackTemp : whiteTemp;

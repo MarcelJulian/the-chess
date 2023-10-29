@@ -4,7 +4,7 @@ export const botFormSlice = createSlice({
   name: "session",
   initialState: {
     accessToken: null,
-    username: "Eisiel",
+    username: "",
     isSignedIn: false
   },
   reducers: {

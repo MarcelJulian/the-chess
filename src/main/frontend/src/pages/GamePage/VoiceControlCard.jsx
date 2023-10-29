@@ -52,8 +52,8 @@ function VoiceControlCard({ game }) {
 
   const parseMove = (move) => {
     let resultingText = "";
-    if (move === "O-O") return "Kingside Castle";
-    if (move === "O-O-O") return "Queenside Castle";
+    if (move.includes("O-O")) return "Kingside Castle";
+    if (move.includes("O-O-O")) return "Queenside Castle";
     for (let i = 0; i < move.length; i++) {
       switch (move.charAt(i)) {
         case "N":
