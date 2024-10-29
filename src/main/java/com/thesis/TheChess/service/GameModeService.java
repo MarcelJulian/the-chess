@@ -23,6 +23,8 @@ public class GameModeService {
 
 	@Value("${lichess_api_url}")	//	https://lichess.org/api/
     public String lichess_api_url;
+
+	public String test="testt";
 	
 	RestTemplate restTemplate = new RestTemplate();
 	
